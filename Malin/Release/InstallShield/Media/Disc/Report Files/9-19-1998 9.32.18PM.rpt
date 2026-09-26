@@ -1,0 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Floppy
+Report Filename : C:\My Installations\Malin\Media\Disc\Report Files\9-19-1998 9.32.18PM.rpt
+Date            : 09/19/1998
+Time            : 9:32PM
+
+Number of Components:                4 
+Number of File Groups:               1 
+Number of Files:                     1 
+Total Size of Files:           118,784 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Game Files
+     Shared DLLs
+     Player Files
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                1 (files for this component only)
+    Source Bytes:         118,784 (files for this component only)
+
+
+                **** File Group: "Program Executable Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Windows\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Malin.exe                   09/19/1998  13:33:16      118,784  3.0.6.0      
+    --------------------------  ----------  --------  -----------  -------------
+    Count=1                                               118,784               

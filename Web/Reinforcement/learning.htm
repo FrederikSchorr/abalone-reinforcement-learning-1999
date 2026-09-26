@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Learning</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+
+
+<meta name="Microsoft Theme" content="sumipntg 000, default"><meta name="Microsoft Border" content="tb, default"></head>
+
+<body bgcolor="#FFFFFF" text="#808080" link="#3333CC" vlink="#666699" alink="#990099"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="verdana, arial, helvetica">
+
+<h3 align="center"><!--mstheme--><font color="#003366"><img src="../images/Banner.gif" alt="Banner.gif (11554 bytes)" WIDTH="600" HEIGHT="60"><!--mstheme--></font></h3>
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><!--mstheme--><font face="verdana, arial, helvetica">
+
+<p>&nbsp;</p>
+
+<h3><!--mstheme--><font color="#003366">Reinforcement learning<!--mstheme--></font></h3>
+
+<h4><!--mstheme--><font color="#003366">A neural network learns to play Abalone<!--mstheme--></font></h4>
+
+<p>We now present a brief summary of the implemented reinforcement learning system (see
+Tesauro <a href="bibliogr.htm">[Tes95]</a>). The heart of the reinforcement learner is a
+neural network that is organized as a standard multilayer perceptron (MLP), see <a href="thesis.htm">Section 1.1</a>. The training procedure is as follows: the network
+observes a sequence of board positions j<small><small>0</small></small> , j<small><small>1</small></small>
+, ... , j<small><small>N</small></small> , starting with the opening position j<small><small>0</small></small>
+and ending in a terminal position j<small><small>N</small></small> characterized by the
+score, i.e. 6 : 3 or 5 : 6. The board positions are fed as input vectors x(j<small><small>0</small></small>),
+x(j<small><small>1</small></small>), ... , x(j<small><small>N</small></small>) to the
+neural network, encoded using a representation scheme x(·) that is described later. Each
+time step in the sequence corresponds to a move made by one side, i.e. a half-move or a <em>ply</em>.
+For each input position j<small><small>k</small></small> there is a neural network output
+J(j<small><small>k</small></small>,r), where r is the network's <em>weight vector</em>.
+J(j<small><small>k</small></small>,r) is the neural networks estimate of the value of the
+position j<small><small>k</small></small> . At each time step, the TD(<em>lambda</em>)
+algorithm is applied to change the network's weights. One possible formula for the weight
+change is as follows:</p>
+
+<p align="center"><img src="learning01.gif" alt="learning01.gif (1817 bytes)" WIDTH="435" HEIGHT="56"></p>
+
+<p>where <em>lambda</em> is a small constant (commonly thought of as a stepsize or <em>learning
+rate </em>pa- rameter), and <em>gradient </em>J(j,r) is the gradient of network output
+with respect to the weights r. </p>
+
+<p>The quantity <em>lambda </em>is a heuristic parameter controlling the <em>temporal
+credit assignment </em>of how an error detected at a given time step feeds back to correct
+previous estimates. When <em>lambda </em>= 0, no feedback occurs beyond the current time
+step, while when <em>lambda</em> = 1, the error feeds back without decay arbitrarily far
+in time. Intermediate values of <em>lambda</em> provide a smooth way to interpolate
+between these two limiting cases. </p>
+
+<p>At the end of each game, a final reward signal J*(j<small><small>N+1</small></small>)
+is given, based on the outcome of the game. The preceding equation is used to change the
+weights, except that the difference (J*(j<small><small>N+1</small></small>)&nbsp; - J(j<small><small>N</small></small>,r<small><small>N</small></small>))
+is used instead of (J(j<small><small>N+1</small></small>,r<small><small>N</small></small>)
+&nbsp; - J(j<small><small>N</small></small>,r<small><small>N</small></small>)).</p>
+
+<p>During training, the neural network itself is used to select moves for both sides. At
+each time step during the course of a game, the neural network scores every possible legal
+move. The move that is selected is then the move with maximum expected outcome for the
+side making the move. In other words, the neural network is learning from the results of
+playing against itself. This self-play training paradigm is used even at the start of
+learning, when the network's weights are random, and hence its initial strategy is a
+random strategy. </p>
+&nbsp;<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="verdana, arial, helvetica">
+
+<p align="center"><a href="../index.htm"><img src="../_derived/home_cmp_sumipntg000_gbtn.gif" width="95" height="20" border="0" alt="Home" align="middle"></a> <a href="../reinforc.htm"><img src="../_derived/up_cmp_sumipntg000_gbtn.gif" width="95" height="20" border="0" alt="Up" align="middle"></a></p>
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+</html>

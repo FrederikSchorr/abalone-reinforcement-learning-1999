@@ -1,0 +1,132 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Floppy
+Report Filename : C:\My Installations\Malin\Media\Disc\Report Files\9-19-1998 10.18.09PM.rpt
+Date            : 09/19/1998
+Time            : 10:18PM
+
+Number of Components:                4 
+Number of File Groups:               4 
+Number of Files:                    16 
+Total Size of Files:         1,852,051 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Game Files
+     Shared DLLs
+     Player Files
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                3 (files for this component only)
+    Source Bytes:         122,003 (files for this component only)
+
+
+                **** File Group: "Program Executable Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Windows\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Malin.exe                   09/19/1998  13:33:16      118,784  3.0.6.0      
+    --------------------------  ----------  --------  -----------  -------------
+    Count=1                                               118,784               
+
+
+<Directory>: E:\Eigene Dateien\Malin
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Board.ar                    09/15/1998  20:06:36        1,242               
+    Aba212.ar                   09/15/1998  20:06:24        1,977               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                 3,219               
+
+
+================================================================================
+                            COMPONENT: "Game Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                2 (files for this component only)
+    Source Bytes:         122,204 (files for this component only)
+
+
+                       **** File Group: "Game Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Game
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    HumanAba4.ag                09/19/1998  13:32:48           91               
+    Four.ag                     09/19/1998  13:33:08          110               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                   201               
+
+
+================================================================================
+                            COMPONENT: "Shared DLLs"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:       1,850,932 (files for this component only)
+
+
+                      **** File Group: "Shared DLLs" ****
+
+
+<Directory>: C:\WINDOWS\SYSTEM
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    mfc42.dll                   06/17/1998  00:00:00      995,383  6.0.8168.0   
+    Msvcrt.dll                  06/17/1998  00:00:00      254,005  6.0.8168.0   
+    Msvcirt.dll                 06/17/1998  00:00:00       77,878  6.0.8168.0   
+    Msvcp60.dll                 06/17/1998  00:00:00      401,462  6.0.8168.0   
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                             1,728,728               
+
+
+================================================================================
+                           COMPONENT: "Player Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                7 (files for this component only)
+    Source Bytes:       1,852,051 (files for this component only)
+
+
+                      **** File Group: "Player Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Player
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Human.ap                    09/15/1998  20:03:16           21               
+    Aba3.ap                     09/15/1998  20:10:20          183               
+    Aba4.ap                     09/15/1998  20:04:06          183               
+    Aba5.ap                     09/15/1998  20:08:44          183               
+    Aba6.ap                     09/15/1998  20:14:46          183               
+    Aba7.ap                     09/15/1998  20:12:04          183               
+    Aba2.ap                     09/15/1998  20:11:28          183               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=7                                                 1,119               

@@ -1,0 +1,147 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Default
+Report Filename : E:\Eigene Dateien\InstallShield\Malin\Media\Default\Report Files\11-18-1998 11.20.42AM.rpt
+Date            : 11/18/1998
+Time            : 11:20AM
+
+Number of Components:                4 
+Number of File Groups:               4 
+Number of Files:                    31 
+Total Size of Files:         2,016,968 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Game Files
+     Shared DLLs
+     Player Files
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:               10 (files for this component only)
+    Source Bytes:         230,671 (files for this component only)
+
+
+                **** File Group: "Program Executable Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Windows\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Malin.exe                   11/18/1998  02:39:16      221,184  3.0.6.0      
+    --------------------------  ----------  --------  -----------  -------------
+    Count=1                                               221,184               
+
+
+<Directory>: E:\Eigene Dateien\Malin
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Board.ar                    11/11/1998  14:50:22        1,247               
+    Aba212.ar                   11/11/1998  14:49:56        1,982               
+    Emil.ar                     11/11/1998  14:50:06          883               
+    Caesar.ar                   11/11/1998  14:50:12          883               
+    Boub.ar                     11/11/1998  14:50:18        1,982               
+    Training08.as               11/18/1998  11:05:40          440               
+    Training01.as               11/16/1998  13:09:32          822               
+    Training02.as               11/16/1998  15:00:38          365               
+    Freud.ar                    11/11/1998  14:50:32          883               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=9                                                 9,487               
+
+
+================================================================================
+                            COMPONENT: "Game Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:         231,080 (files for this component only)
+
+
+                       **** File Group: "Game Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Game
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Three.ag                    11/18/1998  11:18:48          104               
+    Four.ag                     11/18/1998  11:19:10          112               
+    HumanHuman.ag               11/18/1998  11:19:32           95               
+    Two.ag                      11/11/1998  16:00:38           98               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                                   409               
+
+
+================================================================================
+                            COMPONENT: "Shared DLLs"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:       1,959,808 (files for this component only)
+
+
+                      **** File Group: "Shared DLLs" ****
+
+
+<Directory>: C:\WINDOWS\SYSTEM
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    mfc42.dll                   06/17/1998  00:00:00      995,383  6.0.8168.0   
+    Msvcrt.dll                  06/17/1998  00:00:00      254,005  6.0.8168.0   
+    Msvcirt.dll                 06/17/1998  00:00:00       77,878  6.0.8168.0   
+    Msvcp60.dll                 06/17/1998  00:00:00      401,462  6.0.8168.0   
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                             1,728,728               
+
+
+================================================================================
+                           COMPONENT: "Player Files"
+================================================================================
+
+SUMMARY:
+    Total Files:               13 (files for this component only)
+    Source Bytes:       2,016,968 (files for this component only)
+
+
+                      **** File Group: "Player Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Player
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Human.ap                    11/11/1998  14:56:06           26               
+    Boub4.ap                    11/11/1998  14:53:20          185               
+    Caesar4.ap                  11/11/1998  14:52:08           76               
+    Charles4.ap                 11/11/1998  15:03:40           63               
+    David4.ap                   11/16/1998  14:53:40           65               
+    Aba4.ap                     11/11/1998  14:53:50          185               
+    Karl.ap                     11/18/1998  11:06:36       12,574               
+    Emil4p.ap                   11/11/1998  15:02:10           77               
+    Emil5p.ap                   11/11/1998  15:01:56           68               
+    Emil5p3s.ap                 11/11/1998  15:01:46           83               
+    Fredi.ap                    11/17/1998  15:44:02       43,655               
+    Emil3p.ap                   11/11/1998  15:02:14           77               
+    Random.ap                   11/11/1998  14:54:08           26               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=13                                               57,160               

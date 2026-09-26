@@ -1,0 +1,134 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Default
+Report Filename : E:\Eigene Dateien\Malin\Release\InstallShield\Media\Default\Report Files\5-18-1999 11.24.12AM.rpt
+Date            : 05/18/1999
+Time            : 11:24AM
+
+Number of Components:                4 
+Number of File Groups:               4 
+Number of Files:                    26 
+Total Size of Files:         2,000,137 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Game Files
+     Shared DLLs
+     Player Files
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                5 (files for this component only)
+    Source Bytes:         236,030 (files for this component only)
+
+
+                **** File Group: "Program Executable Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Malin.exe                   05/18/1999  10:56:40      229,376  3.0.6.0      
+    Training.as                 12/07/1998  01:26:14          711               
+    Board.ar                    12/02/1998  16:41:52        1,979               
+    Boub.ar                     12/02/1998  16:41:52        1,982               
+    Aba212.ar                   12/02/1998  16:41:52        1,982               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=5                                               236,030               
+
+
+================================================================================
+                            COMPONENT: "Game Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:         236,439 (files for this component only)
+
+
+                       **** File Group: "Game Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Two.ag                      12/02/1998  16:41:52           98               
+    HumanHuman.ag               12/02/1998  16:41:52           95               
+    Three.ag                    12/02/1998  16:41:52          104               
+    Four.ag                     12/02/1998  16:41:52          112               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                                   409               
+
+
+================================================================================
+                            COMPONENT: "Shared DLLs"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:       1,965,167 (files for this component only)
+
+
+                      **** File Group: "Shared DLLs" ****
+
+
+<Directory>: C:\WINDOWS\SYSTEM
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    mfc42.dll                   06/17/1998  00:00:00      995,383  6.0.8168.0   
+    Msvcrt.dll                  06/17/1998  00:00:00      254,005  6.0.8168.0   
+    Msvcirt.dll                 06/17/1998  00:00:00       77,878  6.0.8168.0   
+    Msvcp60.dll                 06/17/1998  00:00:00      401,462  6.0.8168.0   
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                             1,728,728               
+
+
+================================================================================
+                           COMPONENT: "Player Files"
+================================================================================
+
+SUMMARY:
+    Total Files:               13 (files for this component only)
+    Source Bytes:       2,000,137 (files for this component only)
+
+
+                      **** File Group: "Player Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Random.ap                   12/02/1998  16:41:54           26               
+    Boub4.ap                    12/02/1998  16:41:54          185               
+    Caesar4.ap                  12/02/1998  16:41:54           76               
+    Charles4.ap                 12/02/1998  16:41:54           63               
+    David4.ap                   12/02/1998  16:41:54           65               
+    Emil5p.ap                   12/02/1998  16:41:54           68               
+    Gunilla1.ap                 12/03/1998  22:43:34        6,852               
+    Gunilla2.ap                 01/16/1999  01:23:38        6,856               
+    Gunilla3.ap                 01/16/1999  01:24:10        6,856               
+    Gunilla4.ap                 01/28/1999  00:52:56        6,856               
+    Gunilla5.ap                 01/28/1999  01:56:44        6,856               
+    Human.ap                    12/02/1998  16:41:54           26               
+    Aba4.ap                     12/02/1998  16:41:54          185               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=13                                               34,970               

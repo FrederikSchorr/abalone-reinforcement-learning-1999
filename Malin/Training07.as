@@ -1,0 +1,10 @@
+Vince.ap	// Player to be trained
+2		// Number of players
+
+1000000		// { # of contests
+50		//   # of contests between backups
+6		//   # of marbles to win (ejectWon)
+0.6		//   p(board will be randomized)
+1		//   # of enemies
+Random.ap	//   1. trainer
+0.1		//     p

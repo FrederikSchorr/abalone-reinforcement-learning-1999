@@ -1,0 +1,53 @@
+[Language]
+LanguageSupport0=0009
+
+[OperatingSystem]
+OSSupport=0000000000011010
+
+[Data]
+CurrentMedia=Default
+CurrentComponentDef=Default.cdf
+ProductName=Malin
+set_mifserial=
+DevEnvironment=Microsoft Visual C++ 6
+AppExe=E:\Eigene Dateien\Malin\Malin.exe
+set_dlldebug=No
+EmailAddresss=
+Instructions=Instructions.txt
+set_testmode=No
+set_mif=No
+SummaryText=
+Department=
+HomeURL=
+Author=
+Type=Software Development Application
+InstallRoot=E:\Eigene Dateien\Malin\Release\InstallShield
+Version=3.06
+InstallationGUID=f74605e0-4f13-11d2-90c1-a346145e6079
+set_level=Level 3
+CurrentFileGroupDef=Default.fdf
+Notes=Notes.txt
+set_maxerr=50
+set_args=
+set_miffile=Status.mif
+set_dllcmdline=
+Copyright=
+set_warnaserr=No
+CurrentPlatform=
+Category=
+set_preproc=
+CurrentLanguage=English
+CompanyName=Frederik
+Description=Description.txt
+set_maxwarn=50
+set_crc=Yes
+set_compileb4build=No
+
+[MediaInfo]
+mediadata0=Default/Media\Default
+mediadata1=Floppy/Media\Disc
+
+[General]
+Type=INSTALLMAIN
+Version=1.10.000
+

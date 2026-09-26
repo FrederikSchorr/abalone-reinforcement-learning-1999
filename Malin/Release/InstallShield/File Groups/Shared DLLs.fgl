@@ -1,0 +1,10 @@
+[TopDir]
+file0=C:\WINDOWS\SYSTEM\mfc42.dll
+file1=C:\WINDOWS\SYSTEM\Msvcrt.dll
+file2=C:\WINDOWS\SYSTEM\Msvcirt.dll
+file3=C:\WINDOWS\SYSTEM\Msvcp60.dll
+
+[General]
+Type=FILELIST
+Version=1.00.000
+

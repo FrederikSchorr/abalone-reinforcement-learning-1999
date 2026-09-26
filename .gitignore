@@ -1,0 +1,8 @@
+﻿*.ncb
+*.opt
+*.plg
+*.obj
+*.pch
+vssver.scc
+Debug/
+

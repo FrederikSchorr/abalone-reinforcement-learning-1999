@@ -1,0 +1,63 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Code</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+
+
+<meta name="Microsoft Theme" content="sumipntg 000, default"><meta name="Microsoft Border" content="tb, default"></head>
+
+<body bgcolor="#FFFFFF" text="#808080" link="#3333CC" vlink="#666699" alink="#990099"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="verdana, arial, helvetica">
+
+<h3 align="center"><!--mstheme--><font color="#003366"><img src="../images/Banner.gif" alt="Banner.gif (11554 bytes)" WIDTH="600" HEIGHT="60"><!--mstheme--></font></h3>
+<!--mstheme--></font></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><!--mstheme--><font face="verdana, arial, helvetica">
+
+<p>&nbsp;</p>
+
+<h3><!--mstheme--><font color="#003366">Reinforcement Learning<!--mstheme--></font></h3>
+
+<h4><!--mstheme--><font color="#003366">Pseudo code example<!--mstheme--></font></h4>
+
+<p>The following C++ pseudo code section implements the heart of a simple feed-forward
+neural network. All used reinforcement learners are derived from this object, the
+corresponding code examples can be found <a href="thesis.htm">here</a>.</p>
+
+<!--mstheme--></font><pre>class Perceptron 
+{ 
+  int m_I;                      <em>Number of input units </em>
+  int m_H;<em>                      Number of hidden units</em> 
+  float m_x[m_I];<em>               The input vector of dimension m_I </em>
+  float m_y[m_H];<em>               The hidden vector of dimension m_H </em>
+  float m_z;<em>                    The output unit </em>
+  float m_rih[m_I][m_H];        <em>The weight matrix from input to hidden layer </em>
+  float m_rho[m_H];<em>             The weight vector from hidden to output layer </em>
+  </pre><!--mstheme--><font face="verdana, arial, helvetica">
+
+<!--mstheme--></font><pre>  void propagate () 
+  { 
+<em>    Propagate the input vector m_x through the net 
+    Input: m_x, m_I, m_H, m_rih, m_rho 
+    Output: m_y, m_z 
+</em>  </pre><!--mstheme--><font face="verdana, arial, helvetica">
+
+<!--mstheme--></font><pre>    <em>Calculate the activation levels of the hidden layer </em>
+    for (h = 0; h &lt; m_H; h++) 
+    { 
+      m_y[h] = 0.0;             <em>Sum up inputs * weights </em>
+      for (i = 0; i &lt; m_I; i++) m_y[h] += m_rih[i][h] * m_x[i]; 
+      <em>Apply sigmoid function to hidden unit </em>
+      m_y[h] = sigma(m_y[h]); 
+    } 
+  </pre><!--mstheme--><font face="verdana, arial, helvetica">
+
+<!--mstheme--></font><pre>    m_z = 0.0;                  <em>Calculate the activation level of the output unit </em>
+    for (h = 0; h &lt; m_H; h++) m_z += m_rho[h] * m_y[h]; 
+  } 
+}; 
+ </pre><!--mstheme--><font face="verdana, arial, helvetica">
+<!--mstheme--></font><!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><!--mstheme--><font face="verdana, arial, helvetica">
+
+<p align="center"><a href="../index.htm"><img src="../_derived/home_cmp_sumipntg000_gbtn.gif" width="95" height="20" border="0" alt="Home" align="middle"></a> <a href="../reinforc.htm"><img src="../_derived/up_cmp_sumipntg000_gbtn.gif" width="95" height="20" border="0" alt="Up" align="middle"></a></p>
+<!--mstheme--></font></td></tr><!--msnavigation--></table></body>
+</html>

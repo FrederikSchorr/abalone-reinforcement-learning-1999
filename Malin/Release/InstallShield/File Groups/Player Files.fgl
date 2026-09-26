@@ -1,0 +1,19 @@
+[TopDir]
+file0=E:\Eigene Dateien\Malin\Release\Random.ap
+file1=E:\Eigene Dateien\Malin\Release\Boub4.ap
+file2=E:\Eigene Dateien\Malin\Release\Caesar4.ap
+file3=E:\Eigene Dateien\Malin\Release\Charles4.ap
+file4=E:\Eigene Dateien\Malin\Release\David4.ap
+file5=E:\Eigene Dateien\Malin\Release\Emil5p.ap
+file6=E:\Eigene Dateien\Malin\Release\Gunilla1.ap
+file7=E:\Eigene Dateien\Malin\Release\Gunilla2.ap
+file8=E:\Eigene Dateien\Malin\Release\Gunilla3.ap
+file9=E:\Eigene Dateien\Malin\Release\Gunilla4.ap
+file10=E:\Eigene Dateien\Malin\Release\Gunilla5.ap
+file11=E:\Eigene Dateien\Malin\Release\Human.ap
+file12=E:\Eigene Dateien\Malin\Release\Aba4.ap
+
+[General]
+Type=FILELIST
+Version=1.00.000
+

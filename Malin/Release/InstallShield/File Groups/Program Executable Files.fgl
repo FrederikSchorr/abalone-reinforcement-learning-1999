@@ -1,0 +1,12 @@
+[TopDir]
+file0=E:\Eigene Dateien\Malin\Release\Malin.exe
+file1=E:\Eigene Dateien\Malin\Release\Training.as
+file2=E:\Eigene Dateien\Malin\Release\Board.ar
+file3=E:\Eigene Dateien\Malin\Release\Boub.ar
+file4=E:\Eigene Dateien\Malin\Release\Aba212.ar
+file5=E:\Eigene Dateien\Malin\Release\Malin.log
+
+[General]
+Type=FILELIST
+Version=1.00.000
+

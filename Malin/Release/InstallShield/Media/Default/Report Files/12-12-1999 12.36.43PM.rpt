@@ -1,0 +1,578 @@
+////////////////////////////////////////////////////////////////////////////////
+///////////////////InstallShield Media Library Report Summary///////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Media Name      : Default
+Report Filename : E:\Eigene Dateien\Malin\Release\InstallShield\Media\Default\Report Files\12-12-1999 12.36.43PM.rpt
+Date            : 12/12/1999
+Time            : 12:36PM
+
+Number of Components:                5 
+Number of File Groups:               5 
+Number of Files:                   337 
+Total Size of Files:         2,763,591 (bytes)
+
+==========
+COMPONENTS
+==========
+
+
+     Program Files
+     Game Files
+     Shared DLLs
+     Player Files
+     User Guide
+
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Report Details/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+================================================================================
+                           COMPONENT: "Program Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                5 (files for this component only)
+    Source Bytes:         236,030 (files for this component only)
+
+
+                **** File Group: "Program Executable Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Malin.exe                   05/18/1999  10:56:40      229,376  3.0.6.0      
+    Training.as                 12/07/1998  01:26:14          711               
+    Board.ar                    12/02/1998  16:41:52        1,979               
+    Boub.ar                     12/02/1998  16:41:52        1,982               
+    Aba212.ar                   12/02/1998  16:41:52        1,982               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=5                                               236,030               
+
+
+================================================================================
+                            COMPONENT: "Game Files"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:         236,439 (files for this component only)
+
+
+                       **** File Group: "Game Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Two.ag                      12/02/1998  16:41:52           98               
+    HumanHuman.ag               12/02/1998  16:41:52           95               
+    Three.ag                    12/02/1998  16:41:52          104               
+    Four.ag                     12/02/1998  16:41:52          112               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                                   409               
+
+
+================================================================================
+                            COMPONENT: "Shared DLLs"
+================================================================================
+
+SUMMARY:
+    Total Files:                4 (files for this component only)
+    Source Bytes:       1,965,167 (files for this component only)
+
+
+                      **** File Group: "Shared DLLs" ****
+
+
+<Directory>: C:\WINDOWS\SYSTEM
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    mfc42.dll                   05/21/1999  10:40:46      995,383  6.0.8168.0   
+    Msvcrt.dll                  06/17/1998  00:00:00      254,005  6.0.8168.0   
+    Msvcirt.dll                 05/21/1999  10:40:46       77,878  6.0.8168.0   
+    Msvcp60.dll                 06/17/1998  00:00:00      401,462  6.0.8168.0   
+    --------------------------  ----------  --------  -----------  -------------
+    Count=4                                             1,728,728               
+
+
+================================================================================
+                           COMPONENT: "Player Files"
+================================================================================
+
+SUMMARY:
+    Total Files:               13 (files for this component only)
+    Source Bytes:       2,000,137 (files for this component only)
+
+
+                      **** File Group: "Player Files" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\Release
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    Random.ap                   12/02/1998  16:41:54           26               
+    Boub4.ap                    12/02/1998  16:41:54          185               
+    Caesar4.ap                  12/02/1998  16:41:54           76               
+    Charles4.ap                 12/02/1998  16:41:54           63               
+    David4.ap                   12/02/1998  16:41:54           65               
+    Emil5p.ap                   12/02/1998  16:41:54           68               
+    Gunilla1.ap                 12/03/1998  22:43:34        6,852               
+    Gunilla2.ap                 01/16/1999  01:23:38        6,856               
+    Gunilla3.ap                 01/16/1999  01:24:10        6,856               
+    Gunilla4.ap                 01/28/1999  00:52:56        6,856               
+    Gunilla5.ap                 01/28/1999  01:56:44        6,856               
+    Human.ap                    12/02/1998  16:41:54           26               
+    Aba4.ap                     12/02/1998  16:41:54          185               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=13                                               34,970               
+
+
+================================================================================
+                            COMPONENT: "User Guide"
+================================================================================
+
+SUMMARY:
+    Total Files:              311 (files for this component only)
+    Source Bytes:       2,763,591 (files for this component only)
+
+
+                       **** File Group: "User Guide" ****
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    tools.htm                   12/12/1999  12:26:44        2,423               
+    files.htm                   12/12/1999  12:26:46        4,978               
+    howto.htm                   12/12/1999  12:26:46        3,584               
+    index.htm                   12/12/1999  12:26:42        3,221               
+    play.htm                    12/12/1999  12:26:44        4,925               
+    start.htm                   12/12/1999  12:26:44        3,701               
+    first.htm                   12/12/1999  12:26:44        4,011               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=7                                                26,843               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_overlay
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:14:44          466               
+    ...av_sumipntg010_next.gif  12/12/1999  12:14:44           83               
+    ...av_sumipntg010_back.gif  12/12/1999  12:14:44           88               
+    ...av_sumipntg010_hbtn.gif  12/12/1999  12:14:44          105               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:19:14          682               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:50          242               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:50          629               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:50          265               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:50          418               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:50          463               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          265               
+    ...av_sumipntg000_next.gif  12/12/1999  12:21:10           83               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          418               
+    ...av_sumipntg000_back.gif  12/12/1999  12:21:10           88               
+    ...av_sumipntg000_hbtn.gif  12/12/1999  12:21:10          105               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          463               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          466               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          242               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          629               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          682               
+    ...av_sumipntg000_home.gif  12/12/1999  12:24:10           90               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=21                                                6,972               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_overlay\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:48          471               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:48          472               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  00:18:14          423               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  00:18:14          423               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          472               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  00:18:14          424               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:14:42          472               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:48          472               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:48          472               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  00:18:14          424               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  00:18:14          423               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:20:48          472               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  00:22:16          423               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          472               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          472               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  00:22:16          423               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          472               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  00:22:16          423               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  00:22:16          424               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  01:15:44          482               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          472               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  01:15:44          482               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:08          471               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  00:22:16          424               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  00:51:14          424               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  00:51:14          424               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  00:51:14          423               
+    ...av_sumipntg000_hbtn.gif  11/25/1999  01:15:44          471               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  00:51:14          423               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  00:51:14          423               
+    ...av_sumipntg000_vbtn.gif  11/25/1999  01:15:44          471               
+    ...av_sumipntg010_hbtn.gif  11/25/1999  01:15:44          482               
+    ...av_sumipntg010_hbtn.gif  12/12/1999  12:14:44          409               
+    ...av_sumipntg010_back.gif  12/12/1999  12:14:44          408               
+    ...av_sumipntg010_next.gif  12/12/1999  12:14:44          408               
+    ...nav_sumipntg010_bnr.gif  12/12/1999  12:19:16          414               
+    ...nav_sumipntg000_bnr.gif  12/12/1999  12:21:10          414               
+    ...av_sumipntg000_hbtn.gif  12/12/1999  12:21:10          409               
+    ...av_sumipntg000_back.gif  12/12/1999  12:21:10          408               
+    ...av_sumipntg000_next.gif  12/12/1999  12:21:10          408               
+    ...av_sumipntg000_home.gif  12/12/1999  12:24:10          408               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=41                                               18,087               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_derived
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48       11,515               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,850               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:18:12        1,685               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:23:52        1,847               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:23:52        2,413               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:23:52        1,856               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:23:52        2,428               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:18:12        1,634               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:18:12        1,832               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:18:12        2,409               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:18:12        1,801               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:18:12        2,375               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48       11,514               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:18:12        1,812               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:18:12        2,375               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:18:12        1,640               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48       11,571               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:18:12        1,664               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  00:18:12        1,840               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:18:36       11,500               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48       11,509               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:23:52        1,682               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48       11,570               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  00:23:52        1,709               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,552               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,506               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,855               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,877               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:06        1,633               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,848               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,812               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,517               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:23:06        1,822               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:06        1,635               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,625               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:06        1,667               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:06        1,667               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        1,999               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,551               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:06        1,672               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08       11,524               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  00:23:08        1,690               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  00:35:34        1,848               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        1,995               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        2,021               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        1,959               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        1,976               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  00:56:40        1,958               
+    ..._sumipntg000_vbtn_p.gif  11/25/1999  00:56:40        2,031               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  00:18:12        2,414               
+    ...mp_sumipntg010_next.gif  12/12/1999  12:14:44          694               
+    ..._sumipntg010_next_a.gif  12/12/1999  12:14:44          734               
+    ...mp_sumipntg010_back.gif  12/12/1999  12:14:44          702               
+    ..._sumipntg010_back_a.gif  12/12/1999  12:14:44          731               
+    ...mp_sumipntg010_hbtn.gif  12/12/1999  12:14:44        1,808               
+    ..._sumipntg010_hbtn_a.gif  12/12/1999  12:14:44        2,383               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:19:14       11,596               
+    ...mp_sumipntg000_hbtn.gif  12/12/1999  12:22:54        1,825               
+    ...mp_sumipntg000_back.gif  12/12/1999  12:22:54          856               
+    ...mp_sumipntg000_next.gif  12/12/1999  12:22:52          849               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:22:52       11,579               
+    ...mp_sumipntg000_home.gif  12/12/1999  12:24:58          869               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=62                                              245,311               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_derived\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48          344               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48          344               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:18:36          344               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48          344               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48          344               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg010_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:20:48          344               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg000_hbtn_p.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:21:08          344               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_vbtn.gif  11/25/1999  01:15:44          475               
+    ...mp_sumipntg000_hbtn.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg000_vbtn_p.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  11/25/1999  01:15:44          475               
+    ..._sumipntg010_hbtn_a.gif  12/12/1999  12:14:44          321               
+    ...mp_sumipntg010_hbtn.gif  12/12/1999  12:14:44          321               
+    ..._sumipntg010_back_a.gif  12/12/1999  12:14:44          321               
+    ...mp_sumipntg010_back.gif  12/12/1999  12:14:44          321               
+    ..._sumipntg010_next_a.gif  12/12/1999  12:14:44          321               
+    ...mp_sumipntg010_next.gif  12/12/1999  12:14:44          321               
+    ...cmp_sumipntg010_bnr.gif  12/12/1999  12:19:14          321               
+    ...cmp_sumipntg000_bnr.gif  12/12/1999  12:22:52          321               
+    ...mp_sumipntg000_next.gif  12/12/1999  12:22:52          321               
+    ...mp_sumipntg000_back.gif  12/12/1999  12:22:54          321               
+    ...mp_sumipntg000_hbtn.gif  12/12/1999  12:22:54          321               
+    ...mp_sumipntg000_home.gif  12/12/1999  12:24:58          321               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=62                                               26,030               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\images
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    click.JPG                   11/03/1999  22:23:50       25,152               
+    players.JPG                 12/12/1999  12:01:06       20,046               
+    notation.JPG                12/12/1999  12:01:30       42,012               
+    new.JPG                     11/03/1999  22:28:10       34,856               
+    move.JPG                    11/03/1999  22:28:36       15,295               
+    intro.JPG                   11/03/1999  22:28:52      136,124               
+    game.JPG                    11/03/1999  22:29:12       17,311               
+    MalinSnapshot.JPG           12/12/1999  12:19:14       35,866               
+    MalinUGBanner.gif           12/12/1999  12:19:14       11,596               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=9                                               338,258               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\images\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    game.JPG                    12/12/1999  12:11:24          404               
+    intro.JPG                   12/12/1999  12:11:24          405               
+    move.JPG                    12/12/1999  12:11:24          403               
+    new.JPG                     12/12/1999  12:11:24          404               
+    notation.JPG                12/12/1999  12:11:24          403               
+    players.JPG                 12/12/1999  12:11:24          403               
+    click.JPG                   11/10/1999  13:57:56          373               
+    MalinUGBanner.gif           12/12/1999  12:22:54          349               
+    MalinSnapshot.JPG           12/12/1999  12:24:06          343               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=9                                                 3,487               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_borders
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    top.htm                     12/12/1999  12:22:54          568               
+    bottom.htm                  12/12/1999  12:24:06          674               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                 1,242               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_borders\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    bottom.htm                  12/12/1999  12:24:08          742               
+    top.htm                     12/12/1999  12:22:54          743               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                 1,485               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_fpclass
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    fphover.class               12/12/1999  12:12:54       11,684               
+    fphoverx.class              12/12/1999  12:12:54        2,041               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                13,725               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_fpclass\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    fphover.class               12/12/1999  12:12:54          318               
+    fphoverx.class              12/12/1999  12:12:54          318               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=2                                                   636               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_themes
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    themes.inf                  12/12/1999  12:12:54        2,236               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=1                                                 2,236               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_themes\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    themes.inf                  12/12/1999  12:12:54          318               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=1                                                   318               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_themes\sumipntg
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    sumipntg.inf                12/12/1999  12:12:54           86               
+    color0.css                  12/12/1999  12:12:54          559               
+    color1.css                  12/12/1999  12:12:54          563               
+    graph0.css                  12/12/1999  12:12:54        1,564               
+    graph1.css                  12/12/1999  12:12:54        2,009               
+    sumbanna.gif                12/12/1999  12:12:54       11,415               
+    sumbannd.gif                12/12/1999  12:12:54       11,747               
+    sumbul1a.gif                12/12/1999  12:12:54          370               
+    sumbul1d.gif                12/12/1999  12:12:54          441               
+    sumbul2a.gif                12/12/1999  12:12:54          226               
+    sumbul2d.gif                12/12/1999  12:12:54          145               
+    sumbul3a.gif                12/12/1999  12:12:54          235               
+    sumbul3d.gif                12/12/1999  12:12:54          138               
+    sumglob.gif                 12/12/1999  12:12:54          818               
+    sumhbuda.gif                12/12/1999  12:12:54        1,752               
+    sumhbudd.gif                12/12/1999  12:12:54        1,767               
+    sumhbuha.gif                12/12/1999  12:12:54        2,331               
+    sumhbusa.gif                12/12/1999  12:12:54        1,583               
+    sumhbusd.gif                12/12/1999  12:12:54        1,920               
+    sumhombd.gif                12/12/1999  12:12:54          815               
+    sumhomda.gif                12/12/1999  12:12:54          656               
+    sumhomha.gif                12/12/1999  12:12:54          814               
+    sumhomsa.gif                12/12/1999  12:12:54          816               
+    sumhorsa.gif                12/12/1999  12:12:54          636               
+    sumhorsd.gif                12/12/1999  12:12:54          292               
+    sumnexbd.gif                12/12/1999  12:12:54        1,020               
+    sumnexda.gif                12/12/1999  12:12:54          644               
+    sumnexha.gif                12/12/1999  12:12:54          684               
+    sumnexsa.gif                12/12/1999  12:12:54          804               
+    sumprebd.gif                12/12/1999  12:12:54          805               
+    sumpreda.gif                12/12/1999  12:12:54          648               
+    sumpreha.gif                12/12/1999  12:12:54          683               
+    sumpresa.gif                12/12/1999  12:12:54          804               
+    sumtextb.jpg                12/12/1999  12:12:54        6,345               
+    sumupbd.gif                 12/12/1999  12:12:54          829               
+    sumupda.gif                 12/12/1999  12:12:54        1,001               
+    sumupha.gif                 12/12/1999  12:12:54          696               
+    sumupsa.gif                 12/12/1999  12:12:54          829               
+    sumvbuda.gif                12/12/1999  12:12:54        2,347               
+    sumvbudd.gif                12/12/1999  12:12:54        1,905               
+    sumvbuha.gif                12/12/1999  12:12:54        2,353               
+    sumvbusa.gif                12/12/1999  12:12:54        2,157               
+    sumvbusd.gif                12/12/1999  12:12:54        1,933               
+    theme.css                   12/12/1999  12:12:54          633               
+    sumipntg.utf8               12/12/1999  12:12:54           86               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=45                                               70,904               
+
+
+<Directory>: E:\Eigene Dateien\Malin\UserGuide\_themes\sumipntg\_vti_cnf
+
+    Filename                    Date        Time      Size         Version      
+    --------------------------  ----------  --------  -----------  -------------
+    sumipntg.utf8               12/12/1999  12:12:54          176               
+    theme.css                   12/12/1999  12:12:54          176               
+    sumvbusd.gif                12/12/1999  12:12:54          176               
+    sumvbusa.gif                12/12/1999  12:12:54          176               
+    sumvbuha.gif                12/12/1999  12:12:54          176               
+    sumvbudd.gif                12/12/1999  12:12:54          176               
+    sumvbuda.gif                12/12/1999  12:12:54          176               
+    sumupsa.gif                 12/12/1999  12:12:54          176               
+    sumupha.gif                 12/12/1999  12:12:54          176               
+    sumupda.gif                 12/12/1999  12:12:54          176               
+    sumupbd.gif                 12/12/1999  12:12:54          176               
+    sumtextb.jpg                12/12/1999  12:12:54          176               
+    sumpresa.gif                12/12/1999  12:12:54          176               
+    sumpreha.gif                12/12/1999  12:12:54          176               
+    sumpreda.gif                12/12/1999  12:12:54          176               
+    sumprebd.gif                12/12/1999  12:12:54          176               
+    sumnexsa.gif                12/12/1999  12:12:54          176               
+    sumnexha.gif                12/12/1999  12:12:54          176               
+    sumnexda.gif                12/12/1999  12:12:54          176               
+    sumnexbd.gif                12/12/1999  12:12:54          176               
+    sumhorsd.gif                12/12/1999  12:12:54          176               
+    sumhorsa.gif                12/12/1999  12:12:54          176               
+    sumhomsa.gif                12/12/1999  12:12:54          176               
+    sumhomha.gif                12/12/1999  12:12:54          176               
+    sumhomda.gif                12/12/1999  12:12:54          176               
+    sumhombd.gif                12/12/1999  12:12:54          176               
+    sumhbusd.gif                12/12/1999  12:12:54          176               
+    sumhbusa.gif                12/12/1999  12:12:54          176               
+    sumhbuha.gif                12/12/1999  12:12:54          176               
+    sumhbudd.gif                12/12/1999  12:12:54          176               
+    sumhbuda.gif                12/12/1999  12:12:54          176               
+    sumglob.gif                 12/12/1999  12:12:54          176               
+    sumbul3d.gif                12/12/1999  12:12:54          176               
+    sumbul3a.gif                12/12/1999  12:12:56          176               
+    sumbul2d.gif                12/12/1999  12:12:56          176               
+    sumbul2a.gif                12/12/1999  12:12:56          176               
+    sumbul1d.gif                12/12/1999  12:12:56          176               
+    sumbul1a.gif                12/12/1999  12:12:56          176               
+    sumbannd.gif                12/12/1999  12:12:56          176               
+    sumbanna.gif                12/12/1999  12:12:56          176               
+    graph1.css                  12/12/1999  12:12:56          176               
+    graph0.css                  12/12/1999  12:12:56          176               
+    color1.css                  12/12/1999  12:12:56          176               
+    color0.css                  12/12/1999  12:12:56          176               
+    sumipntg.inf                12/12/1999  12:12:56          176               
+    --------------------------  ----------  --------  -----------  -------------
+    Count=45                                                7,920               

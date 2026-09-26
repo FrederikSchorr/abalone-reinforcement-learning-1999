@@ -1,0 +1,39 @@
+# Microsoft Developer Studio Generated Dependency File, included by Windows.mak
+
+.\MainFrm.cpp : \
+	".\MainFrm.h"\
+	".\StdAfx.h"\
+	".\Windows.h"\
+	
+
+.\StdAfx.cpp : \
+	".\StdAfx.h"\
+	
+
+.\Windows.cpp : \
+	".\MainFrm.h"\
+	".\StdAfx.h"\
+	".\Windows.h"\
+	".\WindowsDoc.h"\
+	".\WindowsView.h"\
+	
+
+.\Windows.rc : \
+	".\res\Toolbar.bmp"\
+	".\res\Windows.ico"\
+	".\res\Windows.rc2"\
+	".\res\WindowsDoc.ico"\
+	
+
+.\WindowsDoc.cpp : \
+	".\StdAfx.h"\
+	".\Windows.h"\
+	".\WindowsDoc.h"\
+	
+
+.\WindowsView.cpp : \
+	".\StdAfx.h"\
+	".\Windows.h"\
+	".\WindowsDoc.h"\
+	".\WindowsView.h"\
+	

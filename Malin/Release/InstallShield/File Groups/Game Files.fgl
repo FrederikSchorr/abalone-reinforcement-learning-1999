@@ -1,0 +1,10 @@
+[TopDir]
+file0=E:\Eigene Dateien\Malin\Release\Two.ag
+file1=E:\Eigene Dateien\Malin\Release\HumanHuman.ag
+file2=E:\Eigene Dateien\Malin\Release\Three.ag
+file3=E:\Eigene Dateien\Malin\Release\Four.ag
+
+[General]
+Type=FILELIST
+Version=1.00.000
+

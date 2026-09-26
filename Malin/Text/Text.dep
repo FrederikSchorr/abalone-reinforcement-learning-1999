@@ -1,0 +1,12 @@
+# Microsoft Developer Studio Generated Dependency File, included by Text.mak
+
+..\Kernel\Position.cpp : \
+	"..\Kernel\Kernel.h"\
+	"..\Kernel\Position.h"\
+	
+
+.\Text.cpp : \
+	"..\..\c\source\utl\menudos.h"\
+	"..\Kernel\Kernel.h"\
+	"..\Kernel\Position.h"\
+	
