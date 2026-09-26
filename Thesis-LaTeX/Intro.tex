@@ -1,0 +1,219 @@
+\chapter{Introduction}
+
+The basic paradigm of \emph{reinforcement learning} is as follows (see Tesauro \cite{lig*Tesauro95}). The learning agent observes an \emph{input state} or input pattern, it produces an \emph{output signal} (most commonly thought of as an \emph{action} of \emph{control signal}), and it receives an scalar \emph{reward} or reinforcement \emph{feedback signal} from the environment indicating how good or bad its output was. The goal of learning is to generate the optimal actions leading to maximal reward. In many cases the reward is also delayed (i.e., is given at the end of a long sequence of inputs and outputs). In this case the learner has to solve what is known as the \emph{temporal credit assignment} \index{Temporal credit assignment} problem (i.e., it must figure out how to apportion credit and blame to each of the various inputs and outputs leading to the ultimate final reward signal).
+
+The reinforcement learning paradigm has held great intuitive appeal, and has attracted considerable interest for many years because of the notion of the learner being able to learn on its own, without the aid of an intelligent teacher, from its own experience at attempting to perform a task. In contrast, in the more commonly employed paradigm of supervised learning, \index{Supervised learning} a ``teacher signal'' is required that explicitly tells the learner what the correct output is for every input pattern.
+
+The first large-scale success was Tesauros \index{Tesauro} famous Backgammon-playing program TD-Gam\-mon \cite{lig*Tesauro94}. TD-Gammon \index{TD-Gammon} is a neural network that trains itself to be an evaluation function for the game of Backgammon by playing against itself and employing the reinforcement learning paradigm. TD-Gammon has greatly surpassed all previous computer programs in its ability to play Backgammon and in at least some cases, appears to surpass the positional judgement of world-class human players. The tremendous success of TD-Gammon motivated the application of reinforcement methods to the game of \Abalone. Although the prospects were less promising than for Backgammon (which is in contrast to \Abalone\ a \emph{non-deterministic} game), the developed reinforcement players turned out to play extremely well, beating its conventional counterparts by far!
+
+This work assumes \emph{no} prior knowledge of artificial intelligence; however, some basic mathematical notions, particularly of optimization theory, dynamic programing and probability theory will be helpful. Familiarity with the programing language~C will facilitate the understanding of the pseudo-code used to demonstrate various algorithms.
+
+The rest of this chapter reviews briefly some interesting techniques, concepts or theoretical results related to game-playing. Chapter \ref{cha:neurodynamic} gives a firm mathematical foundation of the reinforcement learning paradigm in combination with neural networks, summarized under the title \emph{Neuro-Dynamic Programming}. Chapter \ref{cha:userguide} presents the \emph{User Guide} of the developed \Abalone\ playing computer program baptized \Malin, while Chapter \ref{cha:conventional} concentrates on advanced \emph{Game-Searching Algorithms}. These are extended in Chapter \ref{cha:impl:reinforcement} (\emph{Neuro-Dynamic Game-Playing Algorithms}) to develop step by step a neural network which learns to play \Abalone.
+
+This paper as well as the developed \Abalone\ playing program can be found at \texttt{http://www.math.tuwien.ac.at/\-OR/\-Mehlmann/\-Diplomarbeiten/\-schorr.htm}.
+
+
+
+
+
+
+
+\section{Multilayer Perceptrons} \label{sec:neuralnetworks} \index{Perceptron} \index{Neural network}
+\emph{Neural networks} are the most popular tool developed by the artificial intelligence community. Neural networks are composed of many nonlinear computational elements (\emph{neurons}) operating in parallel and arranged in patterns reminiscent of biological neural nets. The neurons or nodes are connected via weights (\emph{synapses}) that are typically adapted during use to improve performance. \index{Neuron} \index{Synapse} Neural networks are used for many purposes; in our context we only need a network \emph{approximating a function} $f:\mathbb{R}^n\rightarrow\mathbb{R}$. This short introduction focuses on such a neural network, the \emph{multilayer perceptron}, and is based on Dawid \cite{Dawid96} and Bertsekas and Tsitsiklis \cite{Bertsekas96}.
+
+Each neuron $h$ is connected via the synapses $r(i,h)$ to numerous other neurons $i$; a neuron's output $x_h$ is computed by
+\begin{equation}
+x_h = \sigma\left(\sum_{i=1}^I r(i,h) x_{i}\right),
+\end{equation}
+where $x_{i}$, $i = 1, \ldots, I$ are the outputs of all neurons connected with neuron $h$, $\sigma(\cdot)$ is the \emph{activation} or \emph{sigmoidal function}. \index{Activation function} \index{Sigmoidal function} If the weight $r(i,h)$ is positive the synapse is called excitatory, if the weight is negative the synapse is called inhibitory. \index{Synapse!excitatory} \index{Synapse!inhibitory} The sum of input signals $\sum_{i=1}^I r(i,h) x_{i}$ is called the \emph{activation level} of the neuron $x_h$. \index{Activation level} Figure \ref{fig:sigmoid} depicts several common choices for the activation function; the threshold function, the logistic function 
+$$ \sigma(\xi) = \frac{1}{1 + e^{-\xi}},$$
+and the hyperbolic tangent function
+$$ \sigma(\xi) = \tanh(\xi) = \frac{e^\xi - e^{-\xi}}{e^\xi + e^{-\xi}}.$$
+\begin{figure}[htbp]
+\begin{center}
+\caption{Several activation functions} 
+\label{fig:sigmoid}
+\small
+\medskip
+\input{graphics/sigmoid}
+\end{center}
+\end{figure}
+
+The architecture or topology of a neural network is determined by the way the neurons are interconnected. The number of network topologies is virtually infinite, we will here only cope with \emph{feedforward networks} or \emph{multilayer perceptron} with a \emph{single hidden layer}; see Figure \ref{fig:percep}. \index{Feedforward networks}
+\begin{figure}[htbp]
+\begin{center}
+\caption{A multilayer perceptron with one hidden layer} \label{fig:percep}
+\vspace{2mm}
+\includegraphics[width=0.7\columnwidth]{graphics/percep.eps}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+A 4--3--1 perceptron. \\
+The 4 input neurons are transformed into 3 hidden neurons;\\
+these are linear combined into the output neuron.
+\end{tabular}
+\end{center}
+\end{figure}
+Under this architecture the weight vector $r$ consists of the coefficients $r(i,h)$ and $r(h)$. An input state $j$ is encoded as a vector with components $x_i(j)$, $i = 1,\ldots,I$.  These input neurons $x_i(j)$ are transformed through a linear and a sigmoidal \emph{layer}, resulting in the $H$ \emph{hidden} neurons $y_h(j,r)$
+$$y_h(j,r) = \sigma\left(\sum_{i=1}^I r(i,h) x_i(j)\right), \qquad h=1,\ldots,H.$$
+The hidden neurons $y_h(j,r)$ are linear combined using the weights $r(h)$ to produce the final output $$z(j,r) = \sum_{h=1}^H r(h) y_h(j,r) = \sum_{h=1}^H r(h) \cdot \sigma\left(\sum_{i=1}^I r(i,h) x_i(j)\right).$$ We note that it is common practice to provide the constant 1 as an additional input to the linear layer, or equivalently to fix one of the components of $x$ at the value 1. This provides a tunable constant bias to each of the inputs of the hidden units, and expands the range of mappings that the architecture can effectively approximate.
+
+There is an important result that relates to the approximation capability of the multilayer perceptron. It can be shown that this network, with a good choice of the weights $r$, can approximate arbitrarily closely any function $f:S\mapsto \mathbb{R}$ that is continuous over a closed and bounded set $S$, provided that the number of hidden units $H$ is sufficiently large (see Hornik et al \cite{Hornik89}). For this, a single hidden layer is sufficient. 
+
+Section~\ref{sec:impl:perceptron} demonstrates the implementation of a simple multilayer perceptron.
+
+
+
+
+
+
+
+\section{Game-Searching Theory} \label{sec:gamesearching}
+This section summarizes briefly analytical investigations of the performance of game-search\-ing algorithms (see Pearl \cite{Pearl84}). Detailed explanations and performance comparisons of the employed algorithms can be found in Section \ref{sec:searchalgo}.
+
+The model most frequently used for evaluating the performance of game-searching methods consists of a uniform tree of depth $n$ ($n$ even) and degree $M$, where the terminal positions are assigned random values independently drawn from a common distribution $F$. We shall refer to such a tree as a $(n,M,F)$-tree, see Figure \ref{fig:tree}. 
+\begin{figure}[htbp]
+\begin{center}
+\caption{A $(2,3,F)$-tree} 
+\label{fig:tree}
+\bigskip
+\input{graphics/tree.pic}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+A game-tree of depth $n=2$ and degree $M=3$.
+\end{tabular}
+\end{center}
+\end{figure}
+The expected number of terminal nodes examined during the search and its branching factor have become standard criteria for the complexity of the search method.
+\begin{definition}[Branching Factor] \index{Branching Factor}
+Let $A$ be a deterministic algorithm which sear\-ches the $(n,M,F)$-game and let $I_A(n,M,F)$ denote the expected number of terminal positions examined by $A$. The quantity
+\begin{equation}
+R_A(M,F) = \lim_{n\rightarrow \infty} \sqrt[n]{I_A(n,M,F)}
+\end{equation}
+is called the \emph{branching factor} corresponding to the algorithm $A$.
+\end{definition}
+
+The $\alpha$--$\beta$ search algorithm \index{$\alpha$--$\beta$ algorithm} is the most commonly used procedure in game-playing applications (see Section \ref{sec:alphabeta}). It can be shown that the number of terminal nodes examined by $\alpha$--$\beta$ must be at least $M^{\lfloor n/2 \rfloor} + M^{\lceil n/2 \rceil} -1$ but may, in the worst case reach the entire set of $M^n$ terminal nodes. For moderate values of $M$ ($M \leq 1000$) the $\alpha$--$\beta$ branching factor can be approximated by 
+\begin{equation}
+R_{\alpha\mbox{\scriptsize--}\beta}(M,F)= 0.925 \cdot M^{0.747}.
+\end{equation}
+Roughly speaking, a fraction of only $0.925 \cdot M^{0.747} / M \approx M^{-1/4}$ of the legal moves will be explored by $\alpha$--$\beta$. Alternatively, for a given search time allotment, the $\alpha$--$\beta$ pruning allows the search depth to be increased by a factor $\log M / \log R_{\alpha\mbox{\scriptsize--}\beta} \approx 4/3$ over that of an exhaustive minimax search. Note that these results ignore the impacts of possible \emph{move ordering} as introduced in Section \ref{sec:killermoves}. Effectively, the branching factor of the best search algorithm developed in this work is bounded by $R_{\mbox{\scriptsize Hash}} \leq M^{0.581}$ (see Section \ref{sec:search:experiments}).
+
+
+Although search algorithms other than $\alpha$--$\beta$ have been introduced (SSS* by Stockman \cite{Stockman79}, SCOUT by Pearl \cite{Pearl84}), $\alpha$--$\beta$ has been been proven to be asymptotically optimal of all search algorithms. This, and its modest memory requirements, make $\alpha$--$\beta$ the only used search algorithm in this (and the most other) game-playing programs. 
+
+
+
+
+
+
+
+\section{Value of a Strictly Competitive Game} \label{sec:gametheory} \index{Value!game-theoretical} \index{Strictly competitive game} \index{Game theory}
+\emph{Game theory} is a mathematical discipline analyzing \emph{rational} actions of individuals whose actions affect each other. Game theory proved to be very useful in economic applications, but it provides few insights into very complex games, such as Chess or \Abalone. However, there is an interesting result concerning the possible outcomes of a game, which will be stated below. For an introduction to game theory see Mehlmann \cite{Mehlmann97}, or Binmore \cite{Binmore92}, for combinatorial game theory \cite{Berlekamp82}.
+
+Let $G$ be a \emph{two-player, strictly competitive game of perfect information}. \index{Perfect information} This simply means that the players' aims are diametrically opposed and that each player knows everything about what has happened in the game so far. The set $U_G$ contains all possible outcomes of the game $G$, $U_G = \{u_1,u_2,\ldots,u_K\}$. Further it will be assumed that player I is not indifferent between any pair of outcomes and that the outcomes $u_k$ in the set $U_G$ are labeled so that 
+$$ u_1 \prec_1 u_2 \prec_1 \cdots \prec_1 u_K,$$ 
+where $a \prec_1 b$ means that player I prefers $b$ to $a$.
+
+\begin{definition}[Value a of Strictly Competitive Game]
+An outcome $v$ will be said to be a \emph{value} of a finite, strictly competitive game $G$ if and only if player I can force an outcome in the set $W_v = \{u: u \succeq_1 v\}$ \emph{and} player II can force an outcome in the set $L_v = \{u: u \preceq_1 v\}$. 
+\end{definition}
+
+\begin{theorem} \label{the:value}
+Any finite, strictly competitive game of perfect information without chance moves has a value. \hfill \it No proof
+\end{theorem}
+\Abalone\ is a two-player, strictly competitive game of perfect information. If the rules are altered slightly in order to avoid deadlock situations, only two possible outcomes remain, $U_A = \{u_1, u_2\}$, where $u_i$ denotes the win of player $i$, and thus $u_1 \succ_1 u_2$. This leaves two possibilities for the value $v$ of \Abalone. If $v=u_1$, player I wins every game, if $v=u_2$ player II wins every game. However, although Theorem \ref{the:value} proves that \Abalone\ has a value, it is still unknown. Note, that a ``symmetry argument'' aiming to prove that the value $v$ cannot be $u_2$, is erroneous. The situation in Chess is similar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Genetic Algorithms} \index{Genetic algorithms}
+\emph{Genetic algorithms} (GA) were developed as a tool to find solutions of optimization problems in poorly understood large spaces. They are based on genetic processes of biological organisms, particularly on the principle of natural selection that has become famous as \emph{survival of the fittest}. This short overview is based on Dawid \cite{Dawid96}, an excellent introduction can be found in Michalewicz \cite{Michalewicz96}; the implementation was facilitated by the genetic algorithms software library GAlib \cite{Galib}.
+
+A genetic algorithm is a search algorithm based on the principles of natural evolution. A \emph{population} of strings is considered, where each string encodes an admissible input of the surrounding system. This input may be a solution of an optimization problem or a game-playing strategy. Every input gets some reward from the surrounding system, the so called \emph{fitness value} of the string. Using these fitness values a new population of strings is generated by applying some genetic operators to the old population. Starting with a randomly initialized population, this iteration is carried out for a given number of periods. Besides the principle of natural selection, GAs imitate not only the spreading of genetic material in a population but also the generation of new genetic material by mutations. 
+
+Three genetic operators make up for the behaviour of a population of strings. 
+\begin{description}
+\item[Selection operator] The selection operator determines which of the strings in the current population will be allowed to inherit their genetic material to the next generation. The standard selection operator, called proportional selection, does this by carrying out $n$ random draws with replacement out of the current population $P_t$. The probability that a given member of the current population is chosen at a draw is proportional to the fitness of the string. By the use of this (or other) selection operators an intermediate population, the \emph{mating pool} is produced. The following two operators, crossover and mutation, are applied to this mating pool in order to generate the new population $P_{t+1}$.
+
+\item[Crossover] The crossover operator is the key operator to generate new individuals in the population. Inspired by the example of nature, crossover is intended to join the genetic material of strings with high fitness in order to produce new and better individuals. In the simplest case of one-point crossover, one crossover point is drawn randomly between 1 and $l-1$, where $l$ is the constant number of bits per string. Two parent strings are chosen from the mating pool, and their bits to the right of the crossover point are swapped, producing a pair of offspring.
+
+\item[Mutation] The mutation operator allows the GA to find solutions, which contain bit values that are non-existent in the initial population. The parameter governing this operator is called mutation probability $\mu$. After the application of crossover each bit in any string is inverted with probability $\mu$. Mutation probabilities are in general of order $10^{-3}$. While the selection operator reduces the diversity in the population, does the mutation operator increase it again. The higher the mutation probability, the smaller is the danger of premature convergence.
+\end{description}
+
+For the application to the game of \Abalone\, an extension of genetic algorithms, called \emph{evolutionary programming} (see \cite{Michalewicz96}) was employed. A population is a set of \Abalone\ computer players; a players string corresponds to the parameters of its position evaluator. The goal is to determine the best position evaluator, which is equivalent to the best player. The problem is the definition of a players fitness. 
+
+In function approximation tasks the fitness of a string is equivalent to its difference from the target function $f(\cdot)$. In the case of game-playing on the contrary, no ``best strategy'', which could be used as a reference, is available. Instead the fitness of a player is defined as the percentage of games it wins in a tournament against a set of ``representative opponents''. These opponents are typically all members of the current population $P_t$. The problem is that GAs rely on a very large number of iterations (generations) and that this kind of fitness evaluation is too time consuming. There are also theoretical doubts, whether a fitness definition depending exclusively on the current population will generate the desired results. Additionally the outcome of a single \Abalone\ game depends to a substantial amount on randomness, which forges the results of the ``tournament-fitness''. 
+
+Experimentation based on \cite{Galib} underpinned the above objections. Due to the time-consuming fitness evaluation, the size and the number of populations had to be kept fairly small. This rendered the genetic algorithm almost a random process, yielding no substantial ameliorations in the quality of play. This approach has therefore been abandoned in favor of self-trained neural networks, see Chapter \ref{cha:neurodynamic}.
+
+
+
+
+
+
+
+
+\section{Case-Based Reasoning} \index{Case-based reasoning}
+The following introduction to \emph{case-based reasoning} (CBR) is based on Reiser \cite{Reiser94}, who applied CBR to the game of \Abalone.  
+\begin{quote}
+Case-based reasoning consists of concluding from preceding examples, of adapting  foregoing solutions to solve new problems, or of retrieving old examples to illuminate aspects of the current situation \cite{Kolodner89}.
+\end{quote}
+Case-based reasoning is the attempt to simulate the ``human'' approach to problem solving by machines. Human behaviour is not exclusively governed by strictly defined rules (algorithms) but to a large extent by experience. Many skills are even primarily based on acquired experience -- diagnosis and treatment of diseases, cooking, complex management tasks, \ldots 
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Components of a case-based reasoning system}
+\includegraphics[width=0.8\columnwidth]{graphics/casebase.eps}
+\label{fig:casebase}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+\textsf{Case-Base Memory}, \textsf{Retrieval}, and \textsf{Adaption} are mandatory, \\
+\textsf{Evaluation}, \textsf{Explanation} and \textsf{Repair} are optional.
+\end{tabular}
+\end{center}
+\end{figure}
+Figure \ref{fig:casebase} introduces the components of a typical case-base system.
+\begin{description}
+\item[Case-Base Memory] Each case consists of a description of a problem and its solution. The memory organisation ranges from a simple array (and sequential search), to sophisticated search trees.
+
+\item[Retrieval] The retrieval algorithm searches the case-base memory for the ``most similar'' case(s) to the current one.
+
+\item[Adaption] The cases found by the retrieval algorithm have to be adapted for the current problem. Firstly the differences are detected, and then the retrieved solutions are mutated.
+
+\item[Evaluation \textnormal{(optional)}] This component examines if the derived solution is indeed a valid solution. This is not always possible.
+
+\item[Explanation \textnormal{(optional)}] Analyzes and describes eventually arising errors, thus providing the Repair component with important information.
+
+\item[Repair \textnormal{(optional)}] Repairs errors and ensures that they do not occur again.
+\end{description}
+
+Case-based reasoning has several advantages.
+\begin{itemize}
+\item It is not necessary to repeat already achieved deductions. Once a solution is found, it is stored in memory and reused at the next occasion.
+
+\item CBR is easily combined with other AI-methods, such as rule-based deduction.
+
+\item Knowledge engineering is often based on a set of examples, rather than algorithms. This knowledge can effortlessly be integrated in the case-base memory.
+
+\item It imitates humans, which perhaps facilitates its intuitive understanding.
+\end{itemize}
+
+Reiser \cite{Reiser94} proposes an \Abalone\ playing program based on case-based reasoning, completed by iterative $\alpha$--$\beta$ search. A case is a board position (problem) along with its best move (solution). A case-base is calculated offline, that is before the game starts. Whenever the move $m_j$ for a given position $j$ is to be calculated, the position $j$ is looked up in the case-base memory. If a similar position $j'$ is found, the corresponding move $m_{j'}$ is used. If no position $j'$ similar to $j$ can be found, or if $j$ is an ``instable'' position, an ordinary search algorithm is invoked. The systems response time is improved by keeping a history pointer $j_h$ in the case-base memory which speeds up the retrieving of a suitable position $j'$.
+
+Reiser claims that this algorithm outperforms ordinary search algorithms, if the admitted time budget is very small (``Blitz-tournaments''). However, it seems as if extensive $\alpha$--$\beta$ search remains still superior. This is why this approach was \emph{not} pursued any further in this work.
+

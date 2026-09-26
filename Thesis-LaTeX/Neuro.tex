@@ -1,0 +1,708 @@
+\chapter{Neuro-Dynamic Game-Playing Algorithms} \label{cha:impl:reinforcement}\index{Game-playing algorithms!neuro-dynamic}
+Chapter~\ref{cha:conventional} introduces a series of \Abalone\ playing programs, based on sophisticated search algorithms and a hand-crafted position evaluator. In this chapter we will replace the position evaluator by a neural network that trains itself to be an evaluation function by playing against itself and learning from the outcome. Initially, this methodology would appear unlikely to produce any sensible learning, but the rather surprising finding is that a substantial amount of learning actually takes place. The best ``bred'' neural network outperforms all hand-crafted players not only in quality of play but also in speed!
+
+We now present a brief summary of the implemented reinforcement learning system (see Tesauro \cite{lig*Tesauro95}). The heart of the reinforcement learner is a \emph{neural network} that is organized as a standard multilayer perceptron (MLP), see Section~\ref{sec:neuralnetworks}. The training procedure is as follows: the network observes a sequence of board positions $j_0$, $j_1$, \ldots, $j_N$, starting with the opening position $j_0$ and ending in a terminal position $j_N$ characterized by the score, i.e.~$6:3$ or $5:6$. The board positions are fed as input vectors $x(j_0)$, $x(j_1)$, $\ldots$, $x(j_N)$ to the neural network, encoded using a representation scheme $x(\cdot)$ that is described later. Each time step in the sequence corresponds to a move made by one side, i.e.~a half-move or a \emph{ply}. For each input position $j_k$ there is a neural network output $\tilde J(j_k,r)$, where $r$ is the network's \emph{weight vector}. $\tilde J(j_k,r)$ is the neural networks estimate of the value of the position $j_k$.  At each time step, the TD($\lambda$) algorithm is applied to change the network's weights. One possible formula for the weight change is as follows:
+\begin{equation} \label {eq:reinforcement:brief}
+r_{k+1} - r_k = \gamma \left(\tilde J(j_{k+1},r_k) - \tilde J(j_{k},r_k)\right) \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_m),
+\end{equation}
+where $\gamma$ is a small constant (commonly thought of as a stepsize or \emph{learning rate} parameter), and $\nabla \tilde J(j,r)$ is the gradient of network output with respect to the weights $r$. 
+
+The quantity $\lambda$ is a heuristic parameter controlling the \emph{temporal credit assignment} of how an error detected at a given time step feeds back to correct previous estimates. When $\lambda=0$, no feedback occurs beyond the current time step, while when $\lambda=1$, the error feeds back without decay arbitrarily far in time. Intermediate values of $\lambda$ provide a smooth way to interpolate between these two limiting cases.
+
+At the end of each game, a final reward signal $J^*(j_{N+1})$ is given, based on the outcome of the game. The preceding Equation~\ref{eq:reinforcement:brief} is used to change the weights, except that the difference $\left(J^*(j_{N+1}) - \tilde J(j_{N},r_{N})\right)$ is used in instead of $\left(\tilde J(j_{N+1},r_{N}) - \tilde J(j_{N},r_{N})\right)$.
+
+During training, the neural network itself is used to select moves for both sides. At each time step during the course of a game, the neural network scores every possible legal move. The move that is selected is then the move with maximum expected outcome for the side making the move. In other words, the neural network is learning from the results of playing against itself. This self-play training paradigm is used even at the start of learning, when the network's weights are random, and hence its initial strategy is a random strategy.
+
+
+
+
+
+
+\section{Theory} \label{sec:impl:theory} 
+Chapter~\ref{cha:neurodynamic} follows Bertsekas and Tsitsiklis \cite{Bertsekas96} to develop the notion of a \emph{stochastic shortest path problem} (Section~\ref{sec:stochastic}), respectively its generalization to two-player \emph{dynamic sequential games} (Section~\ref{sec:dynamic:games}). We will now show how the game of \Abalone\ can be fitted into this framework.
+
+The two principal elements of a problem of dynamic programming (DP) are, (see Section~\ref{sec:principalelements})
+\begin{enumerate}
+\item \emph{A discrete-time dynamic system whose state transition depends on a control}. We introduce a state space of the form $\underline{S} \cup \overline{S}$, where $\underline{S}$ are all \Abalone\ board positions where it is player~I's turn, $\overline{S}$ accordingly for player~II. At a state (board position) $i$ of $\underline{S}$ only the \emph{Minimizer} (player~I) is allowed to choose a control (move) $u_{ij} \in U(i)$ and the system then moves to state $j$ with probability 1. $U(i)$ are all possible moves at the board position $i$ for player~I. Note that the choice of a move $u_{ij}$ determines uniquely the next board position, we therefore drop the notion of transition probabilities $p_{ij}(u)$ used in Chapter~\ref{cha:neurodynamic}.
+
+Similarly at a state $i$ of $\overline{S}$, only the \emph{Maximizer} (player~II) is allowed to choose a control $v_{ij} \in V(i)$ and the system then moves to state $j$. The sets $\underline{S}$, $\overline{S}$, $U(i)$ and $V(i)$ are all finite, because the number of \Abalone\ board positions and the number of possible moves at any position are also finite. 
+
+\item \emph{A cost that accumulates additively over time} and depends on the states visited and the controls chosen. Effectively, the cost function used in \Abalone\ is very particular, it does \emph{not} depend on the states visited \emph{nor} on the controls chosen; instead the reward depends uniquely on the final outcome of a game. For this purpose we introduce 12 special states $0_{6:0}$, $0_{6:1}$, \ldots, $0_{6:5}$, and $0_{0:6}$, $0_{1:6}$, \ldots, $0_{5:6}$, corresponding to the 12 possible outcomes of an \Abalone\ game. Every possible game will then start with the opening position $j_0$, move to state $j_1,j_2, \ldots$ until the last marble is kicked and the systems state becomes $0_{x:y}$, where $x$ is the number of marbles kicked by player~I and $y$ accordingly for player~II. Suppose the trajectory consists of the states $j_0$, $j_1$, $\ldots$, $i_{N}$, $i_{N+1}$, then $j_{N} = 0_{x:y}$, and $j_{N+1} = 0$, the absorbing termination state corresponding to ``game over''. As we do not care how the victory is accomplished we set the cost $g(j,u_{jj'})$ to $0$ for all intermediate states and do only reward the victory (or the loss). A typical (although not the only used) cost function can then be defined as,
+\begin{equation} \label{eq:impl:cost}
+ g(j,u_{jj'}) = \left \{
+\begin{tabular}{rcl}
+$+1$ & & if $j = 0_{6:0}, 0_{6:1}, \ldots, 0_{6:5}$, \\
+$-1$ & & if $j = 0_{0:6}, 0_{1:6}, \ldots, 0_{5:6}$, \\
+0 & \qquad & otherwise. \\
+\end{tabular}
+\right . 
+\end{equation}
+\end{enumerate}
+
+Unfortunately is it very likely that a deadlock situation occurs in an \Abalone\ game; put in terms of Section~\ref{sec:generaltheory} does this mean that not all policies are \emph{proper}. Even worse, Assumption~\ref{ass:improper} (every improper policy induces infinite cost-to-go) is not fulfilled! The solution adapted is to avoid deadlock situations as discussed in Section~\ref{sec:deadlock}, but this provokes a new problem. In order to prevent the repetition of a move at position $j_k$, the set of all possible moves $U(j_k)$ is reduced by already exploited moves. Thus $U(j_k)$ does not only depend on the state $j_k$, but also on its predecessors, and must more correctly be parametrized by $U(j_0, j_1, \ldots, j_k)$~-- which is beyond the scope of our model (because the state sequence is no Markov chain anymore). However, at the latest when introducing approximating neural networks, we have to leave the save harbour of exact theory and try to steer clear by using ``only'' heuristic methods.\index{Deadlock situation}
+
+If deadlock situations are avoided, \emph{all} policies are proper and the Assumptions~\ref{ass:proper} and \ref{ass:improper} hold. This ensures that \Abalone\ will terminate, although the number of moves in a game is not known in advance. According to Chapter~\ref{cha:neurodynamic} \Abalone\ is therefore a special case of an \emph{infinite horizon} problem, called a \emph{shortest path} problem. Strictly speaking is \Abalone\ not a \emph{1-player problem} but a \emph{sequential 2-player game}, and because no stochastic elements intervene, do we deal with a \emph{dynamic deterministic sequential shortest path game}.
+
+The \emph{optimal cost-to-go $J^*(j)$} of the position $j$ is defined as its \emph{game-theoretical value}, see Section~\ref{sec:gametheory}. Due to the nature of $g(j,u_{jj'})$, $J^*(j)$ can only take three values,\index{Value!game-theoretical}
+$$ J^*(j) = \left \{
+\begin{tabular}{rcl}
+$+1$ & \qquad & if player~I wins, \\
+0 && for $j=0$ (the absorbing terminal position), \\
+$-1$ & \qquad & if player~II wins.
+\end{tabular} \right . $$
+
+In order to compute the optimal cost-to-go vector $J^*$, we start with an arbitrary initial cost-to-go vector $J$ and calculate $\lim_{k\rightarrow\infty}T^kJ$, where the mapping $T$ is defined by 
+\begin{equation} \label{eq:aba:t}
+(TJ)(j) = \left \{
+\begin{array}{ll}
+\min \limits_{u_{jj'} \in U(j)} \left(g(j,u_{jj'}) + J(j')\right), &  \qquad \forall j \in \underline S, \\
+\max \limits_{v_{jj'} \in V(j)} \left(g(j,v_{jj'}) + J(j')\right), &  \qquad \forall j \in \overline S.
+\end{array} \right .
+\end{equation}
+\emph{Dynamic programming} theory proves that the limit converges to $J^*$.
+
+Fortunately it is impossible to calculate $J^*(\cdot)$ exactly (otherwise the game would soon become boring) and we therefore need to employ approximations $\tilde J(\cdot,r)$ based on neural networks, where $r$ is a parameter vector (characterizing the neural network). The goal is to adjust the weight vector $r$ in such a way that $\tilde J(\cdot,r)$ gets close to $J^*(\cdot)$. 
+This is done by simulation, in much the same way a statistician replaces the theoretical expected outcome $E(X)$ of a stochastic variable $X$ by the mean value $1/n\sum x_i$ of a sample of random drawings $x_i$ of $X$, $i=1,\ldots,n$; see Section~\ref{sec:ndpsimulation} for a formal approach. Of course we cannot suspect $\tilde J(j,r)$ to be exactly $\pm1$, instead a value close to $+1$ can be interpreted as a high probability that player~I will win.
+
+In the following we will use neuro-dynamic algorithms in order to adjust the weight vector $r$. For example the online variant of approximate optimistic TD($\lambda$) policy iteration (Section~\ref{sec:optimistic}) uses the update rule of Equation~(\ref{eq:optimistic:online0}),
+$$r_{k+1} = r_k + \gamma_k d_k \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_m),$$
+where $d_k$ is the temporal difference defined by Eq.~(\ref{eq:optimistic:d_k}), $\gamma_k$ a stepsize, and $\lambda$ a parameter in $[0,1]$. The next sections will subsequently translate this formalism into pseudo-code algorithms.
+
+
+
+
+\section{Multilayer Perceptron} \label{sec:impl:perceptron}\index{Perceptron}\index{Position evaluator!neural network}
+A common nonlinear neural network architecture is the \emph{multilayer perceptron} or \emph{feedforward neural network} with a \emph{single hidden layer}, see Section~\ref{sec:neuralnetworks} for an introduction. Using a $I$--$H$--$1$ perceptron, $\tilde J(j,r)$ evaluates to 
+\begin{equation} \label{eq:perceptron}
+\tilde J(j,r) = \sum_{h=1}^H r(h) \sigma\left ( \sum_{i=1}^I r(i,h) x_i(j) \right ), 
+\end{equation}
+where the state $j$ is encoded as a vector with components $x_i(j)$, $i=1,\ldots,I$. The coefficients $r(i,h)$, and $r(h)$ are also called the networks \emph{weights} and ``connect'' the $i$th \emph{input} with the $h$th \emph{hidden} unit, and the $h$th \emph{hidden} with the only \emph{output} unit, respectively.
+$\sigma(\cdot)$ is a sigmoidal function rendering the transformation nonlinear. 
+
+Implementing a multilayer perceptron is straightforward, Algorithm~\ref{al:perceptron} gives an idea how this would look like in a object-oriented notation (similar to C++). The defined {\al Perceptron} object will later on serve as base object for all reinforcement learners. An object contains \emph{member variables} (distinguished by a preceding {\al m}) and \emph{member functions}; i.e., the member function {\al propagate} assumes that the input vector $x_i(j)$ is already stored in {\al m\_x}, calculates the neural networks output $\tilde J(j,r)$ and stores it in {\al m\_z}.
+
+
+\begin{algorithm}[Multilayer Perceptron] \label{al:perceptron}
+class Perceptron
+\{
+  int m_I; \rcom{Number of input units}
+  int m_H; \rcom{Number of hidden units}
+  float m_x[m_I]; \rcom{The input vector of dimension m_I}
+  float m_y[m_H]; \rcom{The hidden vector of dimension m_H}
+  float m_z; \rcom{The output unit}
+  float m_rih[m_I][m_H]; \rcom{The weight matrix from input to hidden layer}
+  float m_rho[m_H]; \rcom{The weight vector from hidden to output layer}
+  
+  void propagate ()
+  \{
+    \com{Propagate the input vector m_x through the net}
+    \com{Input: m_x, m_I, m_H, m_rih, m_rho}
+    \com{Output: m_y, m_z}
+
+    \com{Calculate the activation levels of the hidden layer}
+    for (h = 0; h < m_H; h++)  
+    \{   
+      m_y[h] = 0.0; \rcom{Sum up inputs * weights}
+      for (i = 0; i < m_I; i++) m_y[h] += m_rih[i][h] * m_x[i];
+      \com{Apply sigmoid function to hidden unit}
+      m_y[h] = sigma(m_y[h]); 
+    \}
+
+    m_z = 0.0; \rcom{Calculate the activation level of the output unit}
+    for (h = 0; h < m_H; h++) m_z += m_rho[h] * m_y[h];
+  \}
+
+  float sigma (float x)
+  \{
+    return tanh(x); \rcom{Tangent hyperbolical is used as sigmoid function}
+  \}
+\};
+\end{algorithm}
+
+
+
+
+
+
+\section{Optimistic TD($\lambda$)} \label{sec:impl:opti}\index{Optimistic TD($\lambda$)}
+The neural network $\tilde J(\cdot,r)$ introduced in Algorithm~\ref{al:perceptron} is on principle capable of approximating any bounded function $f(\cdot)$ of bounded variation (i.e.~ $f(\cdot)=\tilde J*(\cdot)$), provided that the number $H$ of units in the hidden layer is large enough (Hornik et al \cite{Hornik89}). The typical problem in neural network programming is to determine the a priori unknown weights parameter $r$ in order to approximate $f(\cdot)$. From a mathematical viewpoint this is a (possibly nonlinear) \emph{optimization task}, frequently resolved by iterative gradient methods. However, in this case we face another difficulty~-- the ``goal function'' $f(\cdot) = J^*(\cdot)$ is unknown too! This kind of problem is the subject of \emph{dynamic programming} (DP). The solution for this ``double'' problem are \emph{neuro-dynamic algorithms} as discussed extensively in Section~\ref{sec:ndpsimulation}. They can be considered as gradient methods where the ``goal function'' $f(\cdot)$ is continuously altered towards (the unknown) optimal cost-to-go $J^*(\cdot)$. At the same time these techniques can be viewed as dynamic programming algorithms, specialized to the case where the optimal cost-to-go $J^*(\cdot)$ has to be approximated by a less complex function $\tilde J(\cdot,r)$.
+
+In the following, we focus on a neuro-dynamic algorithms based on \emph{temporal differences} (TD).\index{Temporal differences} Let a game $j_0$, $j_1$, \ldots, $j_N$ start with position $j_0$, and end with $j_N$, then the networks evaluation $\tilde J(j_k,r)$ of the position $j_k$ will become more accurate with growing $k$; i.e., $\tilde J(j_0,r) = 0$, $\tilde J(j_k,r)$ for intermediate $k$'s is between 0 and $\pm1$, and finally $\tilde J(j_N,r)=\pm1$. The idea of TD is to drive $\tilde J(j_k,r)$ in the direction of $\tilde J(j_{k+1},r)$,
+$$\Delta r = \gamma \left(\tilde J(j_{k+1},r) - \tilde J(j_k,r) \right) \nabla_r \tilde J(j_k,r),$$
+where $\gamma$ is a stepsize. The temporal difference $\tilde J(j_{k+1},r) - \tilde J(j_k,r)$ gives the algorithm its name. In its most general form, the update rule does not only take into account the \emph{last} move, but \emph{all preceding} moves,
+$$\Delta r = \gamma \left(\tilde J(j_{k+1},r) - \tilde J(j_k,r) \right) \sum_{m=0}^k \lambda^{k-m} \nabla_r \tilde J(j_k,r).$$ 
+
+The quantity $\lambda$ is a heuristic parameter controlling the \emph{temporal credit assignment}\index{Temporal credit assignment} of how an error detected at a given time step feeds back to correct previous estimates. When $\lambda=0$, no feedback occurs beyond the current time step, while when $\lambda=1$, the error feeds back without decay arbitrarily far in time. Intermediate values of $\lambda$ provide a smooth way to interpolate between these two limiting cases.
+
+
+
+
+
+
+
+\subsection{Online}\index{Optimistic TD($\lambda$)!online}
+We start with the online variant of optimistic TD($\lambda$) policy iteration. \emph{Online} signifies that the weight vector $r$ is updated after \emph{every} move; Eqs.~(\ref{eq:optimistic:d_k}), (\ref{eq:optimistic:online2}), and (\ref{eq:optimistic:online3}) formalize this algorithm, which we present once more,
+\begin{eqnarray} 
+\label{eq:impl:opti:online1}
+r_{k+1} &=& r_k + \gamma d_k e_k, \\
+\label{eq:impl:opti:online2} d_k & =&  g(j_k,u_{j_kj_{k+1}}) + \tilde J(j_{k+1},r_k) - \tilde J(j_k,r_k), \\
+\label{eq:impl:opti:online3} e_{k+1} & =&  \lambda e_{k} + \nabla \tilde J(j_{k+1},r_{k+1}).
+\end{eqnarray}
+The index $k=0,1,\ldots$ denotes the $k$th iteration, $\gamma$ is a stepsize, and $\lambda$ the decay parameter. $r_k$ is the parameter vector characterizing the neural network, $d_k$ holds the temporal difference, comparing the current estimate of the cost-to-go $\tilde J(j_k,r_k)$ against the ``next'' estimate $g(j_k,u_{j_kj_{k+1}}) + \tilde J(j_{k+1},r_k)$. When the terminal state $j_{N+1}$ is reached, $\tilde J(j_{N+1},r_{N})$ is replaced by 0; this ensures that the terminal state is cost-free (as defined in Section~\ref{sec:stochastic}). $e_k$ is the eligibility vector (with the same dimension as $r_k$) holding the ``direction'' into which $r_k$ is to be corrected; $e_0$ is initialized by $\nabla \tilde J(j_{0},r_{0})$. We add this algorithm to the {\al Perceptron}, which results in the following object.
+
+\begin{algorithm}[Optimistic TD($\lambda$)~-- Online Variant] \label{al:optimistic}
+class Optimistic_TDlambda extends Perceptron
+\{
+  float m_eih[m_I][m_H]; \rcom{The eligibility matrix from input to hidden layer}
+  float m_eho[m_I]; \rcom{The eligibility vector from hidden to output layer}
+  float m_lambda; \rcom{The decay parameter (between 0 and 1)}
+  float m_step; \rcom{The stepsize (i.e. 1/m_I)} 
+  float m_zOld; \rcom{\(J(x\sb{k},r\sb{k})\) from the last iteration}
+  
+  onlineIterate (float x[m_I], float g)
+  \{
+    \com{Carry out one iteration according to Eqs.(\ref{eq:impl:opti:online1})-(\ref{eq:impl:opti:online3})}
+    \com{Input:} 
+    \com{\hspace{1em}x ... The next state \(x\sb{k+1}\)}
+    \com{\hspace{1em}g ... The cost associated with the transition from \(x\sb{k}\) to \(x\sb{k+1}\)}
+
+    m_x = x; \rcom{Compute \(J(x\sb{k+1},r\sb{k})\) = m_z}
+    propagate ();
+    
+    \com{Temporal difference \(d\sb{k} = g(x\sb{k},x\sb{k+1}) + J(x\sb{k+1},r\sb{k}) - J(x\sb{k},r\sb{k})\)}
+    float d = g + m_z - m_zOld; 
+
+    \com{\(r\sb{k+1} = r\sb{k} + \mbox{stepsize} * d\sb{k} * e\sb{k}\)}
+    iterateWeight (m_rih, m_rho, d);    
+
+    propagate (); \rcom{Store \(J(x\sb{k+1},r\sb{k+1})\) in m_zOld}
+    m_zOld = m_z;
+
+    iterateElig (); \rcom{\(e\sb{k+1} = \lambda * e\sb{k} + \nabla{}J(x\sb{k+1},r\sb{k+1})\)}
+  \}
+
+  onlineStart (float x[m_I])
+  \{
+    \com{Prepare the iteration}
+    \com{Input: x ... The start state \(x\sb{0}\)}
+
+    m_x = x; \rcom{Evaluate input \(x\sb{0}\) and store}
+    propagate (); \rcom{the result \(J(x\sb{0},r\sb{0})\) in m_zOld}
+    m_zOld = m_z;
+  
+    m_eih.fill(0.0); \rcom{Store gradient in eligibilities,}
+    m_eho.fill(0.0); \rcom{\(e\sb{0} = \nabla{}J(x\sb{0},r\sb{0})\)}
+    iterateElig ();
+  \}
+  
+  onlineEnd (float g)
+  \{
+    \com{The last iteration step, ending in the absorbing termination state \(x\sb{N+1} = 0\)}
+    \com{Input: g ... The cost associated with the transition from \(x\sb{N}\) to \(x\sb{N+1}\)}
+
+    \com{Temporal difference \(d\sb{N} = g(x\sb{N},x\sb{N+1}) + 0 - J(x\sb{N},r\sb{N})\)}
+    float d = g + 0 - m_zOld;
+
+    \com{\(r\sb{N+1} = r\sb{N} + \mbox{stepsize} * d\sb{N} * e\sb{N}\)}
+    iterateWeight (m_rih, m_rho, d);
+  \}
+\}
+\end{algorithm}
+The member functions {\al onlineStart}, {\al onlineIterate} and {\al onlineEnd} correspond to the Eqs.~(\ref{eq:impl:opti:online1})-(\ref{eq:impl:opti:online3}), {\al iterateWeight}, and {\al iterateElig} are to be defined later (Algorithm \ref{al:optimistic:basics}). Beforehand we discuss the computation of $\nabla_r \tilde J(j,r)$.
+%Suppose the vector $r$ has the components $(r_{11},r_{12}, \ldots,r_{1H},\ldots, r_{I1},r_{I2}, %\ldots r_{IH},r_1,r_2, \ldots,r_H)$.
+Suppose the parameter vector $r$ has the components 
+$$\begin{array}{lllrllll}
+r(1,1)&r(1,2)& \ldots&r(1,H)\\ 
+\vdots&&&\vdots\\
+r(I,1)&r(I,2)&\ldots&r(I,H)\\
+r(1)&r(2)&\ldots&r(H)
+\end{array}$$
+then $\nabla_r \tilde J(j,r)$ will be a vector with components of the form 
+$$ \frac{\partial \tilde J(j,r)}{\partial r(i,h)}, \quad \mbox{or} \quad \frac{\partial \tilde J(j,r)}{\partial r(h)},$$
+where $i = 1,\ldots,I$ and $h = 1,\ldots,H$. We rewrite the neural network output from Eq.~(\ref{eq:perceptron}) as
+$$\tilde J(j,r) = \sum_{h=1}^H r(h) y_h(j,r),$$ 
+where $y_h(j,r)$ is the activation level of the hidden unit $h$ given state $j$ and the net\-work~$r$,
+$$y_h(j,r)= \sigma\left ( \sum_{i=1}^I r(i,h) x_i(j) \right ).$$ 
+We calculate 
+\begin{eqnarray}
+\frac{\partial \tilde J}{\partial r(h)} & = & y_h, \label{eq:perceptron:nabla1}\\
+\frac{\partial \tilde J}{\partial r(i,h)} & = &  r(h) \cdot \sigma' \left ( \sum_{i=1}^I r(i,h) x_i \right )\cdot  x_i \nonumber \\
+& = & r(h) \cdot \sigma'\left( \sigma^{-1}\left(y_h\right)\right) \cdot x_i,
+\end{eqnarray}
+where $\sigma'(\xi) = \frac{d\sigma(\xi)}{d\xi}$ and $\sigma^{-1}\left(\sigma(\xi)\right)=\xi$. Note that we have suppressed the state $j$ and the weight vector $r$. If we substitute $\sigma(\cdot)$ by $\tanh(\cdot)$ and make use of the (surprisingly simple) identity 
+$$\tanh'\left(\tanh^{-1}(\eta )\right) = 1-\eta^2,$$
+we obtain
+\begin{equation} \label{eq:perceptron:nabla2}
+\frac{\partial \tilde J}{\partial r(i,h)} = r(h) \cdot \left(1 -y_h^2\right)\cdot x_i. \footnotemark
+\end{equation}
+\footnotetext{If we use the logistic function $\sigma(\xi) = 1/(1+e^{-\xi})$ we obtain $\partial \tilde J / \partial r(i,h) = r(h) \cdot y_h(1-y_h) \cdot x_i$ }
+
+One of the reasons of the huge popularity of the perceptron is the efficient computation of $\nabla_r \tilde J(j,r)$ by Eqs.~(\ref{eq:perceptron:nabla1}) and (\ref{eq:perceptron:nabla2}). We are now ready to deliver the two missing functions of the object {\al Optimistic\_TDlambda}.
+
+\begin{algorithm}[Optimistic TD($\lambda$)~-- continued] \label{al:optimistic:basics}
+class Optimistic_TDlambda extends Perceptron (continued)
+\{
+  iterateWeight (var float rih[m_I][m_H], var float rho[m_H], float d)
+  \{
+    \com{Updates the weights according to Eq.(\ref{eq:impl:opti:online1})}
+    \com{\(r\sb{k+1} = r\sb{k} + stepsize * d\sb{k} * e\sb{k}\)}
+    \com{Input:}
+    \com{\hspace{1em}rih ... {The i-h weight matrix \(r\sb{k}\), passed by reference (var)}}
+    \com{\hspace{1em}rho ... {The h-o weight vector \(r\sb{k}\), passed by reference}}
+    \com{\hspace{1em}d ... {The temporal difference \(d\sb{k}\)}}
+    \com{Output: rih, rho}
+
+    \com{Hidden layer}
+    for (h = 0; h < m_H; h++) 
+      rho[h] += m_step * d * m_eho[h];
+
+    \com{Input layer}
+    for (h = 0; h < m_H; h++) 
+      for (i = 0; i < m_I; i++)
+        rih[i][h] += m_step * d * m_eih[i][h];
+  \}
+
+  iterateElig ()
+  \{
+    \com{Updates the eligibilities (see Eq.(\ref{eq:impl:opti:online3}))}
+    \com{\(e\sb{k+1} = \lambda * e\sb{k} + \nabla{}J(x,r))\)}
+
+    \com{Hidden layer}
+    for (h = 0; h < m_H; h++)
+      m_eho[h] = m_lambda * m_eho[h] + m_y[h];
+
+    \com{Input layer}
+    for (h = 0; h < m_H; h++)     
+    \{
+      float tempH = m_rho[h] * dSigma_invSigma(m_y[h]);
+      for (i = 0; i < m_I; i++)
+      \{
+        m_eih[i][h] = m_lambda * m_eih[i][h] + tempH * m_x[i];
+      \}
+    \}
+  \}
+
+  float dSigma_invSigma (float y)
+  \{
+    return 1.0 - y * y; \rcom{Tangens hyperbolical is used as sigmoid function}
+  \}
+\}
+\end{algorithm}
+
+
+
+
+
+\subsection{Offline}\index{Optimistic TD($\lambda$)!offline}
+We now present the \emph{offline} variant of approximate optimistic TD($\lambda$) policy iteration. While the online algorithm updates the parameter vector $r$ after each state transition $(j_k,j_{k+1})$, does the offline variant save computation time by updating $r$ only when the game is over, that is when trajectory $j_0$, $j_1, \ldots$, $j_{N}$, $j_{N+1}$ is completed. According to Section~\ref{sec:impl:theory} is $j_{N} = 0_{x:y}$, and $j_{N+1}$ the absorbing termination state 0. 
+
+Let $r_t$ be the value of the weight vector at the beginning of the $t$th game. Then, at the end of the trajectory $t$, we update the parameter vector $r$ by Eq.~(\ref{eq:optimistic:offline}),
+\begin{equation} \label{eq:impl:opti:off:r}
+r_{t+1} = r_t + \gamma \sum \limits_{k=0}^{N_t} d_k e_k,
+\end{equation}
+where the temporal differences $d_k$ and the eligibility vector $e_k$ are defined by
+\begin{eqnarray} 
+\label{eq:impl:opti:off:d} d_k & =&  g(j_k,u_{j_kj_{k+1}}) + \tilde J(j_{k+1},r_t) - \tilde J(j_k,r_t), \\
+\label{eq:impl:opti:off:e} e_{k+1} & =&  \lambda e_{k} + \nabla \tilde J(j_{k+1},r_t).
+\end{eqnarray}
+
+Note that while the online variant (Eqs.~(\ref{eq:impl:opti:online1})-(\ref{eq:impl:opti:online3})) requires the computation of $\tilde J(j_k,r_k)$ \emph{and} $\tilde J(j_k,r_{k-1})$, does the offline variant only make use of $\tilde J(j_k,r_t)$, on that account reducing the number of forward propagations by 50\%. 
+We will now extend the {\al Optimistic\_TDlambda} object by the necessary functions.
+
+\begin{algorithm}[Optimistic TD($\lambda$)~-- Offline Variant] \label{al:opti:offline}
+class Optimistic_TDlambda extends Perceptron (continued)
+\{
+  float m_rihOff[m_I][m_H]; \rcom{The offline weight \(r'\) i-h matrix}
+  float m_rhoOff[m_I]; \rcom{The offline weight \(r'\) h-o vector}
+
+  offlineIterate (float x[m_I], float g)
+  \{
+    \com{Carry out one iteration according to Eqs.(\ref{eq:impl:opti:off:r})-(\ref{eq:impl:opti:off:e})}
+    \com{Input: }
+    \com{\hspace{1em}x ... The next state \(x\sb{k+1}\)}
+    \com{\hspace{1em}g ... The cost associated with the transition from \(x\sb{k}\) to \(x\sb{k+1}\)}
+
+    m_x = x; \rcom{Compute \(J(x\sb{k+1},r\sb{t})\) = m_z}
+    propagate ();
+
+    \com{Temporal difference \(d\sb{k} = g(x\sb{k},x\sb{k+1}) + J(x\sb{k+1},r\sb{t}) - J(x\sb{k},r\sb{t})\)}
+    float d = g + m_z - m_zOld;
+
+    \com{Iterate offline weights \(r'\sb{k+1} = r'\sb{k} + \mbox{stepsize} * d\sb{k} * e\sb{k}\)}
+    iterateWeight (m_rihOff, m_rhoOff, d);
+
+    m_zOld = m_z; \rcom{Store \(J(x\sb{k+1},r\sb{t})\) in m_zOld}
+
+    iterateElig (); \rcom{\(e\sb{k+1} = \lambda * e\sb{k} + \nabla{}J(x\sb{k+1},r\sb{t})\)}
+  \}
+
+  offlineStart (float x[m_I])
+  \{
+    onlineStart (x);
+
+    m_rihOff = m_rih; \rcom{Initialize offline weights, \(r'\sb{0} = r\sb{t}\)}
+    m_rhoOff = m_roh;
+  \}
+
+  onlineEnd (float g)
+  \{
+    \com{The last iteration step, ending in the absorbing termination state \(x\sb{N} = 0\)}
+    \com{Input: g ... The cost associated with the transition from \(x\sb{N} to x\sb{N+1}\)}
+
+    \com{Temporal difference \(d\sb{N-1} = g(x\sb{N-1},x\sb{N}) + 0 - J(x\sb{N-1},r\sb{t})\)}
+    float d = g + 0 - m_zOld;
+
+    \com{\(r'\sb{N} = r'\sb{N-1} + \mbox{stepsize} * d\sb{N-1} * e\sb{N-1}\)}
+    iterateWeight (m_rihOff, m_rhoOff, d);  
+
+    m_rih = m_rihOff; \rcom{Update weights, \(r\sb{t+1} = r'\sb{N}\)}
+    m_rho = m_rohOff;
+  \}
+\}
+\end{algorithm}
+
+
+
+
+
+
+
+\section{Reinforcement Player}
+Before we use the TD($\lambda$) algorithms to build an \Abalone\ learning system, we combine a game-searching algorithm from Section~\ref{sec:searchalgo} with our neural network position evaluator in order to form a complete game-playing object.
+
+\begin{algorithm}[Reinforcement Player] \label{al:reinplayer}
+class ReinforcementPlayer extends Optimistic_TDlambda
+\{
+  \com{Translate a board position \(j\) into an input vector \(x(j)\). To be defined later on.}
+  float[m_I] positionToInput (Position position);
+
+  float positionEvaluator (Position position)
+  \{
+    \com{Calculate the value of position \(j\) with respect to the actual player}
+
+    \com{Initialize the input vector with \(x(j)\), m_z = \(J(x(j),r)\)}
+    m_x = positionToInput (position); 
+    propagate (); 
+
+    \com{Inverse result if it is player II's turn}
+    if (position.player () == 2) return -m_z;
+    else return m_z;
+  \}
+
+  Move bestMove (Position position, int depth);
+  \{
+    \com{Perform a n-ply search and return the best move}
+    \com{evaluate(...) performs a 'm_depthMax'-ply search and}
+    \com{returns the best move in 'm_moveBest' (see Algorithm \ref{al:hashtable})}
+    m_depthMax = depth;
+    evaluate (Position, 0, -infinity, +infinity);
+    return m_moveBest;
+  \}
+\}
+\end{algorithm}
+The function {\al positionToInput} translates the state (position) $j$ into the input vector $x(j)$, its definition is the subject of Section~\ref{sec:impl:features}. The {\al positionEvaluator} simply propagates the input $x(j)$ through the neural network $r$ and returns the activation level of the output unit, $\tilde J(j,r)$. Note that the neural network always evaluates a position with respect to player~I, while {\al positionEvaluator} returns the value with respect to the actual player. Finally, the function {\al bestMove} is wrapped around the search algorithm {\al evaluate} (i.e.~Algorithm~\ref{al:hashtable}) in order to compute the best possible move. {\al evaluate} makes internally use of the {\al positionEvaluator} $\tilde J(\cdot, r_t)$. In terms of Chapter~\ref{cha:neurodynamic} a call to {\al bestMove (position, 1)} resulting in the move $u$, corresponds to 
+$$u = \arg \min_{u_{jj'} \in U(j)} \left ( g(j,u_{jj'}) + \tilde J(j', r_t) \right ),$$
+if it is player~I's turn, and accordingly for $v_{jj'} \in V(j)$ if it is player~II's turn.
+
+Up until now, we make use of the neural network only to compute the best move $u$ from a given position $j$. The next algorithm shows how optimistic TD($\lambda$) is used to \emph{train the neural network by playing against itself}. 
+
+\begin{algorithm}[Reinforcement Player~-- Training] \label{al:offline:self}\index{Training}
+class ReinforcementPlayer extends Optimistic_TDlambda (continued)
+\{
+  void offlineSelfTraining (Position position)
+  \{
+    \com{Play a game starting with the initial position \(j\sb{0}\) and use its}
+    \com{trajectory \(j\sb{0}, j\sb{1}, \ldots, j\sb{N}\) to train the neural network \(r\)}
+    
+    \com{Translate the position \(j\sb{0}\) to the input vector \(x\sb{0}\),}
+    \com{initialize \(r'\sb{0} = r\), compute \(J(x\sb{0},r)\) and \(e\sb{0}\)}
+    offlineStart(positionToInput (position));
+
+    \com{Play a complete game}
+    while (position.gameOver () == false)
+    \{
+      \com{Compute the best (or at least a good) move}
+      Move selectedMove = goodMove (position);       
+      \com{Play the move}
+      position.move (selectedMove); 
+      
+      \com{Carry out an iteration with cost 0,}
+      \com{\(r'\sb{k+1} = r'\sb{k} + \mbox{stepsize} * (J(x\sb{k+1},r) - J(x\sb{k},r)) * e\sb{k}\),  \(e\sb{k+1}\) = ...}
+      offlineIterate (positionToInput (position), 0);
+    \}
+
+    \com{Attribute a reward, depending on who has won}
+    if (position.winner () == 1) reward = +1.0;
+    else reward = -1.0;
+ 
+    \com{The last iteration step,}
+    \com{\(r'\sb{N+1} = r'\sb{N} + \mbox{stepsize} * (g - J(x\sb{N},r)) * e\sb{N}\),}
+    \com{and finally update the network, \(r = r'\sb{N+1}\)}
+    offlineEnd (reward);
+  \}    
+\}
+\end{algorithm}
+
+Note that Algorithm~\ref{al:offline:self} contains the statement {\al selectedMove~= goodMove (position)}, where {\al goodMove} is an undefined function. For the moment we replace it by {\al bestMove (position, 1)}; Section~\ref{sec:impl:exploration} will fill this gap. The training algorithm uses the cost function $g(j_k,u_{j_k,j_{k+1}})$ defined by Eq.~(\ref{eq:impl:cost}), which assigns the cost 0 to all intermediate state transitions $(j_k,j_{k+1})$, and $\pm1$ when the game is over. 
+
+In a typical application, the neural network parameter vector will randomly be initialized to $r_0$. Next, {\al offlineSelfTraining} will be called for i.e.~10000 times with random start positions $j_0$. When waking up the next morning, the resulting network $r$ will possibly beat hand-crafted position evaluators defined in Section~\ref{sec:featureextracting}! 
+
+The neural network is trained by exclusively playing against itself, no trainer nor supervisor are involved. The knowledge incorporated in the final weight vector $r$, is therefore acquired by the ``machine'' itself.  In supervised learning approaches, the network is trained to imitate the best available human player strategies, resulting in a playing style very similar to human players. This is not at all the case in Algorithm~\ref{al:offline:self}, as a matter of principle the resulting network $r$ develops its strategies  independently of human playing style (for the moment we neglect the influence of the feature extraction upon which {\al positionToInput} is based). This can have astonishing consequences; Tesauro \cite{lig*Tesauro95} reports that after the appearance of his Backgammon playing program TD-Gammon (based on optimistic TD($\lambda$)), human Backgammon world championship players adapted their strategies. The reason was, that in certain situations TD-Gammon \emph{played different than all human players}~-- and turned out to be right!\index{TD-Gammon}\index{Tesauro}
+
+
+
+
+
+
+
+\section{Features} \label{sec:impl:features}\index{Features}
+We already mentioned that even the self-training Algorithm~\ref{al:offline:self} contains a certain amount of human knowledge, encoded in the translation of a board position $j$ into an input vector\index{Input vector} $x(j)$. Effectively, the performance of a reinforcement player depends essentially upon the design of the input vector. 
+
+The most basic input vector $x(j)$ has the components 
+\begin{equation} \label{eq:input:basic}
+x_i(j) = o(i),\qquad \mbox{for } i=0,\ldots,60, \footnotemark
+\end{equation}
+\footnotetext{The \Abalone\ board has 61 spaces}
+where $o(\cdot)$ is an occupation function, 
+\begin{equation}
+o(i) = \left \{
+\begin{tabular}{rll}
+$+1$ & \qquad & if a white marble (player~I) is occupying the space $i$, \\
+0 & & if the space $i$ is free,\\
+$-1$ && if $i$ is occupied by a black marble.\\
+\end{tabular} 
+\right .
+\end{equation}
+Theoretically the input vector~(\ref{eq:input:basic}) provides all information necessary to make Algorithm~\ref{al:offline:self} work, in practice its success will be limited. The main obstacle is the absence of the score of the position in the input vector. By adding enough hidden units, the neural network can ``count'' the white and the black marbles and deduce the score, but this is a highly nonlinear task which is in general difficult to be learned by a network. It is by far more effective to add two new input components which reflect the score,
+\begin{equation} \label{eq:feature:score}
+\begin{array}{rcl}
+x_{61}(j) & = & k_1 \\
+x_{62}(j) & = & k_2,
+\end{array}
+\end{equation}
+where $k_i$, $i=1,2$ is the number of marbles kicked by player $i$. This will facilitate the learning task substantially. However, by \emph{extracting this feature} from the position $j$ and integrating it as additional information into the input vector $x(j)$, we provide the learning algorithm with human knowledge. This implies that even the self-training Algorithm~\ref{al:offline:self} is not to 100\%
+independent of human knowledge.
+
+Another nonlinear and difficult task is the evaluation of neighbour relationships. In general $n$ adjacent marbles of the same color will form a stronger position than $n$ separated marbles. In order to speed up learning time, this information can be integrated into the input vector as well,
+\begin{equation} \label{eq:feature:neighbour}
+x_{63+i}(j) = o(i) \sum_{s \in N(i)} \delta_{o(i)o(s)}, \qquad i = 0,1, \ldots 60,
+\end{equation}
+where $N(i)$ contains the spaces next to space $i$, and $\delta_{xy}$ equals 1 for $x=y$ and 0 otherwise. In the same fashion numerous features can be integrated into the input vector, for example the number of neighbouring enemy marbles at space $i$, the total number of lonely marbles, a boolean indicating whether the game is already over, \ldots 
+
+Let us examine the score-feature~(\ref{eq:feature:score}) once more; obviously the two components $x_{61}(j)$ and $x_{62}(j)$ should have the same influence on the overall result $\tilde J(j,r)$. Put in other words, we want $\tilde J(j,r)$ to be symmetric with respect to color reversal,\index{Color reversal invariance}
+$$\tilde J(j,r) = -\tilde J(j',r),$$
+where $j'$ is won from position $j$ by changing the marble colors from white to black and reversely. This can for example be ensured by $r_{61h} = -r_{62h}$, $h=1,\ldots,H$;  however, our very general multi-purpose neural network and the employed learning algorithms can \emph{not} ensure this symmetry. One solution is to adapt the neural network in order to ensure that $r_{61h} = -r_{62h}$ (see Schraudolph, Dayan and Sejnowski \cite{lig*Schraudolph94} for the game of Go). The other solution is to replace the used features by strictly symmetric features. $x_i$, $i=0,\ldots,60$ are by definition symmetric, $x_{61}$
+and $x_{62}$ can be substituted by
+\begin{eqnarray} 
+x_{61} & = & \mbox{sgn}(k_1-k_2) \cdot \max(k_1,k_2),\label{eq:feature:maxkicked} \\
+x_{62} & = & k_1-k_2, \label{eq:feature:diff}
+\end{eqnarray}
+where $\mbox{sgn}(\cdot)$ is the signum function,
+$$\mbox{sgn}(\xi) = \left \{
+\begin{tabular}{rcl}
+$+1$ & \qquad & if $\xi > 0$,\\
+0 && if $\xi=0$, \\
+$-1$ && if $\xi < 0$.
+\end{tabular} \right. $$
+Features~(\ref{eq:feature:maxkicked})-(\ref{eq:feature:diff}) are equivalent to the Features~(\ref{eq:feature:score}) except for $k_1 = k_2$, and because of $x_i(j) = -x_i(j')$, $i=0, \ldots, 62$, the desired color reversal invariance is achieved, $\tilde J(j,r) = -\tilde J(j',r)$.
+
+To help the network distinguishing the consecutive phases of a game, the 2-dimensional encoding of the score can be split up into a $(2\cdot6)$-dimensional array,
+\begin{eqnarray} \label{eq:feature:score:split1}
+x_{60+i}(j) & = &\left \{
+\begin{tabular}{rcl}
+$\mbox{sgn}(k_1-k_2)$ & \qquad & if $\max(k_1,k_2) \geq i$, \\
+0 && otherwise,
+\end{tabular} \right . \\
+\label{eq:feature:score:split2}
+x_{66+i}(j) & = &\left \{
+\begin{tabular}{rcl}
+$\mbox{sgn}(k_1-k_2)$ & \qquad & if $|k_1-k_2| \geq i$, \\
+0 && otherwise,
+\end{tabular} \right .
+\end{eqnarray}
+where $i=1,\ldots,6$. These features are equivalent to the Features~(\ref{eq:feature:maxkicked})-(\ref{eq:feature:diff}), but the network can more easily adapt its behaviour in function of the kicked marbles.
+
+
+Another symmetry a priori unknown to the neural network, is the rotation invariance of the\index{Rotation invariance} hexagonal \Abalone\ board. Figure~\ref{fig:rotation} classifies the 61 spaces on the board into 9 categories, each comprising between 1 and 12 ``symmetric'' spaces. 
+\begin{figure}[htbp]
+\begin{center}
+\caption{Rotation invariant categories}
+\includegraphics[width=0.5\columnwidth]{graphics/groups.eps}
+\label{fig:rotation}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The 61 spaces on the \Abalone\ board can be classified into 9 categories. \\
+\textsf{E5} is the only space in category 1, the six edges belong to category 9, \\
+\textsf{G4} is one of 12 spaces in category 5.
+\end{tabular}
+\end{center}
+\end{figure}
+Instead of encoding each of the 61 spaces separately into the input vector $x(j)$, the position is compressed into an array of dimension 9,
+\begin{equation} \label{eq:feature:group}
+x_{i}(j) = \sum_{s \in C(i+1)} o(s),\qquad i=0,\ldots,8,
+\end{equation}
+where $C(i)$ contains all spaces of category $i$. As a consequence, the cost-to-go $\tilde J(j,r)$ is invariant against rotations of $m \cdot 60^\circ$ and/or reflection at one of the 6 mirror axis. At the same time, the input vector dimension $I$ is reduced substantially without significant loss of information. Additional features like the neighbour Feature~(\ref{eq:feature:neighbour}) can be compressed in the same way.
+
+
+
+
+
+
+
+\section{State-Space Exploration} \label{sec:impl:exploration}\index{State-space exploration}
+In deterministic games like Chess, Go and \Abalone\ the exploration of the state space is a major issue. As explained at the beginning of Section~\ref{sec:impl:opti}, can neural network training be viewed as a nonlinear optimization task. Like any other optimization problem, the neural network parameter $r$ can therefore get stuck in a fixed state, resulting in inaccurate position evaluations and thus in a bad playing strategy. Theoretically, when employing color reversal invariant position evaluators this should not happen~-- the network playing White would be able to predict the idiosyncrasies of the network playing Black, take advantage of them thus changing the outcome, and forcing Black's predictions to change commensurately~-- but in practice it is a concern. We try to avoid local minimums by applying several techniques.
+\begin{itemize}
+\item 
+One possibility for guaranteeing adequate exploration of the state space is to frequently restart the trajectory and to ensure that the initial states employed form a rich and representative subset of the state space. Although a certain percentage of training games are still started with the standard initial position from Figure~\ref{fig:startpos} (page \pageref{fig:startpos}), the majority is initialized with random positions. These random positions do as well contain $2 \cdot 14$ marbles, but they are placed anywhere on the board.
+
+\item Only color reversal invariant position evaluators are employed. Consider a position evaluator $\tilde J(j,r)$ which is \emph{not} color reversal invariant. The training procedure (i.e.~{\al offline\-Self\-Training)} is always started with the same initial position $j_0$. Then it is likely, that after some training games player~I and II settle on a pair of (bad) strategies such that player~I always defeats player~II. Player~I has no incentive to change his strategy because he already wins all the games, player~II is stuck in his bad defense strategy. This situation can not arise when $\tilde J(j,r)$ is color reversal invariant, because then player~I and II employ exactly the same position evaluator, and player II will change strategy.
+
+\item Instead of always choosing the \emph{best} move when simulating a trajectory $j_0$, $j_1, \ldots$, $j_{N+1}$, we pick moves stochastically by \emph{Gibbs sampling} (Geman and Geman \cite{Geman84})\index{Gibbs sampling} in which the probability $P(m)$ of a given move $m$ is exponentially related to the predicted value of the position $j^m$ it leads to, through a ``temperature'' parameter $T$ that controls the degree of randomness,
+\begin{equation} \label{eq:gibbs}
+P(m) = \frac{1}{Z} \cdot \exp\frac{\tilde J(j^m,r)}{T},
+\end{equation}
+where $Z = \sum_m P(m)$ is a normalizing factor. When $T \rightarrow 0$ the sampling always picks the best move; when $T \gg 0$ the best move has still the highest probability to be chosen, but in general only a ``good'' move will be chosen; for $T\rightarrow\infty$ $P$ becomes a uniform distribution. This sampling, also known as \emph{simulated annealing},\index{Simulated annealing} ensures a better exploration of the state space. The function {\al goodMove} used in the following self-training algorithm is based on this idea.
+\end{itemize}
+
+\begin{algorithm}[Reinforcement Player~-- Gibbs sampling] \label{al:annealing}
+class ReinforcementPlayer extends Optimistic_TDlambda (continued)
+\{
+  float m_temperature; \rcom{The degree of randomness (temperature) T}
+
+  Move goodMove (position)
+  \{
+    \com{Compute a 'good' move with Gibbs sampling}
+
+    moveVector = ExcludeHistoricMoveGenerator (position) 
+
+    float probSum = 0;
+    for (move in moveVector) \rcom{Loop through all moves}
+    \{
+      \com{Generate the position after the move, and evaluate it}
+      nextPosition = position.move (move);       
+      float value = -positionEvaluator (nextPosition); 
+
+      \com{Compute the probability \(P\)}
+      float prob = exp (value / m_temperature);
+      probSum += prob;
+    
+      \com{Select a good move according to Gibbs probabilities}
+      \com{(without storing all values in memory)}
+      if (rand (0, 1) <= (prob / probSum)) bestMove = move;
+    \}
+    return bestMove;   
+  \}
+\}
+\end{algorithm}
+
+Actually, Gibbs sampling is not very well suited to the problem, because typically the values $\tilde J(j^m,r)$ competing against each other are very close. An amelioration can be achieved by subtracting a fixed value $c$ in the magnitude of $\tilde J(j^m,r)$,
+$$P(m) = \frac{1}{Z} \cdot \exp\frac{\tilde J(j^m,r)-c}{T}.$$
+
+
+
+
+
+\section{Experimentation} \label{sec:neuro:experim}
+The following list summarizes all parameters that will affect the learning behaviour of a reinforcement learner.
+
+\begin{description}
+\item[Self-play] Algorithm~\ref{al:offline:self} is based upon self-training, that is, the network plays against itself. However, learning from self-play is sluggish as the network must bootstrap itself out of ignorance without the benefit of exposure to skilled opponents. For that matter, there is nothing to keep us from training the network on moves that are not based on its own predictions~-- for instance, it can learn by playing against the conventional \Malin\ players, or even by just observing games between human players.
+
+\item[Offline~-- Online] Instead of using the offline variant of optimistic TD($\lambda$) as in Algorithm~\ref{al:offline:self}, an online variant will work as well. The offline variant is certainly faster, on the other hand does the online variant tend to converge faster to a good solution.
+
+\item[Feature extracting] The employed encoding of a state $j$ to the input vector $x(j)$ is an essential element of success. Important is that the position evaluation $\tilde J(j,r)$ is invariant with respect to color inversal and to board rotations. Less sophisticated feature vectors will either learn a lot slower, or even not learn anything meaningful at all.
+
+\item[Network dimensions] The number of input units $I$ is determined by the number of features encoded into the input vector. The number of hidden units $H$ is completely arbitrary, ranging from 1 to virtually infinity, limited only by computing resources. Typically $H=10$ hidden units were used.
+
+\item[Initial position] If a training session uses uniquely one initial position $j_0$ for all games, the chance of getting stuck in a suboptimal fixed state increases. Typically a mix between the standard opening position (Figure~\ref{fig:startpos}) and random positions is used.
+
+\item[Decay parameter $\lambda$] The parameter $\lambda$ governs ``how far the reinforcement signal is fed back''. Let a state trajectory be $j_0$, $j_1, \ldots$, $j_{N+1}$, then $\lambda = 0$ means that  $\tilde J(j_k,r)$ affects only $\tilde J(j_{k-1},r)$, whereas $\lambda = 1$ implies that the value of $\tilde J(j_k,r_t)$ influences $\tilde J(j_{0},r), \ldots$, $\tilde J(j_{k-1},r)$.
+
+\item[Stepsize $\gamma$] The greater the stepsize $\gamma$, the faster the network will bootstrap itself out of the initial random state, but the worse its convergence behaviour will be. When $\gamma$ and $\lambda$ are poorly chosen, the network can even diverge, that is, all its weights $r_{ih}$ and $r_h$ tend to $\infty$ . \Malin\ effectively uses two different stepsizes, one for the input layer $\gamma_i$ and one for the hidden layer $\gamma_h$. A common choice for $\gamma$ is the inverse of the number of network units, $\gamma_i = 1/I$, and $\gamma_h = 1/H$. Ideally the stepsize $\gamma$ decreases in the course of time, which is unfortunately not implemented in the \Malin\ players.
+
+\item[Number of training games] This is obviously important. However, the achieved game-playing quality does not improve monotonously with the number of training games. Reasons are the nature of the reinforcement algorithm, which more or less randomly ``finds'' good strategies, but perhaps also the missing moderation of the stepsize $\gamma$. Another possible reason is \emph{overtraining}~-- after\index{Overtraining} a ``good'' strategy was found, the training games concentrate on a particular area of the state space, ``forgetting'' about the regions already explored.
+
+\item[Rewards] As already suggested, does Eq.~(\ref{eq:impl:cost}) not define the only possible cost function. For example, we can alternatively use
+\begin{equation}
+ g(j,u_{jj'}) = \left \{
+\begin{tabular}{rcl}
+$x-y$ & & if $j = 0_{x:y}$, \\
+0 & \qquad & otherwise. \\
+\end{tabular}
+\right . 
+\end{equation}
+$\tilde J(j,r)$ will then have values in the range of $[-6,+6]$.
+
+\item[Squashing the output unit] The neural network~(\ref{eq:perceptron}) can be modified to 
+$$\tilde J(j,r) = \sigma \left(\sum_{h=1}^H r(h) \sigma\left ( \sum_{i=1}^I r(i,h) x_i(j) \right )\right), $$
+which works like the original network but squashes its output unit.
+For $\sigma(\cdot) = \tanh(\cdot)$ this bounds $\tilde J(j,r)$ to $[-1,+1]$. The Eqs.~(\ref{eq:perceptron:nabla1})-(\ref{eq:perceptron:nabla2}) for the computation of $\nabla_r \tilde J(j,r)$ have to be changed accordingly.
+
+\item[Gibbs sampling~-- Temperature]
+If Gibbs sampling is used to simulate the trajectory $j_0,j_1, \ldots, j_{N+1}$, a certain amount of randomness is voluntarily introduced in order to explore new regions of the state space. Using a low temperature $T \rightarrow 0$ ``cools'' the moves down and the best move will be picked; raising the temperature $T \gg 0$ gives the moves a lot of energy and the differences disappear in the growing chaos, the chances of the best move to be picked, diminish.
+
+\end{description}
+
+In contrast to the comparison of search algorithms in Section~\ref{sec:search:experiments}, is the assessment of position evaluation functions not straightforward. How can the quality of a position evaluator be determined? Ideally \emph{all possibly conceivable} players compete in a tournament; if all players use the same search algorithm, the winner must contain the best position evaluator. Obviously, this is not feasible. A realistic approach is to use a set of representative players as opponents for each competing player, and to rank the position evaluators depending on the outcomes of these tournaments. However, if this subset of representative players consists only of computer programs, it can not be guaranteed, that the best ranked player will also be the player performing best against a human player. Finally in a game of \Abalone\ a lot of randomness is involved, winning only one game does not necessarily prove the superiority of a player.
+
+
+
+
+\subsubsection*{Results} 
+A first series of tests (the \textsf{Freud} family) was based on the Features~(\ref{eq:input:basic}), (\ref{eq:feature:score}) and (\ref{eq:feature:neighbour}). The number $H$ of hidden units varied between 2 and 20, no Gibbs sampling~(\ref{eq:gibbs}) was used. Various training methods were employed, but they all had in common that no success could be achieved by $100\%$ 
+pure self-training. Instead the networks were trained by using conventional \Malin\ players, i.e.~1-ply Killer, 2-ply Hash, or sometimes even random players. The best of these networks achieved the same quality of play as their trainers, although they were a lot slower. 
+
+The next generation of reinforcement players (the \textsf{Gunilla} family) play substantially better. They are based on the rotation invariant position Features~(\ref{eq:feature:group}), the color inversal invariant score Features~(\ref{eq:feature:score:split1}) and (\ref{eq:feature:score:split2}), and Gibbs sampling. These players are able to acquire a remarkable level of play by pure self-training. They play distinctively better than the conventional players introduced in Section~\ref{sec:searchalgo}, even beating players benefiting from a deeper lookahead! Figure~\ref{fig:experim:neuro:won} shows the result of a tournament in which the Reinforcement players compete against conventional hand-crafted feature extracting players. 
+\begin{figure}[htbp]
+\begin{center}
+\caption{Reinforcement against conventional players}
+\label{fig:experim:neuro:won}
+\small
+\medskip
+\input{experim/reinWon}
+\end{center}
+%\begin{center}
+%\footnotesize
+%\begin{tabular}{l}
+%\end{tabular}
+%\end{center}
+\end{figure}
+
+The Reinforcement players are apparently better than the Hash players based on a conventional position evaluator. Consider for example 3-Reinforcement; it not only beats 3-Hash but also 4-Hash! However, the position evaluator used in the Hash family is conceived to be fast and efficient and is therefore by far less complex than the neural network providing the Reinforcement family with position evaluations. Consequently it is not very astonishing that~-- same search depth presumed~-- the Reinforcement players do better than their conventional opponents; at the same time they should also be slower. Figure~\ref{fig:experim:neuro:time} depicts the search time $t$ per move for both families.
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Time $t$ per move}
+\label{fig:experim:neuro:time}
+\small \medskip
+\input{experim/reinTime}
+\end{center}
+%\begin{center}
+%\footnotesize
+%\begin{tabular}{l}
+%\end{tabular}
+%\end{center}
+\end{figure}
+Surprise, surprise! -- 3-Reinforcement does not only play better than 4-Hash, but it is also faster! Motivated by this success, further tests examining the influence of single parameters were carried out. 
+
+The single most important factor of success is the feature set employed. Attempts to introduce some sort of asymmetry into the position evaluator $\tilde J(\cdot,r)$, almost always degraded the performance. The feature set used in the Reinforcement players in the above tournament, include beside the usual position and score components the number of neighbouring ``friend'' marbles, the number of neighbouring enemies and the number of ``lonely'' marbles, all of them ``squeezed'' into rotation invariant groups (like Feature~(\ref{eq:feature:group})). Its other parameters are for the sake of completeness summarized by  Table~\ref{tab:reinforcement}.
+\begin{table}[htbp]
+\begin{center}
+\caption{The parameter set of the Reinforcement players} \label{tab:reinforcement}
+\medskip
+\begin{tabular}{ccccccccccccccccccc}
+TD($\lambda$) &  Output & Initial position & I & H & $\lambda$ & $\gamma_i$ & $\gamma_h$ & $T$ & Games
+\\ \hline 
+offline & squashed & 60\% random 
+& 50 & 8 & 0.01 & 0.01 & 0.125 & 0.003 & 26000
+\end{tabular}
+\end{center}
+\begin{center}
+\footnotesize
+All parameters are explained at the beginning of this section.
+\end{center}
+\end{table}
+
+The influence of the other parameters seem less important. Using the above parameters but varying the decay parameter $\lambda$ from 0 to 1, shows only abating performance for $\lambda \geq 0.5$. For $\lambda < 0.5$ no clear trend is discernible, the differences seem to be reduced to stochastic noise. Another test series measured the impact of the number of hidden units $H$ on quality of play. Intuitively the performance must improve with increasing $H$, but the experiment shows that the results for $H = 1,2,4,8,16,32$ are basically the same. Perhaps the feature vector is that good, that almost no non-linearities appear~-- thus rendering additional hidden units useless.

@@ -1,0 +1,94 @@
+
+\thispagestyle{empty}
+\begin{center} \large
+
+\vspace*{0.5cm}
+{\Large \sc Diplomarbeit } \\
+
+\vspace{0.5cm}
+{\LARGE \bf Reinforcement Learning\\ \vspace{0.2cm}
+applied to the Game of Abalone} \\
+
+\vspace{2cm}
+ausgeführt am Institut für \\
+Ökonometrie, Operations Research und Systemtheorie \\
+der Technischen Universität Wien \\
+%carried out at the Institute of Econometrics,\\
+%Operations Research and Systems Theory \\
+%of the Vienna University of Technology \\
+
+\vspace{0.5cm}
+unter der Anleitung von\\
+{\bf Univ.-Doz.~Prof.~Dr.~A.~Mehlmann} \\
+
+\vspace{2cm}
+durch \\
+{\bf Frederik Ren\'e Schorr} \\
+
+\vspace{0.5cm}
+Bergheidengasse 29\\
+1130 Wien\\
+
+
+\vspace{4cm}
+\begin{tabular}{lcr}Wien, im Februar 1999& \hspace{8cm} & \end{tabular}\\ 
+
+\end{center}
+\pagebreak
+
+%***********************************************
+%***** Dedication
+%***********************************************
+\thispagestyle{plain}
+\begin{center}
+\vspace*{6cm}
+\em \Large To my little sister Rebekka
+\end{center}
+\pagebreak
+
+
+%***********************************************
+%***** Abstract
+%***********************************************
+\chapter*{Abstract}
+
+This master's thesis applies artificial intelligence methods to \Abalone, a two-player strictly competitive game of perfect information. It assumes no prior knowledge of artificial intelligence. Reinforcement learning (RL) is the problem faced by an agent that learns behaviour through trial-and-error interactions with a dynamic environment. This work gives a firm mathematical foundation of RL in combination with neural networks. A feedforward neural network is conceived that is able to learn on its own to play \Abalone, without the aid of an intelligent teacher. Experiments are conducted to determine its level of play and the influence of various learning parameters. The work is completed by the development and analysis of advanced game-searching algorithms. 
+
+Keywords: Reinforcement Learning, Neuro-Dynamic Programming, Neural Network, Abalone, Game, Game-searching.
+
+\pagebreak
+
+
+
+%***********************************************
+%***** Abstract 
+%***********************************************
+%\thispagestyle{empty}
+%\begin{center}
+%{\bf Abstract}
+%\end{center}
+%\chapter*{Abstract}
+%I'm a joker, i'm a smoker, i'm a midnight talker, \ldots
+%\pagebreak
+
+%**************************************
+%***** Table of contents 
+%**************************************
+\lhead{Contents}
+\tableofcontents                 % Table of contents
+\clearpage
+\lhead[\fancyplain{}{\thepage}] {\fancyplain{}{\rightmark}}
+
+
+%**************************************
+% Preface
+%**************************************
+\chapter*{Preface}
+The game of \Abalone\ has accompanied me throughout my studies. In 1991, with seventeen, I developed my first \Abalone\ program; it focused primarily on graphical gadgets but was not able to play by itself. This gap was filled by the second version, accomplished during my first years at university. Although its algorithms completely lacked any theoretical foundation and were -- to be euphemistic -- original, achieved the program beginner level. The third attempt was baptized \Malin~3 and has become the subject of this master's thesis. At this point Ms-Dos \& Turbo~C have been replaced by Windows~98 \& Visual~C++, and a number of advanced scientific game-searching algorithms were applied to \Abalone.
+
+Despite the high playing level of the new algorithms, they still lacked the ability to profit from previous experiences. My research in matters of artificial intelligence remained fruitless until the discovery of the \emph{reinforcement learning} paradigm. Tesauro's \cite{lig*Tesauro95} success in breeding a neural network beating all previous Back\-gam\-mon programs, motivated the creation of a new generation of \Abalone\ players -- which proved to outperform all its predecessors!
+
+I would like to thank Alexander Mehlmann, who not only gave me the decisive hint, but always supported and encouraged me throughout the last year.
+
+\vspace*{1.5cm}
+\hfill Vienna, February 1999 

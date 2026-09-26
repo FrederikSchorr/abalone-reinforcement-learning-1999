@@ -1,0 +1,840 @@
+\chapter{Game-Searching Algorithms} \label{cha:conventional}
+
+This chapter covers the development of standard \Abalone-playing algorithms. Each algorithm consists of three main components, the \emph{position evaluator}, the \emph{move generator}, and a \emph{game-searching algorithm}. While the position evaluator and the move generator remain unchanged for the majority of the presented algorithms, is the search algorithm refined step by step. Detailed experimentation results can be found in Section~\ref{sec:search:experiments}. The results of this chapter form the foundation for the development of reinforcement players in Chapter~\ref{cha:impl:reinforcement}.
+ 
+
+
+
+
+\section{Game-Playing Algorithms} \label{sec:basicstructure}\index{Game-playing algorithms}
+This section treats the general structure of game-playing programs. It applies to standard algorithms developed in this chapter as well as to the reinforcement players of Chapter~\ref{cha:impl:reinforcement}. 
+
+
+
+
+\subsection{Position Evaluator}\index{Position evaluator}
+The position evaluator is a function that assigns a value to a board position, possibly between $-1$ and $+1$, where $-1$ would signify a loss of White, $0$ a equilibrium position and $+1$  that White wins. Basically, two different techniques are employed in this work. The first relies on \emph{hand-crafted feature extracting}, the second on the \emph{approximation capabilities of a neural network}. 
+
+Feature extracting has often been called an art (instead of a science); effectively it is a very heuristic task to filter out the significant \emph{features} of a position and to assign them values according to their importance. A feature typically used to reward the grouping of marbles, adds (subtracts) one point to the position value for every white (black) marble that is surrounded by at least three marbles of its own color. The number of handcrafted features can vary from a very small number (three) up to virtually infinite, limited only by imagination and computing speed. Once values have been assigned for each feature, they are (linearly) combined and eventually normalized to build the position's value.
+
+The most important features are the number of enemy marbles already kicked from the board (as well as the number of lost marbles), the position of the marbles, particularly their distance from the center of the hexagonal \Abalone\ board, and last not least the compactness of the marble formation (measured by the number of marbles placed beside marbles of the own color).
+
+The approach taken when using neural networks is fundamentally different. Although hand-crafted features are still used to speed up the task of learning, no values are anymore attributed to features manually. Instead the network has to learn on its own which reward policy leads to success. After several thousands of training games, a well prepared neural network is effectively able to outperform hand-crafted feature extractors by far.
+
+
+
+
+
+
+\subsection{Move Generator}\index{Move generator}
+Even with very sophisticated position evaluators it will still not be enough to restrict one-self to the static evaluation of a position. Every human \Abalone\ or Chess player knows that it is often (or perhaps always) necessary to ``look into the future'', to try to anticipate the moves of one's opponent, how oneself will react, how he will then respond,~\ldots Suppose we try to figure out \emph{all} of our possible moves, then \emph{all} responses to \emph{all} our moves, then~\ldots -- obviously the number of move sequences will increase exponentially with the \emph{search depth}. The average number of possible moves in a typical \Abalone\ position is $M \approx 58$, consequently we will not be able to think many plies (half-moves) ahead, before being hopelessly lost. Instead even a novice \Abalone\ or Chess player considers only a few moves at every ply to inspect more thoroughly; by this means good \Abalone\ players can think up to eight plies (four complete moves) ahead. 
+
+The \emph{move generator} decides at a given stage in the lookahead search, which moves are worth being considered more in detail. For example, \emph{brute force}\index{Brute force algorithms}\index{Move generator!brute force} algorithms always select \emph{all} moves for further inspection, until a given search horizon (for example 5 plies) is reached. On the other hand \emph{heuristic selection}\index{Move generator!heuristic selection} algorithms, try to do it the same way the human mind does, and do only continue to search a fraction of all possible moves, the fraction being between $5\%$ and $75\%$.
+The problem is apparently to know \emph{which} moves are worth further consideration, and which can be ignored. This is far from being a trivial problem, on the contrary it is so complex that finally brute force approaches, intellectually perhaps less appealing, made the race in almost all good game-playing programs available today. The first \Malin\ players are also based on heuristic move selection, but as they are clearly inferior to the succeeding brute force players they are not treated further in this work.
+
+
+
+
+\subsection{Game-Searching Algorithms} \label{sec:minimax} \label{Game-searching algorithms}
+Once we know to evaluate a position and how to select the moves worth deeper examination, there remains still the question of the best way of searching all the resulting move sequences for the best outcome. The idea underlying (almost) all search algorithms is the \emph{minimax} principle.\index{Minimax principle} It states that we always have to select the best move when it is our turn, but always the \emph{worst} when it is our \emph{opponents} turn.
+
+The move sequence derived by this principle will lead to the best possible outcome we can \emph{enforce}. Perhaps an even better outcome would have been \emph{possible}, but in that case we would have had to count on our opponent to commit an error. Take a look at the \emph{game tree} in Figure \ref{fig:minimax} to understand the difference.
+% *** TeX-CAD Graphic ***
+\begin{figure}[htb!]
+   \begin{center}
+   \caption{The minimax principle}
+   \label{fig:minimax}
+   \vspace{5mm}
+   \input{graphics/minimax.pic} 
+   \end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The rectangles are positions where it is the \emph{Maximizers} turn,\\
+the circles correspond to the \emph{Minimizers} positions. \\
+The numbers in the rectangles and squares are the utility of the Maximizer, \\
+or equivalently the loss of the Minimizer. \\
+$m_{xy}$ uniquely identifies a move.
+\end{tabular}
+\end{center}
+\end{figure}
+The player \emph{Maximizer} (rectangles) faces the \emph{Minimizer} (circles). The numbers in the rectangles and circles are the payoff for the Maximizer -- the higher the better. Because \Abalone\ is a strictly competitive game, the minimizers effort to maximize his own payoff is equivalent to minimizing his opponents payoff. The \emph{payoffs} (numbers) in the lowest row are evaluated by the position evaluator as discussed above. The highest possible value is 15, but if the Maximizer plays $m_1$, the Minimizer will answer with $m_{13}$, leading to an outcome of 5! Accordingly, on the right half of the game tree, the Minimizer can enforce an outcome of 7, thus leaving the Maximizer the choice between 5 or 7, which finally results in the minimax value 7. This is the minimum value that the Maximizer can \emph{enforce}.
+
+By a little modification of this minimax algorithm its complexity can be divided by two; the resulting enhancement is known as the $\alpha$--$\beta$ algorithm and is extensively used in the \Malin\ players. See Section \ref{sec:gamesearching} for theoretical analysis of $\alpha$--$\beta$ and Section \ref{sec:alphabeta} for a detailed explanation.
+
+
+
+
+
+\subsection{Deadlock Situation} \label{sec:deadlock}\index{Deadlock situations}
+In some games like Backgammon, it is almost impossible to end up in a \emph{deadlock} situation, that is, when the best action for each player is to repeat a move already played once, and thus to get lost in an endless loop. However, in \Abalone\ this happens fairly often, particularly in the opening phase of the game, after 5--10 moves have been played. Humans can easily avoid this situation, once we realize the deadlock, we simply play the second best move to get out of the trap. The problem is critical when two computer players compete against each other. The solution adapted for all \Malin\ players is the recording of all moves played during the game. Before the move generator returns the list of possible moves, it excludes the deadlock moves and hence avoids an endless loop.
+
+
+
+
+
+
+
+
+
+\section{Position Evaluation by Feature Extracting}\index{Position evaluator!feature extracting}
+\label{sec:featureextracting}
+A central issue in game-playing is the employed position evaluator, already introduced in Section~\ref{sec:basicstructure}. All \Malin\ computer players except the very first and the very last (based on neural networks, Chapter~\ref{cha:impl:reinforcement}) use the same position evaluator -- which is the subject of this section. 
+
+The design of the position evaluator is kept very simple, in order to attain high computation speed. Only four features are employed, the number of kicked (and lost) marbles feature (resulting in the partial sum $V^k$), the distance-to-center feature $V^d$, the neighbour feature $V^n$, and the game-over feature $V^o$.
+\begin{description}
+\item[Kicked and lost marbles] 
+$$V^k = 1000 \cdot \left \{
+\begin{tabular}{lll}
+$2k_1 - k_2$ & \qquad & if $k_1 > k_2$, \\
+$2k_2 - k_1$ && if $k_1 < k_2$, \\
+0 && else,
+\end{tabular}
+\right .$$
+where $k_i$, $i=1,2$ is the number of marbles kicked by player $i$. This nonlinear function ``prefers'' high scores, i.e., 5:3 gets a higher rating than 4:2. The result is weighted by the factor 1000.
+
+\item[Distance-to-center]\index{Distance-to-center} If a marble occupies the (only) central space of the hexagonal \Abalone\ board ({\sf E5} following the notation of Figure \ref{fig:notation}), its player gets 12 units, for a marble in one of the six corners ({\sf A1}, {\sf A5}, {\sf E9}, {\sf I9}, {\sf I5}, {\sf E1}) 
+$5$ units are deduced. The values of the spaces in between are (heuristically) interpolated.
+$$V^d = \sum_s d_c(s)o(s),$$
+where $s$ is a space on the \Abalone\ board, $d(\cdot): \mbox{board} \rightarrow [-5,12]$ is the distance-to-center evaluation function, and $o(\cdot)$ is the occupation function,
+$$o(s) = \left \{
+\begin{tabular}{rll}
+$+1$ & \qquad & if a white marble (player I) is occupying the space $s$, \\
+0 & & if the space $s$ is free,\\
+$-1$ && if $s$ is occupied by a black marble.\\
+\end{tabular} 
+\right .$$
+
+\item[Neighbours]\index{Neighbours} For every pair of neighbouring marbles of the same color, 2 units are awarded.
+$$V^n = 2 \cdot \frac{1}{2} \sum_s o(s) \sum_{\bar s} \delta_{o(s)o(\bar s)},$$
+where $\bar s$ is a space neighbouring $s$, and $\delta_{xy} = 1$ if $x=y$ and 0 otherwise.
+
+\item[Game over] If one player has kicked six marbles the game is over and the value is set to infinity,
+$$V^o = \left \{
+\begin{tabular}{rcl}
+$+ \infty$ & \qquad & if player I has won the game, \\
+0 & & if the game is still going on, \\
+$- \infty$ & & if player II won the game.
+\end{tabular} 
+\right. $$
+
+\end{description}
+The position evaluates then to 
+$$V = V^k + V^d + V^n + V^o.$$  
+Of course the constants mentioned above (i.e.~1000 units for a kicked marble) are easily modifiable by the user (\Malin\ menu item {\sf Tools} -- {\sf Player} -- {\sf Modify}).
+
+Several other features are possible, but did not work out very well.
+\begin{description}
+\item[Intruder] If a marble is surrounded by at least five enemy marbles, bonus points are awarded. The idea is to disturb the construction of compact marble formations by introducing an alien marble in the middle. 
+
+The problem is, that this ``intruding'' {\em can} be beneficial but does not have to. Suppose the enemy is dominating the center of the \Abalone\ board, then it is certainly a good idea to place a marble inside his formation, because this may dramatically reduce his opportunities to push your marbles. But when we find one of our marbles near the board border surrounded by enemy marbles, we are almost sure to loose it.
+
+\item[Loneliness] If a marble is all alone, touching no neighbours, value is decreased because a marble is much more valuable when it is integrated in a compact formation.
+
+This feature is often mentioned by human players, when asked how they evaluate an \Abalone\ position and is unambiguously an useful feature. However, it unnecessarily slows down the position evaluation because the neighbour feature already takes account of lonely marbles -- by simply not awarding any neighbour bonus points. 
+
+\item[With enemy at border] If the marble is placed right beside the border and an enemy marble is neighbouring, value is decreased.
+
+This feature is too general to be really useful and was therefore abandoned.
+
+\item[Push enemy] The possibility of pushing enemy marbles in the next move increases a position's value, because it tends to irritate the opponent.
+
+Having the opportunity to push the opponents marbles, may sometimes be a good intermediate goal, but it sometimes produces unwanted results and was therefore abandoned too. 
+
+
+\item[Attack enemy] If an enemy marble could be kicked off the board during the next move, bonus points are awarded.
+
+This is certainly a very useful feature, perhaps one of the most important. The reason why it is no longer used, is a modification of the search algorithm, called \emph{quiescence search}, see Section~\ref{sec:quiescence}. Basically it means, that unstable positions are never evaluated directly but always expanded until a stable position is reached. The position evaluator is therefore never run on positions where marbles could be kicked during the next move (this is the definition of an unstable position).
+\end{description}
+
+
+
+
+
+\subsection{Three-Player Games}
+In a two-player challenge the position evaluator returns one value $V$, which is by definition the utility of the first player, and because \Abalone\ is strictly competitive, the loss of the second player. In a three-player challenge, it will be necessary to remember more information than a single value to characterize a position. Note also, that an game-playing algorithm designed for \emph{three}, \emph{four}, \emph{or more} player challenges cannot rely on the minimax principle, which is exclusively applicable to two-player games. 
+
+Consider the two-player case; a position's value is composed of two partial sums $V = v_1 - v_2$, where $v_1$ is attributed to the marbles of the first player, and $v_2$ to the second. For example, $v_1$ is increased for every marble \emph{player I} has kicked from the board, but $v_2$ gets points for every marble \emph{of player II} near the center of the board. According to the minimax principle (see Figure~\ref{fig:minimax}) player I will always try to maximize $V$, while player two does the contrary by trying to minimize $V$. This is equivalent to player~I maximizing $V_1$ and player~II maximizing $V_2$, where
+\begin{eqnarray*}
+V_1 & = & +v_1 - v_2, \\
+V_2 & = & -v_1 + v_2.
+\end{eqnarray*}
+This way all players maximize ``their'' utility, which simplifies the algorithm; on the other hand do we need to store the two values $v_1$ and $v_2$ instead of only $V$.
+
+The generalization to the $p$-player case is straightforward. Instead of generating a single value $V$ for a board position, $p$ values $v_1, v_2, \ldots, v_p$ are calculated, where $v_i$ consists of the points attributed to the marbles of player $i$. The utility $V_i$ of player $i$ can then defined by
+$$ V_i = \frac{1}{p-1}\left(-v_1 - \cdots - v_{i-1} + (p-1) \cdot v_i - v_{i+1}- \cdots - v_p \right).$$
+Whenever its player $i$'s turn, he will try to maximize ``his'' utility $V_i$. Note that this definition is completely heuristic; for example, the utilities $V_1, V_2, V_3,$ in a three-player challenge can as well be defined by 
+\begin{eqnarray*}
+V_1 & = & v_1 - 0.5 v_2 - 0.3 v_3 \\
+V_2 & = & -0.3v_1 + v_2 - 0.5 v_3 \\
+V_3 & = & -0.5v_1 - 0.3v_2 + v_3.
+\end{eqnarray*}
+
+
+
+
+
+
+\section{Search Algorithms} \label{sec:searchalgo}
+\subsection{Brute Force Negamax Search} 
+\index{Negamax principle}\index{Move generator!brute force}
+This section introduces the core algorithm, upon which \emph{all} following game-searching algorithms are based. Algorithm \ref{al:bruteforcenega} is equivalent to the minimax principle, but is coded slightly different. While the minimax algorithm distinguishes between player I and II, alternatively maxi- and minimizing, does this version not need this distinction. The position values are always maximized but instead they are multiplied with $-1$ after every lookahead-stage, giving the algorithm its name -- \emph{negamax algorithm}.
+
+The term \emph{brute force} refers to the method of move generation. While a heuristic move selection algorithm only expands a (small) fraction of all possible moves, do brute force algorithms simply inspect \emph{all} moves.
+
+\begin{algorithm}[Brute Force Negamax Search] \label{al:bruteforcenega}
+int Evaluate (Position position, int depth)
+\{
+  \com{Input:} 
+  \com{\hspace{1em}position ... Object holding the marble positions on the Abalone board,} 
+  \com{\hspace{6em}the score, and whose turn it is.}
+  \com{\hspace{1em}depth ... Holds the actual search depth in plies (starting with 0).}
+  \com{\hspace{1em}g_depthMax ... Global variable holding the search depth limit in plies.}
+  \com{Output:}
+  \com{\hspace{1em}g_moveBest ... Holds the best move for the initial start position.}
+  \com{Return value: The positions value after a (g_depthMax \(-\) depth)-ply} 
+  \com{\hspace{1em}lookahead with respect to the player whose turn it is.}
+
+  \com{? already reached search depth limit (g_Xxx signifies global variable)}
+  if (depth >= g_depthMax)
+  \{
+    \com{The position is evaluated with respect to the player whose turn it is}
+    return PositionEvaluator (position);
+  \}
+
+  \com{Generate all possible moves}
+  moveVector = BruteForceMoveGenerator (position);
+
+  int valueBest = -infinity;
+  \com{Loop through all moves}
+  for (move in moveVector)   
+  \{
+    \com{Move, and store new board position}
+    newPosition = Move (position, move);
+
+    \com{Expand the move by calling Evaluate recursively}
+    value = -Evaluate (newPosition, depth + 1);
+
+    if (value > valueBest) \rcom{Hold track of the best move}
+    \{
+      valueBest = value;
+      moveBest = move;
+    \}
+  \}
+
+  \com{If lowest level, store the final result}
+  if (depth == 0) g_moveBest = moveBest; 
+
+  return valueBest;   \rcom{Return the value of the best move}
+\}
+\end{algorithm}
+And this is the function which initializes the recursion.
+\begin{algorithm}[Brute Force Negamax Search -- Initialization] \label{al:bruteforcenegainit}
+Move CalculateMove (Position position, int lookahead)
+\{
+  \com{Input:}
+  \com{\hspace{1em}position ... Object holding the Abalone board.}
+  \com{\hspace{1em}lookahead ... Defines how many plies deep the lookahead shall be carried out.}
+  \com{Returns the best move.}
+
+  g_depthMax = lookahead;
+  Evaluate (position, 0);
+  return g_moveBest;
+\}
+\end{algorithm}
+Note the simplicity of the algorithm due to its recursive character. {\al Evaluate} always returns the positions value $V$ with respect to the player whose turn it is. The \Malin\ players contain additionally a random element, which does not necessarily choose the \emph{first} move returning {\al valueBest}, but \emph{arbitrarily} one move among the best.
+
+
+
+\subsection{Quiescence Search} 
+\label{sec:quiescence}\index{Quiescence search}
+This section introduces an important enhancement of the minimax/negamax algorithm, called \emph{quiescence search}. The basic idea is to avoid the evaluation of unstable positions. The characterization of an unstable position can be very difficult, depending on the game (i.e.~see \cite{Bramer83} for the game of Chess). However, in \Abalone\ the definition of a unstable game is very straightforward. 
+\begin{definition}[Unstable position] If a marble can be kicked off the board during the next move, the position is said to be \emph{unstable}.\index{Unstable position}
+\end{definition}
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{An unstable position}
+\vspace{2mm}
+\includegraphics[width=0.4\columnwidth]{graphics/quies.eps}
+\label{fig:quiescence}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+It is Blacks turn.
+\end{tabular}
+\end{center}
+\end{figure}
+See Figure \ref{fig:quiescence} for an example. If the static position evaluator tries to analyze this situation it will be unable to estimate correctly how many marbles will remain on the board; the evaluator can only take into account how many marbles \emph{already} have been kicked. The quality of the evaluation of such a position is very low, because the positions value will change dramatically within one or a few moves; this causes very bad move selection decisions. Quiescence search will avoid the evaluation of such positions by continuing to expand all critical (``kicking'') moves as far as the position becomes stable. This enhancement improves substantially the game-playing quality of the algorithm. Algorithm \ref{al:quiescence} is based upon the brute force negamax Algorithm \ref{al:bruteforcenega}.
+\begin{algorithm}[Quiescence Search] \label{al:quiescence}
+int Evaluate (Position position, int depth)
+\{
+  \com{At which search stage are we ?}
+  if (depth >= g_depthMax)   \rcom{Quiescence search}
+  \{
+    \com{Generate only the moves which kick a marble off the board}
+    moveVector = KickingMoveGenerator (position);
+  \}
+  else if (depth > 0) \rcom{Regular search}
+  \{
+    \com{Generate all possible moves}
+    moveVector = BruteForceMoveGenerator (position);
+  \}
+  else \rcom{Lowest search level (depth == 0)}
+  \{
+    \com{Generate all possible moves except those already played once}
+    \com{in exact the same position}
+    moveVector = ExcludeHistoricMoveGenerator (position);
+  \}
+
+  \com{? no more moves}
+  if (moveVector.size() == 0) 
+  \{
+    \com{The position is evaluated with respect to the player whose turn it is}
+    return PositionEvaluator (position);
+  \}
+
+  int valueBest = -infinity;
+  for (move in moveVector)   \rcom{Loop through generated moves}
+  \{
+    newPosition = Move (position, move);
+    int value = -Evaluate (newPosition, depth + 1);
+    if (value > valueBest)
+    \{
+      valueBest = value;  
+      moveBest = move;
+    \}
+  \}
+  if (depth == 0) g_moveBest = moveBest;
+  return valueBest;
+\}
+\end{algorithm}
+The only difference to Algorithm \ref{al:bruteforcenega} is the move generation section at the beginning of {\al Evaluate}, which now depends on {\al depth}, the recursion parameter, holding the number of plies already expanded. While the basic minimax Algorithm \ref{al:bruteforcenega} simply stops further investigation when {\al depth} equals {\al g\_depthMax} (the lookahead limit in plies), does the quiescence Algorithm \ref{al:quiescence} continue too expand all moves which kick a marble off the board. This ensures that the {\al PositionEvaluator} is never applied to an unstable position.
+
+Suppose that we carry out a 3-ply lookahead to determine the value of a given start position and that we encounter the position of Figure \ref{fig:quiescence} while it is Blacks turn and {\al depth} is already 3. Without quiescence search the position would simply be evaluated by the static {\al PositionEvaluator}. With quiescence search the move {\sf F5-H5 $\rightarrow$ G5} will be stored in the {\al moveVector} and the lookahead goes on with \emph{only one, instead of all} moves generated. This way {\al Evaluate} will be called with {\al depth} $=$ 4; and generate the two moves {\sf G3-H4 $\rightarrow$ H4} and {\sf I7-I6 $\rightarrow$ I6} for player White. By continuing this way, {\al Evaluate} inspects move sequences with up to 7 plies -- 3 plies of regular search and 4 plies of quiescence search for the position in Figure \ref{fig:quiescence} (until only one black marble remains). Strictly speaking, is Algorithm \ref{al:quiescence} no brute force search anymore, because quiescence search can be interpreted as ``heuristic move generation''.
+
+The \Malin\ player family \textsf{Cäsar} relies on the quiescence Algorithm \ref{al:quiescence}.
+
+
+
+
+
+
+\subsection{$\alpha$--$\beta$ Search}\index{$\alpha$--$\beta$ algorithm}
+\label{sec:alphabeta}
+While quiescence search improves the overall result by selectively investigating deeper than the initial lookahead limit proposes, does the following enhancement speed up the algorithm without changing the overall value of the examined position. The game tree is still searched in the recursive manner introduced by the minimax / negamax Algorithm \ref{al:bruteforcenega}, but information of the already searched branches is kept in memory in order to produce cut-offs. A cut-off is a portion of the game tree which is not searched; of course these cut-offs must not alter the overall resulting value. This enhancement is known as the \emph{$\alpha$--$\beta$ algorithm}, see Section~\ref{sec:gamesearching} for an theoretical analysis. Figure \ref{fig:alphabeta} depicts an game tree which we will use to explain the idea. 
+% *** TeX-CAD Graphic ***
+\begin{figure}[htb!]
+   \begin{center}
+   \caption{The $\alpha$--$\beta$ algorithm in a minimax formulation}
+   \label{fig:alphabeta}
+   \vspace{10mm}
+   \input{graphics/alphbeta.pic} 
+   \end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The tree of a 3-ply lookahead problem. \\
+The numbers are positions values, ``\,$\cdot$\,'' signifying that an evaluation was not necessary. \\
+Only the positions at the ``bottom'' of the search tree are actually analyzed by the \\
+position evaluator, the other values are determined by maximum (minimum) selection over the \\
+descendents respectively. \\
+The $\alpha$--$\beta$ couples are depicted in parentheses. Note that during an maximum (minimum) \\
+selection only the upper (lower) bound grants cut-offs. \\
+$m_x$, $m_{xy}$, and $m_{xyz}$ uniquely identify the branches of the search tree.
+\end{tabular}
+\end{center}
+\end{figure}
+
+The search tree is analyzed from the left to the right, accordingly starting with the branches $m_1$, $m_{11}$, and $m_{111}$ where the desired lookahead depth is reached and the position evaluator is invoked for the first time, returning 9. For the moment we ignore quiescence search. The position $m_{112}$ (more precisely the position reached after the move $m_{112}$) evaluates to 7. As it is the maximizers turn, $m_{11}$ is therefore assigned the value 9. At position $m_{1}$ it is the minimizers turn and therefore $m_{11}$ (value 9) will compete against the positions $m_{12}$ and $m_{13}$ in a minimum selection. We continue the analysis of the search tree and evaluate the positions $m_{121}$ to 5 and $m_{122}$ to 10; by now we know that $m_{12}$ is \emph{at least} 10 -- which guarantees that $m_{11}$ is better than $m_{12}$!! It is therefore not necessary to evaluate $m_{123}$ because it will not change the value of $m_{1}$ -- the portion of the search tree beginning with $m_{123}$ can therefore be \emph{cut-off}.
+
+By continuing this scheme we evaluate the position $m_1$ to 7, which is therefore a lower bound for the value $V$ of the initial start position. Therefore we can cut-off all branches below $m_{22}$: after evaluation of $m_{21}$ we know that $m_2$ values \emph{at most} 5. Note the intervals depicted beside the positions values, the lower bound is called $\alpha$ value, the upper bound $\beta$ value. The cut-off explained above is called an \emph{$\alpha$-cut-off}, because 5 was below the $\alpha$ value 7. 
+
+Now, why does $m_{311}$ not induce a cut-off? After all it is outside the $(\alpha,\beta) = (7,\infty)$ interval? First have a look at $m_{32}$, we already know that when its value gets above 12, it is of no further use. Therefore $m_{322}$ evaluating to 17 generates a \emph{$\beta$-cut-off}. Both $m_{322}$ and $m_{311}$ compete in a \emph{maximum} selection, but only $m_{322}$ is \emph{above the $\beta$ value}. On the other hand does it not matter whether $m_{311}$ is below the $\alpha$ value. In the case of $m_{21}$ it is inverse, it is the \emph{minimizers} turn and we only care if a value is \emph{below the $\alpha$ value}. The reason why we always keep the $\alpha$ \emph{and} the $\beta$ value in memory, is that at position $m_{3211}$ of a (not depicted) 4-ply lookahead we could once again make use of the $\alpha$ value, and so on \ldots
+
+
+
+
+
+\subsubsection*{Negamax Formulation}\index{Negamax principle}
+While the presented minimax formulation of the $\alpha$--$\beta$ algorithm already tends to tie up (recursively) one's brain, is the negamax formulation even worse. Figure \ref{fig:alphabetanega} presents once more the search tree known from Figure \ref{fig:alphabeta}, but this time we always maximize, therefore only inducing $\beta$-cut-offs.
+% *** TeX-CAD Graphic ***
+\begin{figure}[htb!]
+   \begin{center}
+   \caption{The $\alpha$--$\beta$ algorithm in a negamax formulation}
+   \label{fig:alphabetanega}
+   \vspace{10mm}
+   \input{graphics/alphbene.pic} 
+   \end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The numbers are position values with respect to the \emph{opponent} player, \\
+``\,$\cdot$\,'' signifying that an evaluation was not necessary. \\
+Only the positions at the ``bottom'' of the search tree are actually \\
+analyzed by the position evaluator.\\
+The $\alpha$--$\beta$ couples are depicted in parentheses beside the \emph{parents} of the positions \\
+they belong to. Only $\beta$-cut-offs are possible.\\
+$m_x$, $m_{xy}$, and $m_{xyz}$ uniquely identify the branches of the search tree.
+\end{tabular}
+\end{center}
+\end{figure}
+
+The positions values are not anymore depicted with respect to a \emph{constant} player but depending on the player whose turn it is (to be more precise, with respect to the ``actual'' players opponent). To see the equivalence with Figure \ref{fig:alphabeta} multiply all values in the odd rows by $-1$ and mirror the $(\alpha,\beta)$ interval in the even rows at the origin. Note also that the $(\alpha,\beta)$ intervals placed beside the value of a position $m_{xy}$ belong to the positions $m_{xyz} ,\forall z$.
+
+However, even if things seem to get complicated, the important thing is to see the equivalence with the minimax formulation (Figure \ref{fig:alphabeta}) on one hand, and with Algorithm \ref{al:alphabeta} on the other hand.
+\begin{algorithm}[$\alpha$--$\beta$ Search] \label{al:alphabeta}
+int Evaluate (Position position, int depth, int alpha, int beta)
+\{
+  \com{Input:}
+  \com{\hspace{1em}alpha ... The lower bound, never used for cut-offs.}
+  \com{\hspace{1em}beta ... The upper bound.}
+
+  if (depth >= g_depthMax) moveVector = KickingMoveGenerator (position);
+  else if (depth > 0) moveVector = BruteForceMoveGenerator (position);
+  else moveVector = ExcludeHistoricMoveGenerator (position);
+
+  if (moveVector.size() == 0) return PositionEvaluator (position);
+
+  int valueBest = -infinity;
+  for (move in moveVector)   \rcom{Loop through all moves}
+  \{
+    newPosition = Move (position, move);
+
+    \com{Call Evaluate with appropriate alpha beta values}
+    int value = -Evaluate (newPosition, depth + 1, 
+      -beta, -Max(alpha, valueBest));
+
+    if (value > valueBest) \rcom{Hold track of the best move}
+    \{
+      valueBest = value;  
+      moveBest = move;
+
+      \com{If Beta cut-off stop loop}
+      if (value >= beta) break;
+    \}
+  \}
+  if (depth == 0) g_moveBest = moveBest;
+  return valueBest;
+\}
+\end{algorithm}
+The algorithm is derived from the quiescence Algorithm \ref{al:quiescence} and is initialized by {\al Evaluate (position, 0, $-\infty$, $\infty$)}. Only three changes have been put into effect; the parameter definition of {\al Evaluate}, the recursive call of {\al Evaluate} and the test for a $\beta$-cut-off. 
+
+The \textsf{Charles} family is based on exactly this $\alpha$--$\beta$ algorithm.
+
+
+
+
+
+\subsection{Killer Moves} \label{sec:killermoves}\index{Killer moves}
+The $\alpha$--$\beta$ algorithm reduces the number of position evaluations substantially. Without $\alpha$--$\beta$ we expect $M^n$ positions to be evaluated in a $n$-ply lookahead, where $M$ is the average number of possible moves. The $\alpha$--$\beta$ Algorithm \ref{al:quiescence} \emph{can} reduce the number of evaluations in the best case to 
+$$M^{\lfloor\frac{n}{2}\rfloor} + M^{\lceil\frac{n}{2}\rceil} - 1,$$
+but in the worst case it remains $M^n$, see Section \ref{sec:gamesearching}. What does this depend upon? Take once more a look at Figure \ref{fig:alphabeta}; if the move $m_3$ had been analyzed \emph{before} the move $m_1$ a larger part of the search tree could have been cut-off (i.e.~the moves $m_{12}$ and $m_{13}$). The order in which the moves are analyzed is therefore important. In the best case, the move which yields the best value is always selected first, consequently inducing a maximum of cut-offs. Obviously this is not possible (why would we carry out a search otherwise?), but a good idea might be to introduce \emph{heuristic move ordering}.\index{Heuristic move ordering}
+
+Elmenreich \cite{Elmenreich98} proposes to evaluate intermediate positions before further analyzing them. For example, the moves $m_1$, $m_2$, and $m_3$ in Figure \ref{fig:alphabeta} are statically evaluated before deciding which one is expanded first. Tables are kept in memory to make use of the similarity of many moves. However, this requires additional calls to the position evaluator and has not been pursued in \Malin.
+
+Instead heuristic move ordering is accomplished by the use of \emph{killer move} tables. A killer move is a very good move, so good he ``kills'' a great portion of the search tree by inducing a lot of cut-offs. The idea is that in a typical \Abalone\ position there are only a few really good moves and that furthermore in positions which are not very different, the good moves remain the same. 
+This is because of several reasons (see \cite{Elmenreich98}),
+\begin{itemize}
+\item in \Abalone\ marbles are only moved by exactly one space;
+\item in one move no more than 5 marbles can be displaced, usually only 2 or 3 marbles are moved;
+\item the evaluation of a board position depends primarily on \emph{where} the marbles lie and not on the patterns they form.
+\end{itemize}
+
+The killer algorithm remembers the move which is currently considered best at each level of the search tree and tries this move first at each new position. Actually, \Malin\ does not only keep the best move at each level in memory, but uses the best \emph{six} moves at each level (see Figure \ref{fig:killermoves}. Suppose the branch $m_{13}$ in Figure \ref{fig:alphabeta} corresponds to the move \textsf{G6-E6 $\rightarrow$ F6}, then we will consider it a killer move, because it was the best move at position $m_1$. It will be therefore be stored in the killer move table for level 1. We assume further that \textsf{G6-E6 $\rightarrow$ F6} is also a valid move from position $m_3$, and that it corresponds to the branch $m_{32}$. Then the killer move Algorithm~\ref{al:killermoves} will start expanding $m_{32}$ before the other branches, hoping to increase the number of cut-offs (unfortunately this is not the case in this example).
+
+\begin{algorithm}[Killer Moves] \label{al:killermoves}
+int Evaluate (Position position, int depth, int alpha, int beta)
+\{
+  \com{Input/Output: g_killer ... Object holding the killer move tables.}
+
+  if (depth >= g_depthMax) moveVector = KickingMoveGenerator (position);
+  else if (depth > 0) moveVector = BruteForceMoveGenerator (position);
+  else moveVector = ExcludeHistoricMoveGenerator (position);
+
+  if (moveVector.size() == 0) return PositionEvaluator (position);
+
+  \com{Sort the moves according to the killer table for level 'depth'}
+  g_killer.sort(depth, moveVector);
+
+  int valueBest = -infinity;
+  for (move in moveVector)   \rcom{Loop through all moves}
+  \{
+    newPosition = Move (position, move);
+    int value = -Evaluate (newPosition, depth + 1, 
+      -beta, -Max(alpha, valueBest));
+    if (value > valueBest)
+     \{
+       valueBest = value;  
+       moveBest = move;
+       if (value >= beta) break;
+      \}
+    \}
+  \}
+
+  \com{Add move to the killer move table for level 'depth'}
+  g_killer.add(depth, moveBest);
+
+  if (depth == 0) g_moveBest = moveBest;
+  return valueBest;
+\}
+\end{algorithm}
+The algorithm is derived from the $\alpha$--$\beta$ Algorithm \ref{al:alphabeta}; two lines make up for the difference, {\al g\_killer.sort(depth, moveVector)} which orders the {\al moveVector} according to the killer move table, and {\al g\_killer.add(depth, moveBest)} declaring that {\al moveBest} is a good move. Note that all calls to the killer object are parametrized with {\al depth}, in order to determine which killer move table to use (there is one for every lookahead-stage). For each move in one of the killer tables, a counter is kept which determines its ``killing quality''; a call to {\al add(depth,move)} increases the counter, which rapidly decreases in the course of time. {\al sort(depth, moveVector)} effectively performs only a partial sort, stopping after the six best moves have been found and shifted to the front of the move vector.
+
+
+
+
+
+
+
+\subsection{Iterative Search}\index{Iterative search}
+From Algorithm \ref{al:killermoves} it follows that an important portion of the search tree has to be searched before the killer move tables are able to provide good move ordering. The idea of \emph{iterative searching} is to conduct the search in stages, starting with shallow searches and gradually increasing the depth of search until the desired lookahead depth is reached or time runs short. Hence, the algorithm starts with a 1-ply search, building up the the killer move table for level 1, then continues with a 2-ply search, \ldots until a full $n$-ply search has been carried out. At a first glance this seems to increase the number of position evaluations, but Frey \cite{Frey83} has illustrated that the better move ordering counterbalances the repeated search stages. Even when evaluation are counted for all iterations combined, the total is still less than that observed with a single search equal in depth to that of the last iteration. Note, that iterative search without a move ordering algorithm (like killer moves) would not make any sense at all.
+
+The recursive algorithm developed in the last subsection stays the same, only the initialization is changed.
+\begin{algorithm}[Iterative Search -- Initialization] \label{al:iterativeinit}
+Move CalculateMove (Position position, int lookahead)
+\{
+  \com{Empty the killer move tables}
+  g_killer.init();
+
+  \com{Start with a 1-ply search, \ldots, up to a full 'lookahead'-ply search}
+  for (int i = 1; i <= lookahead; i++)
+  \{
+    \com{Set the search depth}
+    g_depthMax = i;
+    Evaluate (position, 0, -infinity, infinity);
+  \}
+  return g_moveBest;
+\}
+\end{algorithm}
+This algorithm could be refined by heuristically adapting the $(\alpha,\beta)$ window from $(-\infty,\infty)$ to some smaller interval (\cite{Frey83} refers to this technique as non-speculative forward pruning).\index{Non-speculative forward pruning} This will induce more cut-offs, but in the worst case the interval was too small and the calculations have to be restarted. This approach has not been pursued any further. The \textsf{David} family is based on killer moves with iterative search.
+
+
+
+
+
+
+\subsection{Hash Tables}\index{Hash table}
+Even if the number of examined positions can be substantially reduced by using an \emph{iterative killer move $\alpha$--$\beta$ algorithm} (Algorithms \ref{al:killermoves}, \ref{al:iterativeinit}) the position evaluator still remains a bottle-neck to the overall performance. Moreover, when performing a $n$-ply search where $n \geq 3$, it is very probable that positions are evaluated \emph{several times} at different locations in the search tree. This can happen when the move sequence $m^1 , m^2 , m^3, m^4, \ldots $, played alternately by player I and II, is permuted to $m^3, m^2, m^1, m^4, \ldots$ (which is not always possible). Hence, if enough memory is available, overall speed could be increased by storing the values of often needed positions. This is of course not limited to the results of static position evaluations -- remembering evaluations based upon a $n$-ply lookahead will be even more precious. 
+
+The memory organisation required, is in terms of computer science, a \emph{sparse array}, because the number of possible \Abalone\ board positions is very large. As a fast random access for a number of a priori unknown entries is needed, a linked list or a pointer array are not feasible. The compromise in size and speed is a \emph{hash table}. The utilization of hash tables for this purpose is the subject of \cite{Elmenreich98}. 
+
+The basic idea is to use an ordinary table of fixed size $H$ and to assign uniformly each board position a \emph{hash index $h_i$} ranging from $[0,H-1]$. A position is then stored at offset $h_i$, in the worst case overwriting another position with the same $h_i$. The size $H$ of the hash table and the \emph{uniform} distribution of $h_i$ over all possible positions are crucial to the performance.
+
+For each evaluated position, the following data is stored in the table at offset $h_i$.
+\begin{itemize}
+\item The positions value $V$.
+\item The lookahead depth $n$ upon which the calculation of $V$ is based.
+\item The $\alpha$--$\beta$ quality $q$ of the evaluation (indicates whether $V$ is exact or only approximated due to $\alpha$ or $\beta$-cut-offs).
+\item The positions \emph{hash value $h_v$} (the hash index $h_i$ and the hash value $h_v$ together (almost) uniquely identify the position).
+\end{itemize}
+
+In order to ensure that the hash index $h_i$ is uniformly distributed, we choose $H$ to be a prime number (i.e.\ 4423, 9941, 11213, 21701) and calculate
+$$h_i = \left ( \sum_{s=0}^{60} 3^s \cdot \bar o(s)  \right ) \bmod H,$$
+where $s$ enumerates the 61 spaces on the \Abalone\ board, and  $\bar o(\cdot)$ is an occupation function,
+$$\bar o(s) = \left \{
+\begin{tabular}{rll}
+0 & & if the space $s$ is free,\\
+$1$ & \qquad & if a white marble (player I) is occupying the space $s$, \\
+$2$ && if $s$ is occupied by a black marble.\\
+\end{tabular} 
+\right .$$
+For the calculation of the hash value $h_v$ a large prime number $P$ has to be chosen arbitrarily (i.e.\ $P = 72117691$),
+$$h_i = \left ( \sum_{s=0}^{60} 5^s \cdot \bar o(s)  \right ) \bmod P.$$
+
+The hash value $h_v$ of an evaluated position is stored at offset $h_i$ in the hash table. To avoid a collision with another position having the same index $h_i$, several hash tables of size $H$ are kept in parallel; if the entry in the first table is already occupied by a position with different hash value $h_v$, the second table is used, \ldots if all hash tables are already full, one entry is overwritten. The entry to overwrite is selected with a heuristic algorithm, which favors entries with a small lookahead depth $n$. \Malin\ uses typically 4 hash tables in parallel. Theoretically it is possible that two positions share $h_v$ and $h_i$, but the probability is so small ($\approx 10^{-9}$) that it can be neglected.
+
+When the value of a position with hash index $h_i$ is to be looked up, the hash tables are searched for an entry at offset $h_i$ with correct hash value $h_v^s$ (the $s$ signifies \emph{stored}). The stored value $V^s$ is only accepted if the lookahead depth $n^s$ it is based on, is greater than the requested lookahead depth $n$, $n^s \geq n$.
+
+If the result of a $n$-ply lookahead search returns a value in the interval $(\alpha,\beta)$ it can  safely be reused at any other node in the search tree, because this is the \emph{exact} minimax value of the position. If on the other hand a positions value $V$ is outside the $(\alpha, \beta)$ bounds, it is only known that $V \leq \alpha$, or $V \geq \beta$ respectively. However, this \emph{can} under certain circumstances provide useful information, and is therefore also stored in the hash table. The $\alpha$--$\beta$ quality $q$ can accordingly take three values,
+$$q = \left \{
+\begin{tabular}{lll}
+{\al lesser} & & if $V \leq \alpha$,\\
+{\al exact} & \qquad & if $V \in (\alpha,\beta)$, \\
+{\al greater} && if $V \geq \beta$.\\
+\end{tabular} 
+\right .$$
+When retrieving a value $V^s$ from the hash table and the quality $q^s \neq $~{\al exact}, it depends on the actual $(\alpha,\beta)$ interval, if $V^s$ is accepted. The hash table algorithm is derived from Algorithms \ref{al:killermoves} and \ref{al:iterativeinit}.
+
+\begin{algorithm}[Hash Table] \label{al:hashtable}
+int Evaluate (Position position, int depth, int alpha, int beta)
+\{
+  \com{Input/Output: g_hash ... Object holding the hash tables.}
+
+  \com{Search hash table for position (calculated at least with a}
+  \com{(g_depthMax \(-\) depth)-ply lookahead) and retrieve its value and quality.}
+  if (g_hash.find (position, g_depthMax - depth, value, quality) 
+    && depth > 0)
+  \{
+    if (quality == lesser && value <= alpha) return value;
+    else if (quality == exact) return value;
+    else if (quality == greater && value >= beta) return value;
+  \}
+
+  if (depth >= g_depthMax) moveVector = KickingMoveGenerator (position);
+  else if (depth > 0) moveVector = BruteForceMoveGenerator (position);
+  else moveVector = ExcludeHistoricMoveGenerator (position);
+
+  if (moveVector.size() == 0) return PositionEvaluator (position);
+
+  g_killer.sort(depth, moveVector);
+
+  int valueBest = -infinity;
+  for (move in moveVector)   \rcom{Loop through all moves}
+  \{
+    newPosition = Move (position, move);
+    int value = -Evaluate (newPosition, depth + 1, 
+      -beta, -Max(alpha, valueBest));
+    if (value > valueBest)
+     \{
+       valueBest = value;  
+       moveBest = move;
+       if (value >= beta) break;
+      \}
+    \}
+  \}
+
+  g_killer.add(depth, moveBest);
+
+  if (depth >= g_depthMax)   \rcom{Quiescence search}
+  \{
+    \com{Store board value in hash table with search depth 0,}
+    \com{if value <= alpha no statement about the quality is possible}
+    if (valueBest > alpha)
+      g_hash.store(position, 0, valueBest, greater);
+  \}
+  else if (depth > 0)   \rcom{Regular search}
+  \{
+    \com{Determine the value's quality with respect to (alpha,beta)}
+    if (valueBest <= alpha) quality = lesser;
+    else if (valueBest >= beta) quality = greater;
+    else quality = exact;
+    \com{Store board value in hash table}
+    g_hash.store (position, g_depthMax - depth, valueBest, quality);
+  \}
+  else \rcom{depth == 0}
+  \{
+    g_moveBest = moveBest;
+  \}              
+
+  return valueBest;
+\}
+\end{algorithm}
+The two extensions are placed at the top and the bottom of the procedure; {\al g\_hash.\-store (position, lookaheadDepth, value, quality)} enters or modifies a position in the hash table, {\al g\_hash.find (position, lookaheadDepth, value, quality)} retrieves the value $V^s$ and quality $q^s$ for a given position and the required lookahead depth $n$. Note that without a brute force search including \emph{all} possible moves, {\al valueBest} can only be a lower bound to the exact value; this is why an exact result during quiescence search is impossible.
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Comparison} \label{sec:search:experiments}
+Extensive tests have been carried out to measure the efficiency of the proposed algorithms. Table \ref{tab:examined} summarizes the characteristics of the examined algorithms.
+% Table
+\begin{table}[htbp]
+\caption{The examined search algorithms}
+\label{tab:examined}
+\begin{center}
+\begin{tabular}{c|cccc}
+Abbreviation & Minimax & $\alpha$--$\beta$ & Killer & Hash \\
+\hline 
+Algorithms & \ref{al:quiescence}, \ref{al:bruteforcenegainit} & \ref{al:alphabeta}, 
+\ref{al:bruteforcenegainit} & \ref{al:killermoves}, \ref{al:iterativeinit} & \ref{al:hashtable}, \ref{al:iterativeinit} \\
+\Malin\ family & \textsf{Caesar} & \textsf{Charles} & \textsf{David} & \textsf{Emil} \\
+Symbol & \makebox(0,7){\circle*{3}} & $\times$ & \makebox(0,6){\circle{3}} & $\star$ \\
+\hline
+Brute force & yes & yes & yes & yes \\
+Quiescence & yes & yes & yes & yes \\
+$\alpha$--$\beta$ & no & yes & yes & yes \\
+Killer move tables & no & no & yes & yes \\
+Iterative pruning & no & no & yes & yes \\
+Hash tables & no & no & no & yes
+\end{tabular}
+\end{center}
+\end{table}
+
+Several characteristic values are used to evaluate the quality of the algorithms.
+\sloppy\begin{description} \label{pag:characteristic}
+\item[Depth $n$] \hfill \\ The ``regular'' lookahead depth, ignoring quiescence search effects.
+\item[Quiescence depth $n_Q$] \hfill \\ Denotes the average search depth including quiescence search ($n \leq n_Q$).
+\item[All evaluations $e_a$] \hfill \\ The overall number of position evaluations. 
+\item[Maximum depth evaluations $e_m$] \hfill \\ Number of position evaluations at maximum depth, $e_m \leq e_a$. If the algorithm is not iterative, $e_m = e_a$. This value corresponds to the theoretical number of terminal positions $I_A(n)$, defined in Section~\ref{sec:gamesearching}.
+\item[Empirical branching factor $b_e$] \hfill \\ Denotes the number of moves examined per position, excluding quiescence search.
+\item[Theoretical branching factor $b_t$] \hfill \\ This value is calculated in imitation of the branching factor $R_A$ used in theoretical analysis of search algorithms, see Section~\ref{sec:gamesearching}; it is defined as the $n$th root of the number of all evaluations, $b_t = \sqrt[n]{e_a}$.
+\item[Complexity $c$] \hfill \\ A simple minimax search examines $M^n$ positions, where $M\approx58$ is the average number of possible moves. We define the complexity $c$ by $M^{n \cdot c} := e_a$, which is equivalent to $c = \log_M b_t$.
+\item[Time $t$] \hfill \\ The time elapsing during a full $n$-ply search, measured in seconds. All test are run on a AMD Pentium 266 Mhz (64MB memory, Windows 98).
+\item[Hash $h$] \hfill \\ The percentage of positions found in the hash table. Note that the portion of the search tree eliminated as a consequence is necessarily greater (or equal), because all successor nodes of a ``found'' node will not be evaluated neither.
+\end{description}\fussy
+
+The following figures are based on the results of a \emph{tournament} of 16 \Malin\ computer players. Each algorithm competed twice against each algorithm, making a total of $16\cdot15 = 240$ games, or $8.3$ hours; Table \ref{tab:searchalgo} (page \pageref{tab:searchalgo}) holds the average characteristic values for each of the 16 players. The tournament winners were 5-ply Hash; 4-ply Hash, 4-ply Killer and 4-ply $\alpha$--$\beta$.
+
+
+
+
+
+\subsubsection*{Position Evaluations}
+\begin{figure}[htbp]
+\begin{center}
+\caption{Position evaluations $e_a$} 
+\label{fig:e_a}
+\small
+\medskip
+\input{experim/e_a}
+\end{center}
+\end{figure}
+Figure \ref{fig:e_a} compares the total number of position evaluations $e_a$ against the theoretical prediction of $M^n$ for a pure minimax algorithm (note that the $y$ axis is logarithmic!). Carrying out a 3-ply Minimax requires about 250000 position evaluations, which corresponds approximately to a 4-ply $\alpha$--$\beta$ search, which is again distinctly above a 5-ply Hash search. One of the reasons why the pure Minimax algorithm is \emph{above} $M^n$ is that it includes also evaluations due to quiescence search. The most important improvement is the introduction of $\alpha$--$\beta$ cut-offs, followed by the amelioration due to killer move tables. More sophisticated enhancements like hash tables seem less convincing, although they clearly beat every other algorithm. 
+
+The dotted line denominated ``Perfect $\alpha$--$\beta$'' corresponds to $M^{\lfloor n/2 \rfloor} + M^{\lceil n/2 \rceil} -1$, which is the (theoretical) minimum number of evaluations an $\alpha$--$\beta$ algorithm requires (see Section~\ref{sec:gamesearching}). Recall that the Hash players do \emph{not} employ a pure $\alpha$--$\beta$ algorithm, this is why some outperform Perfect $\alpha$--$\beta$. However, Perfect $\alpha$--$\beta$ beats (by definition) all ``true'' $\alpha$--$\beta$ algorithms. It is interesting to note that all algorithms descending from $\alpha$--$\beta$, show different behaviour for even or odd $n$. The reason is that for even $n$, more cut-offs are possible at the \emph{deepest} search level than for odd $n$. The game tree in Figure \ref{fig:alphabeta} can help to understand the difference. 1-ply Perfect $\alpha$--$\beta$ will evaluate exactly $M$ positions. For $n=2$, $M + (M-1)$ positions will be evaluated; the first $M$ positions are \emph{all} descendants of $m_3 = 12$, which now serves as $\alpha$-value, cutting down the remaining evaluations from $(M-1)\cdot M$ to $(M-1)\cdot1$. Similarly, in a 3-ply lookahead, a good $\alpha$-value is soon determined, but at the deepest (and most important) level only $\beta$-cutoffs are possible, which can make no use of the $\alpha$-value. This increases the total number of evaluations to $M^2 + M - 1$ for $n=3$.
+
+
+
+
+
+
+
+\subsubsection*{Time per Move}
+\begin{figure}[htbp]
+\begin{center}
+\caption{Time $t$ per move} 
+\label{fig:t}
+\small
+\medskip
+\input{experim/t}
+\end{center}
+\end{figure}
+Figure \ref{fig:t} plots the the time $t$ required to compute a move. Due to the C++ runtime procedures employed, the standard deviation is quite high; this might explain the very small value of the 1-ply $\alpha$--$\beta$ algorithm. The overheads necessary to manage the killer move and hash tables, slow down the corresponding algorithms for low lookahead depth; however for ``large'' $n$ the Hash algorithm wins again. The same reason makes 5-ply Hash as fast as 3-ply Minimax although it evaluates substantially less positions (see Figure~\ref{fig:e_a}).
+
+
+
+
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Empirical branching factor $b_e$} 
+\label{fig:b_e}
+\small
+\medskip
+\input{experim/b_e}
+\end{center}
+\end{figure}
+\subsubsection*{Empirical Branching Factor}
+Figure \ref{fig:b_e} depicts the empirical branching factors $b_e$. The dotted line at $y = M$ is the average branching factor, which is the average number of possible moves at a given position (ignoring quiescence search). Throughout our investigations we have estimated $M$ by 58, but Figure \ref{fig:b_e} illustrates drastically a problem: $M$ will take a lower value for a \emph{typical} \Abalone\ position (occurring in a game), than for any \emph{random} \Abalone\ position. When the Minimax algorithm expands a position by trying all possible moves, it will tend to ``randomize'' the board position, and therefore increasing the average number of possible moves. $M \approx 58$ has been chosen as a compromise in order to allow comparison with theoretical results (see Section~\ref{sec:gamesearching}). 
+
+Note the almost identical results for the Killer and Hash algorithm (the small branching factor of 4-ply Killer is probably due to stochastic deviation); this is not surprising -- whenever the Hash algorithm does not find a position in its tables, it does effectively employ the Killer algorithm. 
+
+
+
+
+
+
+\subsubsection*{Theoretical Branching Factor}\index{Branching Factor}
+\begin{figure}[htbp]
+\begin{center}
+\caption{Theoretical branching factor $b_t$} 
+\label{fig:b_t}
+\small
+\medskip
+\input{experim/b_t}
+\end{center}
+\end{figure}
+Figure \ref{fig:b_t} plots the theoretical branching factors $b_t = \sqrt[n]{e_a}$, which are derived from the total number of position evaluations $e_a$. The main difference between the empirical and theoretical branching factor is that $b_e$ is an essentially local statement, while $b_t$ has much more global expressiveness. For example does $b_t$ reflect the effects of quiescence search (see the Minimax players), the difference between the Killer and the Hash players, but also the overheads due to iterative search. 
+
+It is not surprising anymore that the Hash players perform best, further tests with 6-ply Hash (not depicted) confirm that $b_t$ will descend even more with increasing $n$. The branching factors for the $\alpha$--$\beta$ players are bounded by the asymptotical branching factor $R_{\alpha\mbox{\scriptsize--}\beta}$ as defined in Section~\ref{sec:gamesearching}; however, due to move ordering and other refinements do Killer and Hash attain substantially smaller branching factors.
+
+
+ 
+
+
+\subsubsection*{Use of Hash Tables}
+\begin{figure}[htbp]
+\begin{center}
+\caption{Use of hash tables $h$} 
+\label{fig:h}
+\small
+\medskip
+\input{experim/h}
+\end{center}
+\end{figure}
+Figure \ref{fig:h} shows how the efficiency $h$ of the hash tables increase with $n$. For $n=1,2$ every generated position in the search tree is unique, which makes the hash table no great advantage (see the corresponding $b_t$ values for Killer and Hash in Figure \ref{fig:b_t}). But with lookahead depth $n = 3$, move permutation becomes possible and $h$ jumps to more than $25\%$.
+Once more the value of the not depicted 6-ply Hash ($h \approx 40\%$)
+underpins the even/odd hypothesis; $h$ seems only to increase substantially after $n$ being even.
+
+
+
+
+
+
+
+
+
+\subsubsection*{Numerical results}
+Table \ref{tab:searchalgo} finally, holds all the numerical values (and more) used in the preceding figures.
+% Table
+\begin{table}[htbp]
+\caption{Search algorithm performances}
+\label{tab:searchalgo}
+\begin{center}
+\begin{tabular}{lr|rrrrrrrr}
+Algorithm & $n$ & $n_Q$ & $e_a$ & $e_m$ & $b_e$ & $b_t$ & $c$ & $t$ & $h$ \\
+\hline Minimax & 1 & 1.92 & 67 & 67 & 51.4 & 67.0 & 1.034 & 0.002 & --\\
+& 2 & 2.52 & 4003 & 4003 & 61.7 & 63.3 & 1.021 & 0.050 & --\\
+& 3 & -- & 263822 & 263822 & 63.0 & 64.1 & 1.025 & 3.585 & --\\
+\hline $\alpha$--$\beta$ & 1 & 1.64 & 57 & 57 & 53.4 & 57.0 & 0.994 & 0.001 & --\\
+& 2 & 2.36 & 700 & 700 & 13.0 & 26.5 & 0.804 & 0.013 & --\\
+& 3 & 3.73 & 16905 & 16905 & 23.1 & 25.7 & 0.779 & 0.274 & --\\
+& 4 & -- & 249071 & 249071 & 13.8 & 22.3 & 0.765 & 4.429 & --\\
+\hline Killer & 1 & 1.63 & 56 & 56 & 54.4 & 56.0 & 0.993 & 0.004 & --\\
+& 2 & 2.36 & 295 & 241 & 6.2 & 17.2 & 0.700 & 0.012 & --\\
+& 3 & 3.36 & 4503 & 4232 & 14.5 & 16.5 & 0.691 & 0.084 & --\\
+& 4 & 4.47 & 21046 & 16019 & 4.9 & 12.0 & 0.613 & 0.687 & --\\
+\hline Hash & 1 & 1.54 & 51 & 51 & 52.8 & 51.0 & 0.970 & 0.003 & 3\\
+& 2 & 2.43 & 296 & 243 & 6.6 & 17.2 & 0.701 & 0.014 & 5\\
+& 3 & 3.36 & 2873 & 2661 & 14.8 & 14.2 & 0.654 & 0.075 & 29\\
+& 4 & 4.58 & 13210 & 10089 & 6.7 & 10.7 & 0.584 & 0.519 & 25\\
+& 5 & 5.41 & 133830 & 122022 & 15.8 & 10.6 & 0.581 & 3.721 & 36
+\end{tabular}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The definitions of the characteristic values $n_Q ,e_a, \ldots$ are given at page \pageref{pag:characteristic}. \\
+Two $n_Q$ values are missing because of overflow.
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+
+\subsubsection*{Killer Moves}
+\begin{figure}[htbp]
+\begin{center}
+\caption{$e_a$ depending on the number of killer moves} 
+\label{fig:killermoves}
+\small
+\medskip
+\input{experim/killer}
+\end{center}
+\end{figure}
+In Section~\ref{sec:killermoves} it was already mentioned that the \Malin\ killer move implementation is based upon 6 killer moves per lookahead stage. Figure \ref{fig:killermoves} plots the number of total evaluations $e_a$ depending on the number of used killer moves. 3-ply Killer was used for testing, and 6 turned out to generate the fewest position evaluations. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

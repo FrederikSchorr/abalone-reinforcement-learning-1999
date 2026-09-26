@@ -1,0 +1,25 @@
+Chapter 1 
+Introduction 
+The basic paradigm of reinforcement learning is as follows (see Tesauro [Tes95]). The 
+learning agent observes an input state or input pattern, it produces an output signal 
+(most commonly thought of as an action of control signal ), and it receives an scalar 
+reward or reinforcement feedback signal from the environment indicating how good or 
+bad its output was. The goal of learning is to generate the optimal actions leading to 
+maximal reward. In many cases the reward is also delayed (i.e., is given at the end 
+of a long sequence of inputs and outputs). In this case the learner has to solve what 
+is known as the temporal credit assignment problem (i.e., it must figure out how to 
+apportion credit and blame to each of the various inputs and outputs leading to the 
+ultimate final reward signal). 
+The reinforcement learning paradigm has held great intuitive appeal, and has attracted 
+considerable interest for many years because of the notion of the learner being able to 
+learn on its own, without the aid of an intelligent teacher, from its own experience at 
+attempting to perform a task. In contrast, in the more commonly employed paradigm 
+of supervised learning, a ``teacher signal'' is required that explicitly tells the learner 
+what the correct output is for every input pattern. 
+The first large-scale success was Tesauros famous Backgammon-playing program TD- 
+Gammon [Tes94]. TD-Gammon is a neural network that trains itself to be an evalu- 
+ation function for the game of Backgammon by playing against itself and employing 
+the reinforcement learning paradigm. TD-Gammon has greatly surpassed all pre- 
+vious computer programs in its ability to play Backgammon and in at least some 
+1 
+

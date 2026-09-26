@@ -1,0 +1,36 @@
+\chapter{Conclusion} \label{cha:conclusion}
+
+\section{Further research}
+The initial objective of this master's thesis was the development of \emph{self-learning} \Abalone\ computer players. The (very recent) theory of neuro-dynamic programming proved to yield astonishingly good results, the neural networks employed were able to acquire a high degree of strategic knowledge. However, there is still little understanding of their learning behaviour. The following list proposes some subjects susceptible to further research.
+\begin{description}
+\item[Moderation of the stepsize $\gamma$] In order to improve the convergence behaviour, the stepsize $\gamma$ (used in iterative gradient like methods, see Eq.~(\ref{eq:impl:opti:online1})) should diminish over time. A popular choice is to let $\gamma = c/(m+d)$ in the course of the $m$th trajectory (training game), where $c$ and $d$ are some positive constants. \Malin\ currently only supports fixed stepsizes $\gamma = \gamma_0$.
+
+\item[Variation of the decay parameter $\lambda$] The quantity $\lambda\in [0,1]$ controls the temporal credit assignment of how an error feeds back to correct previous estimates. Experiments conducted in Section~\ref{sec:neuro:experim} could not register substantial performance differences for $\lambda \leq 0.5$, but it is very probable these results are forged by the ``non-moderation'' of the stepsize $\gamma$.
+
+\item[Radial basis functions] Neural networks are not the only possible universal approximators. Radial basis functions could be employed instead.
+
+\item[Number of training games] Tesauro \cite{lig*Tesauro95} reports that his Backgammon neural net\-works usually learn linear relationships first and only in a second phase start to reflect nonlinear affinities. It would further be very interesting if appropriate moderation of the stepsize $\gamma$ could effectively avoid overtraining. 
+
+\item[Chess] The game of \Abalone\ is somewhat between Backgammon and Chess; while its complexity is rather comparable to Backgammon, does it \emph{not} contain any random elements, thus being a deterministic game like Chess. Tesauro applied reinforcement learning to Backgammon; this work demonstrated that \Abalone\ as well is amendable to neuro-dynamic programming; the next logical step is to apply this promising methodology to the game of Chess.
+\end{description}
+
+
+
+
+
+
+
+
+\section{Aftereffects}
+Artificial intelligence (AI) researchers in the nineteen-sixties and seventies proclaimed in regular intervals that within ten years the world's best Chess player would be a machine; however, it was \emph{only in the nineties} that IBM's ``Deep Blue'' outperformed virtually all human players (except a handful of international masters). In the last five to ten years (the early nineteen-nineties), neuro-dynamic programming (NDP) has attracted rapidly increasing interest in the machine learning and artificial intelligence communities. Complex problems of planning and sequential decision making, that for a long time were thought to be intractable, are nowadays effectively solved by NDP. Is this the new AI miracle-tool? The development in Chess admonishes us against brash predictions, but it is nevertheless useful to outline some possible evolutions.
+
+This result of this work is ``only'' a pure software product and will consequently not have great impact on \emph{real-life}. However, it is not very difficult to imagine a neural network that uses the same methods to learn to play \emph{Pacman}\footnote{A famous computer game, where an \emph{agent} (Pacman!) has to survive in a maze with hidden treasures and hostile monsters.}. At the same time industrial robots build entire cars, independent mobile units explore the Mars, and humanoid robots are already capable of climbing staircases. The combination of such advanced robots with artificial intelligent ``brains'' will/\-can/\-could change our society dramatically! A real-life Pacman can/could learn to ``eat'' the dust in my apartment, to store and retrieve goods in huge subterranean warehouses, to rescue injured persons in radioactive environments, to drive my  car, to track and kill enemy soldiers in asian jungles, \ldots 
+
+These perspectives provoke a series of questions. Are these robots \emph{intelligent}? Is a human brain in its complexity and circumstantiality on principle superior to artificial neural networks? Will a robot ever be self-conscious? These questions are of philosophical nature, others focus on more practical issues. Will intelligent robots completely push aside workers in factories? How can we ensure the control over combat-robots? Is it not dangerous to develop intelligent beings missing an inherent control mechanism, some sort of moral sense, a conscience? 
+
+Although these questions have no immeadiate answers, they have to be brought to general public's attention -- artificial intelligence is of too serious consequences to be left over to the scientific community.
+
+
+
+
+

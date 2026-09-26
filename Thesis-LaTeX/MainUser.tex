@@ -1,0 +1,80 @@
+%\NeedsTeXFormat{LaTeX2e}[1995/06/01]
+\documentclass[12pt,oneside,a4paper]{article}
+%*************************************
+%***** Verwendete LaTeX2e-Pakete *****
+%*************************************
+
+% --- Unterstuetzen von deutschen Umlauten
+\usepackage[latin1]{inputenc}
+% --- Verwenden von DC-Fonts (erlaubt richtiges Trennen
+%      auch in Worten mit Umlauten)
+\usepackage{t1enc}
+% --- Papierformat soll A4 sein
+\usepackage{a4}
+% --- Haefig verwendete Zusatzpakete 
+% Nicht benötigte Packete sind herauskommentiert 
+%\usepackage{bibgerm,cite}      % Deutsche Bezeichnungen, Automatisches Zusammenfassen von Literaturstellen
+%\usepackage{nomencl}            % unterstützt Symbolverzeichnisse
+\usepackage[final]{graphicx}    % Einbinden von EPS-Grafiken unterstuetzen
+%\usepackage[draft]{graphicx}   
+%\usepackage{psfrag}             % Ersetzen vom Text in EPS-Bildern durch LaTeX ermöglichen
+%\usepackage{alltt}              % Für Quelltexte u.ä.
+%\usepackage{supertab}          % Mehrseitige Tabellen
+\usepackage{fancyhdr}           % Seitenkopf gestalten
+%\usepackage{hangcap}           % Eingerückte Überschriften verwenden 
+%\usepackage{theorem}
+%\usepackage{amsmath,amsfonts,amssymb,amsxtra} % AMSTEX unterstuetzen
+%\usepackage{mathrsfs}          % Für Funktionsmengen, mit \mathscr zugreifen z.B. Laplace- oder Fouriersymbol
+%\usepackage{my}
+%\usepackage[notcite,notref]{showkeys}          % Anzeigen aller \label und \ref -Kommandows
+
+
+% --- Trennmuster fuer Ausnahmefaelle
+%\hyphenation{Malin Aba-lone}
+
+% Document layout
+%\addtolength{\topmargin}{10mm}
+%\addtolength{\textheight}{-15mm}
+%\addtolength{\oddsidemargin}{7mm}
+%\addtolength{\textwidth}{-10mm}
+%\topmargin-0.3cm 
+%\textwidth15.7cm 
+%\textheight20.5cm 
+
+
+% Zeilenabstand: 1 1/2-zeilig
+\renewcommand{\baselinestretch}{1.3}
+
+% erste Zeile eines Absatzes nicht einrücken
+\parindent0em
+% Absatzabstand
+\parskip1.5ex
+
+% Tiefe der Gliederung
+\setcounter{secnumdepth}{5}
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{tocdepth}{2}
+
+
+%**** Abkürzungen ****
+\newcommand{\Abalone}{{\sc Abalone}}
+\newcommand{\Malin}{{\sc Malin}}
+
+
+
+
+
+% Hier beginnt das eigentliche Dokument!
+\begin{document}
+
+\title{\Malin\\An Abalone Playing Program\\User Guide}
+\author{Frederik {\sc Schorr} \\ Vienna University of Technology}
+\maketitle
+
+%\tableofcontents                 % Table of contents
+
+%**** Kapitel 1 *****
+\include{userguid.tex}
+
+\end{document}
+

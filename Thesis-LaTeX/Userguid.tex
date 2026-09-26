@@ -1,0 +1,157 @@
+% This file is used within two different main files. Therefore no chapter command is included.
+
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{\Malin\ in action}
+\vspace{5mm}
+\includegraphics[width=0.90\columnwidth]{userguid/intro.eps}
+\label{fig:intro}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The player {\sf Human} has already lost one marble against the (computer) player {\sf Gd}. \\
+According to the history pane, 12 moves (24 plies) have been played. \\
+\Malin\ is waiting since 57 seconds for {\sf Human} to play.
+\end{tabular}
+\end{center}
+\end{figure}
+
+\Malin\ is an \Abalone\ playing computer program running on Microsoft Windows platforms. It is primarily designed as a testbed for different game-playing algorithms (including neural networks) and \emph{not} as a commercial program. Nevertheless the program features a graphical user interface which makes it fairly easy to use. 
+
+By the way, the name \Malin\ is derived from the French adjective \emph{malin}, which could be translated to English by \emph{clever}, \emph{bright}, \emph{astute} and to German by \emph{schlau}, or \emph{gewitzt}.
+
+\section{First steps}
+Have a look at the Sreen-snapshot \ref{fig:intro}. 
+The largest part of the \Malin\ window is dedicated to the game board. From the {\sf Players} pane on the upper right side we know that the gray marbles belong to player {\sf Human} and that he has already lost 1 marble (although he is a very slow player!). The history pane below lists the 24 plies (making 12 complete moves) which have already been played. Finally pay attention to the status bar in the bottom line~-- for the moment \Malin\ is idle and waits for you to make a move.
+
+To make a move, mouse-click on the desired marbles (up to three)~-- this will highlight them.
+%, see Snapshot~\ref{fig:click}. 
+% *** EPS-Grafik *** 
+%\begin{figure}[htbp]
+%\begin{center}
+%\caption{Two highlighted marbles}
+%\vspace{5mm}
+%\includegraphics[width=0.3\columnwidth]{userguid/click.eps}
+%\label{fig:click}
+%\end{center}
+%\end{figure}
+Then try to move them, just as you would do with any other window: Mouse-click one of the highlighted marbles, tear it (mouse button still down) in the desired direction and release finally the mouse button. Did not work out? You can cheat by using the menu item {\sf Move}~-- {\sf Take Back} to undo your move \ldots
+
+If you want to sleep over the next move, use the menu items {\sf Game}~-- {\sf Save} and {\sf Game}~-- {\sf Open} respectively. By default \Malin\ proposes you to challenge a computer opponent, but you can use {\sf Game}~-- {\sf New} to setup a new game with two, three or four players, each of them being human or one of dozens of different computer players. By the way, \Malin\ is a fully multithreaded application (\emph{multi-tasking}), so there is no problem in interrupting \Malin\ while it is thinking about the next move.
+
+\section{Installation}
+\Malin\ comes with a standard installation utility: execute {\tt Setup.exe} and let you guide by the installation wizard. Basically you only have to determine the directory where the program files will be copied to. To remove \Malin\ from your system use the Microsoft Windows~98 remove utility: {\sf Start}~-- {\sf Settings}~-- {\sf Control Panel}~-- {\sf Add/Remove Programs}. This ensures that the tiny little entry in your system registration is also deleted.
+
+\section{Start a New Game}
+Now let's start to play the Game! By default (after starting up \Malin) you are proposed a game against a computer opponent, so you are ready to go! However, sometimes the default computer player will be too strong, or you might just want to see two computer players fighting against each other, \ldots By the way, \Malin\ does not know \emph{one} computer player whose strength is adjustable, but knows \emph{many} different computer players, who are by convention organized into families. The first generation got the generic name {\sf Aba}, the latest generation of \Malin\ computer players shares the root {\sf Gunilla}.
+
+To setup a new game select {\sf Game}~-- {\sf New} (Snapshot \ref{fig:game}).
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{The {\sf Game} menu}
+\vspace{5mm}
+\includegraphics[width=0.3\columnwidth]{userguid/game.eps}
+\label{fig:game}
+\end{center}
+\end{figure}
+The dialogbox {\sf New Game} (Snapshot \ref{fig:new}) pops up.
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{The {\sf New Game} dialog box}
+\vspace{5mm}
+\includegraphics[width=0.7\columnwidth]{userguid/new.eps}
+\label{fig:new}
+\end{center}
+\end{figure}
+You have to decide on the number of players (between two and four). Below you have to choose the players from drop-down-lists. Each entry in the drop-down-list contains a player along with a short description in parentheses, usually characterizing the strength of the player. For example
+\begin{center}
+\sf Emil (5 plies 3 sec alpha-beta hashtable)
+\end{center}
+tells you that the player {\sf Emil} thinks at least 5 plies (half-moves) in advance, and if the time budget of 3 seconds is not already scooped out, even farther. The algorithm used is alpha-beta pruning speeded up by a hashtable.
+
+If you want to change players during game, you can use {\sf Game}~-- {\sf Players}. A dialog box very similar to \ref{fig:new} pops up and allows you to change any player. You might for example want to look which move a expert computer player would select in a tricky situation.
+
+\section{Playing a Game}
+Once you started to play a game, you have lots of status information displayed in the main window. The {\sf Players} pane in the upper right for example (see Snapshot \ref{fig:players}) holds the name of the players and their score.
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{The {\sf Players} pane}
+\vspace{5mm}
+\includegraphics[width=0.45\columnwidth]{userguid/players.eps}
+\label{fig:players}
+\end{center}
+\end{figure}
+The ``checkbox'' contains the marble-color of the player, followed by his name. The number of enemy marbles kicked from the board ({\sf Ejected}) is matched against the number of lost marbles. In two player games it would not be necessary to display the number of lost marbles (they equal the opponents number of ejected marbles), but in three or four player games it can be useful. Finally the total thinking time is displayed.
+
+The {\sf History} pane below records the game, ply by ply. Each entry holds one move: when it was played, whose turn it was and which marbles where moved. The board notation used is somewhat similar to chess, but not that easy to read because of the hexagonal form of the \Abalone\ board. See Figure \ref{fig:notation} for an explanation.
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{\Malin\ board notation} \index{Abalone!board notation}
+\vspace{5mm}
+\includegraphics[width=0.45\columnwidth]{userguid/notation.eps}
+\label{fig:notation}
+\end{center}
+\begin{center}
+\footnotesize
+\begin{tabular}{l}
+The empty place in the upper left corner would be notated {\sf A1}, \\
+the two marbles in the lower right corner {\sf I8-I9}.
+\end{tabular}
+\end{center}
+\end{figure}
+
+Now let's have a look at the {\sf Move} menu in Snapshot \ref{fig:move}. One menu entry~-- {\sf Cancel}~-- is not available for the moment; this is because \Malin\ is idle, waiting for the user to move. 
+% *** EPS-Grafik *** 
+\begin{figure}[htbp]
+\begin{center}
+\caption{The {\sf Move} menu}
+\vspace{5mm}
+\includegraphics[width=0.30\columnwidth]{userguid/move.eps}
+\label{fig:move}
+\end{center}
+\end{figure}
+But imagine \Malin\ busy thinking about the next move for a computer player; if you want interrupt it to save the game, then you will {\sf Cancel} the game. To tell \Malin\ to take up thinking, select {\sf Compute}; this will obviously only work if it is a computer player's turn. {\sf Take Back} allows you to cheat~-- you can effectively take back moves until the very beginning of the game!
+
+Finally you will find two checkboxes at the bottom of the {\sf Move} menu. They both affect the behaviour of computer players. If {\sf Loop} is turned on (default), \Malin\ will always make computer players play when it is their turn, if it is turned off, you have to make \Malin\ play manually by selecting {\sf Compute}. When {\sf Highlight} is on (default), the computer players highlight their selected marbles (for one second) before moving them. This can be too time consuming when two computer opponents face each other.
+
+
+\section{Tools}
+The {\sf Tools} menu is mainly designed for developing purposes and will therefore not be discussed in detail. It contains a submenu which handles the creation and modification of computer players, but these functions require detailed knowledge of the internal \Malin\ design. The {\sf Tournament} tool allows to select several computer players for a tournament competition. \Malin\ then plays everybody against everybody although it is not displaying the game; the results are written to {\tt Malin.log}. Finally the {\sf Train Neural Net} entry takes a \Malin\ script file as argument, which is used to specify the training program for a neural computer player. However, this is beyond the scope of this User Guide.
+
+\section{How to \ldots?}
+\begin{description}
+\item[How do I know if a player is a computer or human player?] \hfill \\ The only \emph{human} player is called {\sf Human}, all other players are computer players. However, the status bar always tells you whether \Malin\ expects you to move or does the job itself.
+\item[Why do many computer players not accept three or four player games?]\hfill \\  Because playing against more than one player requires different programming techniques. All really good \Malin\ computer players are exclusively optimized for two player challenges, but you can always try the {\sf Aba} or {\sf Boub} computer player families.
+\item[What are these strange codes in the history pane?] \hfill \\ Each entry in the {\sf History} list box, corresponds to one move and records when it was played, whose turn it was and which marbles were selected. See Figure \ref{fig:notation} to understand the move notation.
+\item[How do I get advice of an expert computer player?] \hfill \\ There is no menu entry like ``Give advice'', but you can always use the {\sf Game}~-- {\sf Players} utility to change your ({\sf Human}) player into a computer expert, let him make one move and change back to the {\sf Human} player.
+\item[How about having several instances of \Malin\ running at the same time?] \hfill \\ No problem, your CPU will be occupied, that is all.
+\item[Does anything bad happen if I close the \Malin\ window while it is busy?] \hfill \\ No, \Malin\ cancels thinking and shuts itself down correctly.
+\item[What is left on my system, after I have run the remove utility?] \hfill \\ The program files and the entry in the system registration are deleted, only the four dynamic libraries stay in your Windows system directory.
+\end{description}
+
+\section{Files}
+\begin{description}
+\item[Program Files] These files are located in the directory chosen during setup.
+
+\begin{tabular}{ll}
+{\tt Malin.exe} & The \Malin\ executable \\
+{\tt *.ar} & Initialization files \\
+{\tt Malin.log} & The log file, used for example by the tournament tool
+\end{tabular}
+\item[Shared Dynamic Libraries] The dynamic libraries are as always stored in the Windows system directory. They are not deleted by the remove utility.
+
+\begin{tabular}{ll}
+{\tt Msvcrt.dll} & C++ runtime library \\
+{\tt Msvcirt.dll} & C++ runtime library \\
+{\tt Msvcp60.dll} & Microsoft Visual C++ 6.0\\
+{\tt Mfc42.dll} & Microsoft Foundation Classes 4.2
+\end{tabular}
+\item[Players]  The player files have the extension {\tt ap} and are stored in the subdirectory {\tt Player}.
+\item[Games] The game files have the extension {\tt ag} and are stored in the subdirectory {\tt Game}.
+\end{description}

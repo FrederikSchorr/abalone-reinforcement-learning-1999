@@ -1,0 +1,41 @@
+5.3 Optimistic TD(--) 77 
+class Perceptron 
+{ 
+int m_I; Number of input units 
+int m_H; Number of hidden units 
+float m_x[m_I]; The input vector of dimension m_I 
+float m_y[m_H]; The hidden vector of dimension m_H 
+float m_z; The output unit 
+float m_rih[m_I][m_H]; The weight matrix from input to hidden layer 
+float m_rho[m_H]; The weight vector from hidden to output layer 
+void propagate () 
+{ 
+Propagate the input vector m_x through the net 
+Input: m_x, m_I, m_H, m_rih, m_rho 
+Output: m_y, m_z 
+Calculate the activation levels of the hidden layer 
+for (h = 0; h < m_H; h++) 
+{ 
+m_y[h] = 0.0; Sum up inputs * weights 
+for (i = 0; i < m_I; i++) m_y[h] += m_rih[i][h] * m_x[i]; 
+Apply sigmoid function to hidden unit 
+m_y[h] = sigma(m_y[h]); 
+} 
+m_z = 0.0; Calculate the activation level of the output unit 
+for (h = 0; h < m_H; h++) m_z += m_rho[h] * m_y[h]; 
+} 
+float sigma (float x) 
+{ 
+return tanh(x); Tangent hyperbolical is used as sigmoid function 
+} 
+}; 
+5.3 Optimistic TD(--) 
+The neural network ~ 
+J('; r) introduced in Algorithm 5.1 is on principle capable of ap- 
+proximating any bounded function f(') of bounded variation (i.e. f(') = ~ 
+J ~ (')), 
+provided that the number H of units in the hidden layer is large enough (Hornik et al 
+[HSW89]). The typical problem in neural network programming is to determine the 
+a priori unknown weights parameter r in order to approximate f('). From a mathe- 
+matical viewpoint this is a (possibly nonlinear) optimization task, frequently resolved 
+

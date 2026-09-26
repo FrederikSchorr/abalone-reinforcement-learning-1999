@@ -1,0 +1,14 @@
+Abstract 
+This master's thesis applies artificial intelligence methods to Abalone, a two-player 
+strictly competitive game of perfect information. It assumes no prior knowledge of 
+artificial intelligence. Reinforcement learning (RL) is the problem faced by an agent 
+that learns behaviour through trial-and-error interactions with a dynamic environment. 
+This work gives a firm mathematical foundation of RL in combination with neural 
+networks. A feedforward neural network is conceived that is able to learn on its own to 
+play Abalone, without the aid of an intelligent teacher. Experiments are conducted to 
+determine its level of play and the influence of various learning parameters. The work 
+is completed by the development and analysis of advanced game-searching algorithms. 
+Keywords: Reinforcement Learning, Neuro-Dynamic Programming, Neural Network, 
+Abalone, Game, Game-searching. 
+iii 
+

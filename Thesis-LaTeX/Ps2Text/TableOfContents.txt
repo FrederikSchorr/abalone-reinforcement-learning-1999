@@ -1,0 +1,76 @@
+Contents 
+1 Introduction 1 
+1.1 Multilayer Perceptrons . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 
+1.2 Game-Searching Theory . . . . . . . . . . . . . . . . . . . . . . . . . . 5 
+1.3 Value of a Strictly Competitive Game . . . . . . . . . . . . . . . . . . . 6 
+1.4 Genetic Algorithms . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7 
+1.5 Case-Based Reasoning . . . . . . . . . . . . . . . . . . . . . . . . . . . 9 
+2 Neuro-dynamic Programming 12 
+2.1 Dynamic Programming . . . . . . . . . . . . . . . . . . . . . . . . . . . 13 
+2.1.1 Principal elements . . . . . . . . . . . . . . . . . . . . . . . . . 13 
+2.1.2 Infinite Horizon Problems . . . . . . . . . . . . . . . . . . . . . 15 
+2.2 Stochastic Shortest Path Problems . . . . . . . . . . . . . . . . . . . . 16 
+2.2.1 General Theory . . . . . . . . . . . . . . . . . . . . . . . . . . . 16 
+2.2.2 Value Iteration . . . . . . . . . . . . . . . . . . . . . . . . . . . 18 
+2.2.3 Policy Iteration . . . . . . . . . . . . . . . . . . . . . . . . . . . 19 
+2.2.4 Temporal Difference-Based Policy Iteration . . . . . . . . . . . . 21 
+2.2.5 Dynamic Sequential Games . . . . . . . . . . . . . . . . . . . . 23 
+2.3 Neuro-Dynamic Simulation Methods . . . . . . . . . . . . . . . . . . . 23 
+iv 
+
+Contents v 
+2.3.1 Simulation and Training . . . . . . . . . . . . . . . . . . . . . . 24 
+2.3.2 Lookup Table Representation . . . . . . . . . . . . . . . . . . . 25 
+2.3.3 Approximate Policy Evaluation . . . . . . . . . . . . . . . . . . 26 
+2.3.4 Approximate Policy Evaluation using TD(--) . . . . . . . . . . . 27 
+2.3.5 Approximate Optimistic TD(--) Policy Iteration . . . . . . . . . 29 
+2.3.6 Approximation in Dynamic Games . . . . . . . . . . . . . . . . 32 
+3 Malin -- An Abalone Playing Program 33 
+3.1 First steps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34 
+3.2 Installation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34 
+3.3 Start a New Game . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35 
+3.4 Playing a Game . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 36 
+3.5 Tools . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38 
+3.6 How to : : : ? . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39 
+3.7 Files . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39 
+4 Game-Searching Algorithms 41 
+4.1 Game-Playing Algorithms . . . . . . . . . . . . . . . . . . . . . . . . . 41 
+4.1.1 Position Evaluator . . . . . . . . . . . . . . . . . . . . . . . . . 41 
+4.1.2 Move Generator . . . . . . . . . . . . . . . . . . . . . . . . . . . 42 
+4.1.3 Game-Searching Algorithms . . . . . . . . . . . . . . . . . . . . 43 
+4.1.4 Deadlock Situation . . . . . . . . . . . . . . . . . . . . . . . . . 44 
+4.2 Position Evaluation by Feature Extracting . . . . . . . . . . . . . . . . 45 
+4.2.1 Three-Player Games . . . . . . . . . . . . . . . . . . . . . . . . 47 
+4.3 Search Algorithms . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48 
+4.3.1 Brute Force Negamax Search . . . . . . . . . . . . . . . . . . . 48 
+
+Contents vi 
+4.3.2 Quiescence Search . . . . . . . . . . . . . . . . . . . . . . . . . . 50 
+4.3.3 ¸--ž Search . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 53 
+4.3.4 Killer Moves . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56 
+4.3.5 Iterative Search . . . . . . . . . . . . . . . . . . . . . . . . . . . 58 
+4.3.6 Hash Tables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 60 
+4.3.7 Comparison . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 63 
+5 Neuro-Dynamic Game-Playing Algorithms 72 
+5.1 Theory . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 73 
+5.2 Multilayer Perceptron . . . . . . . . . . . . . . . . . . . . . . . . . . . . 76 
+5.3 Optimistic TD(--) . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 77 
+5.3.1 Online . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78 
+5.3.2 Offline . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 83 
+5.4 Reinforcement Player . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84 
+5.5 Features . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 87 
+5.6 State-Space Exploration . . . . . . . . . . . . . . . . . . . . . . . . . . 90 
+5.7 Experimentation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92 
+6 Conclusion 98 
+6.1 Further research . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 98 
+6.2 Aftereffects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 99 
+A Abalone -- Rules of the Game 101 
+B Malin -- Detailed Design 107 
+Bibliography 111 
+
+Contents vii 
+List of Figures 115 
+List of Tables 117 
+List of Algorithms 118 
+Index 119 
+

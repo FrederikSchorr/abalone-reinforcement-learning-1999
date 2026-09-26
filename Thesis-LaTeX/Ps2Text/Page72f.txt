@@ -1,0 +1,63 @@
+Chapter 5 
+Neuro-Dynamic Game-Playing 
+Algorithms 
+Chapter 4 introduces a series of Abalone playing programs, based on sophisticated 
+search algorithms and a hand-crafted position evaluator. In this chapter we will replace 
+the position evaluator by a neural network that trains itself to be an evaluation function 
+by playing against itself and learning from the outcome. Initially, this methodology 
+would appear unlikely to produce any sensible learning, but the rather surprising 
+finding is that a substantial amount of learning actually takes place. The best ``bred'' 
+neural network outperforms all hand-crafted players not only in quality of play but 
+also in speed! 
+We now present a brief summary of the implemented reinforcement learning system 
+(see Tesauro [Tes95]). The heart of the reinforcement learner is a neural network that 
+is organized as a standard multilayer perceptron (MLP), see Section 1.1. The training 
+procedure is as follows: the network observes a sequence of board positions j 0 , j 1 , 
+: : : , j N , starting with the opening position j 0 and ending in a terminal position j N 
+characterized by the score, i.e. 6 : 3 or 5 : 6. The board positions are fed as input 
+vectors x(j 0 ), x(j 1 ), : : : , x(j N ) to the neural network, encoded using a representation 
+scheme x(') that is described later. Each time step in the sequence corresponds to a 
+move made by one side, i.e. a half-move or a ply. For each input position j k there is 
+a neural network output ~ 
+J(j k ; r), where r is the network's weight vector. ~ 
+J(j k ; r) is 
+the neural networks estimate of the value of the position j k . At each time step, the 
+TD(--) algorithm is applied to change the network's weights. One possible formula for 
+72 
+
+5.1 Theory 73 
+the weight change is as follows: 
+r k+1 
+`` 
+~ 
+J(j k+1 ; r k ) (i m ; r m ); (5.1) 
+where ' is a small constant (commonly thought of as a stepsize or learning rate pa- 
+rameter), and r ~ 
+J(j; r) is the gradient of network output with respect to the weights 
+r. 
+The quantity -- is a heuristic parameter controlling the temporal credit assignment of 
+how an error detected at a given time step feeds back to correct previous estimates. 
+When -- = 0, no feedback occurs beyond the current time step, while when -- = 1, 
+the error feeds back without decay arbitrarily far in time. Intermediate values of -- 
+provide a smooth way to interpolate between these two limiting cases. 
+At the end of each game, a final reward signal J ~ (j N+1 ) is given, based on the outcome 
+of the game. The preceding Equation 5.1 is used to change the weights, except that 
+the difference 
+`` 
+J ~ (j N+1 ) 
+t 
+each time step during the course of a game, the neural network scores every possible 
+legal move. The move that is selected is then the move with maximum expected 
+outcome for the side making the move. In other words, the neural network is learning 
+from the results of playing against itself. This self-play training paradigm is used even 
+at the start of learning, when the network's weights are random, and hence its initial 
+strategy is a random strategy. 
+5.1 Theory 
+Chapter 2 follows Bertsekas and Tsitsiklis [BT96] to develop the notion of a stochastic 
+shortest path problem (Section 2.2), respectively its generalization to two-player dy- 
+namic sequential games (Section 2.2.5). We will now show how the game of Abalone 
+can be fitted into this framework. 
+The two principal elements of a problem of dynamic programming (DP) are, (see 
+Section 2.1.1) 
+1. A discrete-time dynamic system whose state transition depends on a control. We 
+

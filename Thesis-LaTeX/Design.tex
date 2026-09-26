@@ -1,0 +1,33 @@
+\chapter{Malin -- Detailed Design}\index{Malin!detailed design}
+\Malin\ 3.0 is an \Abalone\ playing computer program developed for Microsoft Windows platforms, see Chapter~\ref{cha:userguide} for an introducing user guide. This appendix is not a fully detailed design document, but gives a rough overview over the program architecture.
+
+\Malin\ 3.0 is entirely written in C++ as it comes with Microsoft Visual C++ 6.0. It makes use of a lot of advanced features of C++, like \emph{virtual base classes}, \emph{polymorphism}, \emph{operator overloading}, \emph{exception handling}, \emph{smart pointers} and \emph{templates}. The program (approximately 350kB in 100 files) is structured in two modules.
+\begin{description}
+\item[Kernel] The Kernel module comprises all \Abalone\ specific objects, see Figures \ref{fig:kernel} and \ref{fig:simulation}. For example the Player object is able to serialize itself to and from the disk, to allocate the necessary objects and to compute a move for a given position. The Game object manages its players, checks if all moves are legal and keeps the game history in memory. All Kernel objects are written in pure ANSI C++ in order to facilitate possible portation to other operating systems. Extensive use is made of the standard C++ libraries, particularly of the new C++ Standard Template Library (STL).
+
+\item[Framework] This module contains all operating-system dependent objects, see Figure \ref{fig:framework}. To a large extent these objects drive the user interface, but others manage the worker threads performing a best move search. \Malin\ 3.0 is multithreaded in a way that the user interface is always served by the main thread. This ensures that the program can be controlled by the user at any time. \Malin\ is based on the MFC~6.0 (Microsoft Foundation Class Library) single document architecture.
+\end{description}
+
+
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Kernel objects} \label{fig:kernel}
+\includegraphics[width=0.95\columnwidth]{graphics/kernel.eps}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Player-family specific objects} \label{fig:simulation}
+\includegraphics[width=0.95\columnwidth]{graphics/simul.eps}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\begin{center}
+\caption{Framework objects} \label{fig:framework}
+\includegraphics[width=0.8\columnwidth]{graphics/frame.eps}
+\end{center}
+\end{figure}

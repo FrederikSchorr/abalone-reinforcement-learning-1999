@@ -1,0 +1,520 @@
+\chapter{Neuro-dynamic Programming} \label{cha:neurodynamic}
+ 
+\nocite{Viertl97}
+\nocite{Mehlmann97}
+\nocite{Tesauro92}
+\nocite{lig*Tesauro94}
+\nocite{lig*Tesauro95}
+\nocite{lig*Tesauro89}
+\nocite{lig*Schraudolph94}
+\nocite{lig*Epstein94}
+\nocite{lig*Lee90}
+\nocite{Schaeffer92}
+\nocite{Goerz95}
+\nocite{Singh96}
+\nocite{Sutton92}
+\nocite{Berliner90}
+\nocite{Kaelbling96}
+\nocite{Lin92}
+\nocite{Singh92}
+\nocite{Parra93}
+\nocite{Elmenreich98}
+\nocite{Reiser94}
+\nocite{Kaindl89}
+\nocite{Pearl84}
+\nocite{Sedgewick92}
+\nocite{Dawid96}
+\nocite{Michalewicz96}
+\nocite{Atkinson93}
+\nocite{Bramer83}
+\nocite{Binmore92}
+\nocite{Schildt96}
+\nocite{Sutton93}
+\nocite{Littman96}
+
+{\em Reinforcement learning}\index{Reinforcement learning} is the problem faced by an agent that must learn behaviour through trial-and-error interactions with a dynamic environment. It dates back to early days of cybernetics and work in statistics, psychology, neuroscience, and computer science. In the last five to ten years (the early nineteen-nineties), new methods have attracted rapidly increasing interest in the machine learning and artificial intelligence communities. These methods are aiming to provide effective suboptimal solutions to complex problems of planning and sequential decision making under uncertainty, that for a long time were thought to be intractable. They claim to deal effectively with the dual curses of dynamic programming and stochastic optimal control: Bellman's\index{Curse of dimensionality} {\em curse of dimensionality} (the exponential computational explosion with the problem dimension is averted through the use of parametric approximate representations of the cost-to-go function), and the {\em curse of modeling}\index{Curse of modeling} (an explicit system model is not needed, and a simulator can be used instead). Furthermore, the methodology has a logical structure and a mathematical foundation. It draws on the theory of function, the theory of iterative optimization and neural network training, and the theory of dynamic programming. In view of the close connection with both neural networks and dynamic programming, Bertsekas and Tsitsiklis \cite{Bertsekas96} settled on the name {\em neuro-dynamic programming} (NDP),\index{Neuro-dynamic programming} 
+which describes better the nature of the subject than the older and more broadly applicable name {\em reinforcement learning}.
+
+This chapter is essentially a summary of Bertsekas and Tsitsiklis' excellent textbook on neuro-dynamic programming \cite{Bertsekas96}, focusing on topics relevant for game-playing algorithms. Its application to the game of \Abalone\ is discussed in Chapter~\ref{cha:impl:reinforcement}, but the presented theory is also applicable to non-deterministic games like Backgammon.
+
+Section \ref{sec:dp} gives a short introduction to \emph{dynamic programming}; Section \ref{sec:stochastic} concentrates on \emph{stochastic shortest path problems}, which will later be used to model the game \Abalone. Finally Section \ref{sec:ndpsimulation} (labeled \emph{neuro-dynamic simulation methods}) combines neural networks with dynamic programming.
+
+
+
+
+
+
+
+
+
+\section{Dynamic Programming}\index{Dynamic programming} \label{sec:dp}
+This section considers systems where decisions are made in stages. The outcome of each decision is not fully predictable but can be anticipated to some extent before the next decision is made. Each decision results in some immediate cost but also affects the context in which future decisions are to be made and therefore affects the cost incurred in future stages. We are interested in decision making policies that minimize the total cost over a number of stages. Such problems are challenging primarily because of the tradeoff between immediate and future costs. {\em Dynamic programming} (DP) provides a mathematical formalization of this tradeoff.
+
+
+
+
+\subsection{Principal elements} \label{sec:principalelements}
+The principal elements of a problem in dynamic programming are,
+\begin{enumerate}
+\item \emph{A discrete-time dynamic system whose state transition depends on a control}.\index{Control} Throughout this chapter, we assume that there are $n$ states, denoted by $1$, $2$, $\ldots$, $n$, plus possibly an additional termination state, denoted by 0. When at state $i$, the control must be chosen from a given finite set $U(i)$. At state $i$, the choice of a control $u$ specifies the transition probability $p_{ij}(u)$ to the next\index{Transition probability} state~$j$. 
+
+\item \emph{A cost that accumulates additively over time} and depends on the states visited and the controls chosen.\index{Cost} At the $k$th transition, we incur a cost $\alpha^kg(i,u,j)$, where $g$ is a given function, and $\alpha$ is a scalar with $0 < \alpha \leq 1$, called the \emph{discount factor}.\index{Discount factor} The meaning of $\alpha < 1$ is that future costs matter to us less than the same costs incurred at the present time. Discounted problems are of no interest for the analysis of typical games, we will therefore restrict this introduction to undiscounted models, where $\alpha = 1$.
+\end{enumerate}
+
+If we are in state $i$ and we choose control $u$, we move to state $j$ with given probability $p_{ij}(u)$. 
+The control $u$ depends on the state $i$ and the rule by which we select the controls is called a \emph{policy}.\index{Policy} Simultaneously with a transition from $i$ to $j$ under control $u$, it is not enough to look at the magnitude of the cost $g(i, u, j)$; we must also take into account the desirability of the next state $j$. We thus need a way to rank or rate states $j$. This is done by using the optimal cost (over all remaining states) starting from state $j$, which is denoted by $J^*(j)$ and is referred to as the optimal \emph{cost-to-go}\index{Cost-to-go!optimal} of state $j$. These costs-to-go can be shown to satisfy some form of \emph{Bellman's equation}\index{Bellman!equation}
+$$J^*(i) = \min_u E \left [ g(i,u,j) + J^*(j) \mid i,u \right ], \quad \mbox{for all}\ i,$$
+where $j$ is the state subsequent to $i$, and $E[\cdot \mid i,u]$ denotes expected value with respect to $j$, given $i$ and $u$. Generally, at each state $i$, it is optimal to use a control $u$ that attains the minimum above. Thus controls are ranked based on the sum of the expected cost of the present period and the optimal expected cost of all subsequent periods.
+
+We are interested in \emph{stationary policies}, that is, functions $\mu$
+mapping states into controls with $\mu(i) \in U(i)$ for all states $i$.\index{Policy!stationary}
+Let us denote by $i_k$ the state at time $k$. Once a stationary policy $\mu$ is fixed, the sequence of states $i_k$ becomes a \emph{Markov chain} with transition probabilities
+$$P(i_{k+1} = j \mid i_k = i) = p_{ij}(\mu(i)).$$
+
+We can distinguish between \emph{finite horizon problems}, where the cost accumulates over a finite number of stages, say $N$, and \emph{infinite horizon problems}, where the cost accumulates indefinitely.\index{Finite horizon problems} In $N$-stage problems the expected \emph{cost of a stationary policy $\mu$}, starting from an initial state $i$, is
+$$J^\mu_N(i) = E \left [G(i_N) + \sum^{N-1}_{k=0}g(i_k,\mu(i_k),i_{k+1}) \mid i_0=i \right ],$$
+where $G(i_N)$ is a terminal cost for ending up with final state $i_N$, and the expected value is taken with respect to the probability distribution of the Markov chain $\{i_0$, $i_1$, $\ldots$, $i_N\}$.
+This distribution depends on the initial state $i_0$ and the stationary policy $\mu$. 
+
+
+
+
+
+
+\subsection{Infinite Horizon Problems}\index{Infinite horizon problems}
+In infinite horizon problems, the total expected cost starting from an initial state $i$ and using a stationary policy $\mu$ is\index{Cost!of a stationary policy}
+$$J^\mu(i) = \lim_{N \rightarrow \infty} E \left [\sum^{N-1}_{k=0}g(i_k,\mu(i_k),i_{k+1}) \mid i_0=i \right ].$$
+The optimal cost-to-go starting from state $i$, is denoted by 
+$$J^*(i) = \min_\mu J^\mu(i).$$
+The costs $J^*(i)$, $i = 1,\ldots,n$, can be viewed as the components of a vector $J^*$, which is referred to as the \emph{optimal cost-to-go vector}.\index{Cost-to-go!vector}
+
+Three principal classes of infinite horizon problems can be distinguished: 
+\begin{description}
+\item[Stochastic shortest path problems]
+We assume that there is an additional state 0, which is a cost-free termination state; once the system reaches that state it remains there at no further cost. The structure of the problem is assumed to be such that termination is inevitable, at least under an optimal policy. Thus, the objective is to reach the termination state with minimal expected cost $J^\mu(i_0)$. The problem is in effect a finite horizon problem, but the length of the horizon may be random and may be affected by the policy being used.
+
+\item[Discounted problems]
+\index{Infinite horizon problems!discounted problems}
+Here, we assume that the discount factor $\alpha < 1$. We try to minimize the total cost 
+$$J^{\mu,\alpha}(i) = \lim_{N \rightarrow \infty} E \left [\sum^{N-1}_{k=0}\alpha^k g(i_k,\mu(i_k),i_{k+1}) \mid i_0=i \right ].$$ Note that the absolute one-stage cost $|g(i,u,h)|$ is bounded from above by some constant $M$, because of our assumption that $i$, $u$, and $j$ belong to finite sets; this makes the cost-to-go $J^{\mu,\alpha}(i)$ well defined because it is the infinite sum of a sequence of numbers that are bounded in absolute value by the decreasing geometric progression $\alpha^k M$.
+
+\item[Average cost per stage problems]
+\index{Infinite horizon problems!average cost per stage problems}
+Minimization of the total cost $J^\mu(i)$ makes sense only if $J^\mu(i)$ is finite for at least some policies $\mu$ and some initial state $i$. If this is not the case we can try to minimize the \emph{average cost per stage},\index{Cost!average per stage} given by
+$$\lim_{N \rightarrow \infty} \frac{1}{N}J^{\mu,\alpha}_N(i),$$ which frequently turns out to be well defined as a limit and finite.
+\end{description}
+
+The rest of this chapter concentrates on stochastic shortest path problems; Chapter \ref{cha:impl:reinforcement} shows how the game of \Abalone\ can be fitted into this model.
+
+
+
+
+
+
+
+
+\section{Stochastic Shortest Path Problems} \label{sec:stochastic} 
+\index{Stochastic shortest path problems}
+Here, we assume that there is no discounting ($\alpha = 1$) and, to make the cost-to-go meaningful, we assume that there exists a \emph{cost-free termination state}, denoted by 0.\index{Termination state} Once the system reaches that state, it remains there at no further cost, that is,
+$$p_{00} = 1, \quad g(0,u,0) = 0, \quad \forall u \in U(0).$$
+We are interested in problems where reaching the termination state is inevitable, at least under an optimal policy. Thus, the essence of the problem is how to reach the termination state with minimum expected cost.
+
+A special case of the stochastic shortest path problems is worth mentioning. \emph{The deterministic shortest path problem},\index{Deterministic shortest path problem} obtained when each control at a given state leads with certainty to a unique successor state. This problem is usually defined in terms of a directed graph consisting of $n$ nodes plus a destination node 0, and a set of arcs $(i,j)$, each having a given cost $c_{ij}$. The cost of a path consisting of a sequence of arcs is the sum of the costs of the arcs of the path. The objective is to find among all paths that start at a given node and end at the destination, a path that has minimum cost; this is also called a \emph{shortest path}. If we identify nodes with states, the outgoing arcs from a given node with the controls associated with the state corresponding to the node, and the costs of the arcs with the costs of the corresponding transitions, we obtain a special case of the problem of this section.
+
+\subsection{General Theory} \label{sec:generaltheory}
+In order to guarantee the inevitability of termination under an optimal policy, we introduce certain conditions that involve the notion of a \emph{proper policy}; that is a stationary policy that leads to the termination state with probability one, regardless of the initial state.\index{Policy!proper}\index{Policy!improper} A stationary policy that is not proper is said to be \emph{improper}.
+
+Throughout this section we assume the following.
+\begin{assumption} \label{ass:proper}
+There exists at least one proper policy.
+\end{assumption}
+\begin{assumption} \label{ass:improper}
+For every improper policy $\mu$, the corresponding cost-to-go $J^\mu(i)$ is infinite for at least one state $i$.
+\end{assumption}
+
+When specialized to the classical (deterministic) shortest path problem, Assumption \ref{ass:proper} is equivalent to assuming the existence of at least one path from each node to the destination in the underlying graph, while Assumption \ref{ass:improper} is equivalent to assuming that all cycles in the underlying graph have positive cost. These are the typical conditions under which deterministic shortest path problems are analyzed.
+
+Note that a simple condition that implies Assumption \ref{ass:improper} is that the expected one-stage cost $\sum^n_{j=0} p_{ij}(u)g(i,u,j)$ is strictly positive for all states $i \neq 0$ and $u \in U(i)$. Another important case where Assumptions \ref{ass:proper} and \ref{ass:improper} are satisfied is when \emph{all} policies are proper, that is when termination is inevitable under all stationary policies.
+
+
+
+
+\subsubsection*{A useful mapping}
+The form of DP algorithm motivates the introduction of two mappings that play an important theoretical role and provide a convenient shorthand notation in expressions that would be too complicated to write otherwise.
+
+For any vector $J=(J(1),\ldots,J(n))$, we consider the vector $TJ$ obtained by applying one iteration of the DP algorithm to $J$; the components of $TJ$ are
+$$ (TJ)(i) = \min_{u \in U(i)} \sum^n_{j=0} p_{ij}(u) \left( g(i,u,j) + J(j) \right), \qquad i=1,\ldots,n,$$ 
+where we will always use the convention that $J(0)=0$ instead of viewing $J(0)$ as a free variable. Note that $T$ can be viewed as a mapping that transforms a vector $J$ into the vector $TJ$. Furthermore $TJ$ is the optimal cost-to-go vector for the one-stage problem that has one-stage cost $g$ and terminal cost $J$.
+
+Similarly, for any vector $J$ and any stationary policy $\mu$, we consider the vector $T_\mu J$ with components
+$$ (T_\mu J)(i) = \sum^n_{j=0} p_{ij}\left(\mu(i)\right) \left( g(i,\mu(i),j) + J(j) \right), \qquad i=1,\ldots,n.$$ 
+
+We will denote by $T^k$ the composition of the mapping $T$ with itself $k$ times; that is, for all $k$ we write 
+$$(T^kJ)(i)=\left (T(T^{k-1}J)\right)(i), \qquad i=1,\ldots,n.$$
+Thus, $T^kJ$ is the vector obtained by applying the mapping $T$ to the vector $T^{k-1}J$. 
+The components of $T^k_\mu J$ are defined similarly. The following proposition gives the main results regarding stochastic shortest path problems. The proof can be found in \cite{Bertsekas95}.
+\begin{theorem} \label{the:stochastic}
+Consider the stochastic shortest path problem under Assumptions \ref{ass:proper} and \ref{ass:improper}.
+\begin{enumerate}
+\item The optimal cost-to-go vector $J^*$ has finite components and satisfies 
+$J^*=TJ^*.$
+Furthermore, $J^*$ is the only solution of the equation $J=TJ$.
+\item We have 
+$\lim \limits_{k \rightarrow \infty} T^kJ = J^*,$
+for every vector $J$.
+\item A stationary policy $\mu$ is optimal if and only if 
+$T_\mu J^* = TJ^*.$
+\item For every proper policy $\mu$ and every vector $J$, the associated cost-to-go vector $J^\mu$ satisfies
+$\lim \limits_{k \rightarrow \infty} T^k_\mu J = J^\mu.$
+Furthermore,
+$J^\mu = T_\mu J^\mu,$
+and $J^\mu$ is the only solution of this equation. \hfill {\it No~proof}
+\end{enumerate}
+\end{theorem}
+
+We now discuss a number of different methods for computing the optimal cost-to-go vector~$J^*$.
+
+
+
+
+
+
+\subsection{Value Iteration} \label{sec:dp:valueiteration}
+\index{Value iteration}
+The DP iteration that generates the sequence $T^kJ$ starting from some $J$ is called \emph{value iteration} and is a principal method for calculating the optimal cost-to-go vector $J^*$. Generally, the method requires an infinite number of iterations. However, under special circumstances, the method can terminate finitely. A prominent example is the case of a deterministic shortest path problem, but there are other more general circumstances where termination occurs. 
+
+In particular, let us assume that the transition probability graph corresponding to some optimal stationary policy $\mu^*$ is \emph{acyclic}.\index{Transition probability!graph} By this we mean that there are no cycles in the graph that has as nodes the states $0,1,\ldots,n$, and has an arc $(i,j)$ for each pair of states $i$ and $j$ such that $i \neq 0$ and $p_{ij}\left(\mu^*(i)\right) > 0$. Then it can be shown that the value iteration method will yield $J^*$ after at most $n$ iterations when started from the vector $J$ given by
+$$J(i) = \infty \qquad i = 1,\ldots,n.$$
+
+\index{Value iteration!asynchronous}In the value iteration method, the estimate of the cost-to-go vector is updated for all states simultaneously. An alternative is to update the cost-to-go at one state at a time, while incorporating into the computation the interim results. As long as $J(i)$ is iterated infinitely often for each state $i$, the validity of this method can also be proven.
+
+\begin{theorem}[Asynchronous Value Iteration Convergence] \hfill \\
+Consider the algorithm that starts with an arbitrary initial vector $J_0$ and at the $k$th iteration, chooses an index $i_k \in \{1,\ldots,n\}$, replaces the $i_k$th component of the current vector $J_k$ with $(TJ_k)(i_k)$, and leaves all other components of $J_k$ unchanged; that is
+$$J_{k+1}(i) = \left \{ 
+\begin{tabular}{ll}
+$(TJ_k)(i)$, \qquad  & if $i=i_k$, \\
+$J_k(i)$, & otherwise.
+\end{tabular} \right. $$
+Assume that all components are chosen for iteration infinitely often. Then, the generated sequence of cost-to-go vectors $J_k$ converges to $J^*$. \hfill {\it No~proof.}
+\end{theorem}
+
+
+
+
+
+
+\subsection{Policy Iteration} \label{sec:policyiteration}\index{Policy iteration}
+In general, value iteration requires an infinite number of iterations to obtain the optimal cost-to-go vector. There is an alternative to value iteration, called \emph{policy iteration}, which always terminates finitely. In this algorithm, we start with a proper policy $\mu_0$ and we generate a sequence of new proper policies $\mu_1, \mu_2, \ldots$. Given the policy $\mu_k$, we perform a \emph{policy evaluation step},\index{Policy evaluation step} that computes $J^{\mu_k}(i)$, $i = 1,\ldots,n$, as the solution of the (linear) system of equations
+\begin{equation} \label{equ:policyevaluation}
+J(i) = \sum^n_{j=0} p_{ij}\left(\mu_k(i)\right)\left(g(i,\mu_k(i),j) + J(j)\right), \qquad i = 1,\ldots,n,
+\end{equation}
+in the $n$ unknowns $J(1),\ldots,J(n)$ (recall that J(0) is set to zero). We then perform a \emph{policy improvement step},\index{Policy improvement step} which computes a new policy $\mu_{k+1}$ as 
+\begin{equation} \label{equ:policyimprovement}
+\mu_{k+1}(i) = \arg \min_{u \in U(i)} \sum^n_{j=0} p_{ij}(u)\left(g(i,u,j) + J^{\mu_k}(j)\right), \qquad i = 1,\dots,n,
+\end{equation}
+or equivalently as the policy satisfying
+$$T_{\mu_{k+1}}J^{\mu_k} = TJ^{\mu_k}.$$
+The process is repeated with $\mu_{k+1}$ used in place of $\mu_k$, unless we have $J^{\mu_{k+1}}(i) = J^{\mu_k}(i)$ for all $i$, in which case the algorithm terminates with the policy $\mu_k$. The following theorem establishes the validity of policy iteration.
+\begin{theorem}[Policy iteration convergence]
+The policy iteration algorithm generates an improving sequence of proper policies, that is $J^{\mu_{k+1}}(i) \leq J^{\mu_k}(i)$ for all $i$ and $k$, and terminates with an optimal policy. \hfill {\it No~proof}
+\end{theorem} 
+In practice the policy iteration algorithm typically requires very few iterations, although there are no theoretical guarantees for this.
+
+
+\index{Policy iteration!modified}
+When the number of states is large, solving the linear system in the policy evaluation step by direct methods such as Gaussian elimination is time-consuming. One way to get around this difficulty is to solve the linear system iteratively by using value iteration. In fact, we may consider solving the system approximately by executing a limited number of value iterations. The resulting method is called the \emph{modified policy iteration algorithm}.
+
+To formalize this method, let $J_0$ be an $n$-dimensional vector such that $TJ_0 \leq J_0$. Let $m_0,m_1,\ldots$ be positive integers, and let the vectors $J_1, J_2, \ldots$ and the stationary policies $\mu_0,\mu_1,\ldots$ be defined by 
+\begin{equation} \label{eq:modified}
+T_{\mu_k}J_k = TJ_k, \qquad J_{k+1}=T^{m_k}_{\mu_k}J_k, \qquad k=0,1,\ldots
+\end{equation}
+Thus a stationary policy $\mu_k$ is defined by from $J_k$ according to $T_{\mu_k}J_k = TJ_k$, and the cost-to-go $J^{\mu_k}$ is approximately evaluated by $m_k-1$ additional value iterations, yielding the vector $J_{k+1}$, which is used in turn to define $\mu_{k+1}$.
+\begin{theorem}[Modified Policy Iteration Convergence] \hfill \\
+Assume that $TJ_0 \leq J_0$ and let $(J_k,\mu_k)$ be the sequence generated by Eq.~(\ref{eq:modified}). Then $J_k$ converges to $J^*$. \hfill {\it No~proof.}
+\end{theorem}
+
+
+Note that if $m_k=1$ for all $k$ in the modified policy iteration algorithm, we obtain the value iteration method, while if $m_k = \infty$ we obtain the policy iteration method, where the policy evaluation step is performed iteratively by means of value iteration. It seems often to be best to take $m_k$ larger than 1 according to some heuristic scheme. A key idea is that a value iteration involving a single policy (evaluating $T_\mu J$ for some $\mu$ and $J$) is much less expensive than an iteration involving all policies (evaluating $TJ$ for some $J$), when the number of controls available at each state is large.
+
+
+
+
+
+\subsection{Temporal Difference-Based Policy Iteration}
+\label{sec:dp:temporaldifference}
+\index{Policy iteration!temporal difference-based}
+\index{Temporal differences}
+We mentioned earlier that when the number of states is large, it is usually preferable to carry out the policy evaluation step of the policy iteration method by using value iteration. A drawback of this approach, however, is that the value iteration algorithm may converge very slowly. This is true for many stochastic shortest path problems with a large number of states, as well as for discounted problems with a discount factor that is close to 1. We are thus motivated to use an approach whereby the discount factor is effectively reduced in order to accelerate the policy evaluation step. Remember that for stochastic shortest path problems the discount factor equals 1.
+
+The idea underlying the approach is that the discount factor can be reduced without altering the cost-to-go of a given policy only if the expected value of the one-stage cost under that policy is equal to 0. We thus introduce a transformation that asymptotically induces this one-stage cost structure. The transformation is based on the notion of \emph{temporal differences} (TD for short), which will be of major importance in the context of the simulation-based methods of section \ref{sec:ndpsimulation}.
+
+We now describe a policy-iteration like algorithm that maintains a policy-cost vector pair $(J_k,\mu_k)$. We can view $J_k$ as an approximation to the cost-to-go vector $J^{\mu_k}$. In the typical iteration, given $(J_k,\mu_k)$, we calculate $\mu_{k+1}$ by the policy improvement step
+$$T_{\mu_{k+1}}J_k = TJ_k.$$
+To calculate $J_{k+1}$, we define the TD associated with each transition $(i,j)$ under $\mu_{k+1}$:
+\begin{equation} \label{equ:temporaldiff}
+d_k(i,j) = g(i,\mu_{k+1}(i),j) + J_k(j) - J_k(i).
+\end{equation}
+We also consider a parameter $\lambda$ from the range $[0,1]$. We view $d_k(i,j)$ as the one-stage cost of policy $\mu_{k+1}$ for an $\lambda$-discounted DP problem with the transition probabilities $p_{ij}\left(\mu_{k+1}(i)\right)$ of the original problem, and we calculate the corresponding cost-to-go vector. This vector, denoted by $\Delta_k$, has components given by
+\begin{equation} \label{equ:deltak}
+\Delta_k(i) = E\left[\sum^\infty_{m=0} \lambda^m d_k(i_m,i_{m+1}) \mid i_0 = i \right], \qquad \forall i.
+\end{equation}
+The vector $J_{k+1}$ is then obtained by
+\begin{equation} \label{equ:iteration}
+J_{k+1} = J_k + \Delta_k.
+\end{equation}
+We refer to the method as the \emph{$\lambda$-policy iteration method}.\index{Policy iteration!$\lambda$}
+
+Note that when $\lambda = 1$, we obtain $J_{k+1} = J^{\mu_{k+1}}$, so the 1-policy iteration method coincides with the standard policy iteration method. However, for $\lambda < 1$, the two methods are different, and in fact it can be seen from Eqs.\ (\ref{equ:temporaldiff})-(\ref{equ:iteration}) that the 0-policy iteration method coincides with the value iteration method for the original problem.
+
+The motivation for the $\lambda$-policy iteration method is that the $\lambda$-discounted policy evaluation step can be much easier when $\lambda < 1$ than when $\lambda = 1$. In particular, when value iteration is used for policy evaluation, convergence is faster when $\lambda < 1$ than when $\lambda = 1$. Similarly, when policy evaluation is performed using a simulation approach, as in the NDP methods to be discussed in section \ref{sec:ndpsimulation}, the variance of the cost samples that are averaged by simulation is typically smaller when $\lambda < 1$ than when $\lambda = 1$, as can be seen from the definition of $\Delta_k$, cf. Eq.~(\ref{equ:deltak}). As a result, the number of cost samples that are required to evaluate by simulation the cost-to-go of a given policy within a given accuracy may be much smaller when $\lambda < 1$ than when $\lambda = 1$.
+
+On the negative side, the asymptotic convergence rate of the sequence $J_k$ produced by the $\lambda$-policy iteration method deteriorates as $\lambda$ becomes smaller. However, this disadvantage may not be very significant within the NDP approximation context to be discussed later. In particular, when the policy evaluation step cannot be performed with high accuracy, a reasonable practical objective is to obtain a policy whose cost is within the best ``achievable'' tolerance from the optimum, rather than to obtain the optimal cost-to-go function and an optimal policy. Under these circumstances, the asymptotic rate of convergence of $J_k$ may not be crucial, and using $\lambda < 1$ often requires a comparable number of policy iterations to attain the same performance level as using $\lambda = 1$.
+
+\begin{theorem}[TD-Based Policy Iteration Convergence] \hfill \\
+Assume $\lambda \in [0,1)$, $TJ_0 \leq J_0$ and let $(J_k,\mu_k)$ be the sequence generated by the $\lambda$-policy iteration algorithm. Then $J_k$ converges to $J^*$. \hfill {\it No~proof}
+\end{theorem}
+
+\subsection{Dynamic Sequential Games}
+\label{sec:dynamic:games}
+\index{Game!dynamic sequential}
+In this subsection we introduce a generalization of the stochastic shortest path DP model to the case where there is an opponent who aims to maximize the cost-to-go. We more precisely focus on an important subclass, where the \emph{Minimizer} and \emph{Maximizer} take turns in selecting the controls $u$ and $v$ respectively. The choice of each player is selected with full knowledge of preceding choice of the other player and the state transition resulting from that choice. We refer to this type of problem as a \emph{dynamic sequential game} with perfect information.
+
+To formalize this concept we introduce a state space of the form $\underline S \cup \overline S$. At a state $i$ of $\underline S$, only the Minimizer is allowed to choose a $u \in U(i)$ and the system then moves to a state $j \in \overline S$ with probability $\underline p_{ij}(u)$. Similarly, at a state $i$ of $\overline S$, only the Maximizer is allowed to choose a $v \in V(i)$ and the system then moves to a state $j\in\underline S$ with probability $\overline p_{ij}(u)$. We continue to assume that the sets $\underline S$, $\overline S$, $U(i)$, and $V(i)$ are all finite.
+
+The mapping $T$ can be defined by
+\begin{equation} \label{eq:games:t}
+(TJ)(i) = \left \{
+\begin{array}{ll}
+\min \limits_{u \in U(i)} \sum \limits_{j \in \overline S} \underline p_{ij}(u) \left ( g(i,u,j) + J(j) \right ),&  \qquad \forall i \in \underline S, \\
+\max \limits_{v \in V(i)} \sum \limits_{j \in \underline S} \overline p_{ij}(v) \left ( g(i,v,j) + J(j) \right ), & \qquad \forall i \in \overline S,
+\end{array} \right.
+\end{equation}
+
+As in the one-player game there exists a cost-free and absorbing termination state. If we assume that this state is reached with probability 1 under all policies for the Minimizer and the Maximizer, the validity of various value iteration and policy iteration methods can be proven. For example a value iteration method starting from some vector $J$ and sequentially generating $TJ, T^2J,\ldots$ will converge to
+$$ \lim_{k \rightarrow \infty} T^kJ = J^*,$$
+where $J^*(i)$ is the \emph{game-theoretic value} of the game at state $i$ (see Section~\ref{sec:gametheory}).\index{Value!game-theoretical}
+
+
+
+
+
+
+
+
+
+
+\section{Neuro-Dynamic Simulation Methods}
+\label{sec:ndpsimulation}
+The computational methods for dynamic programming problems that were described in Section \ref{sec:stochastic} apply when there is an explicit model of the cost structure and the transition probabilities of the system. However, such a model is often not available but instead the system and the cost structure can be simulated. By this we mean that the state space and the control space are known and there is a computer program that simulates, for a given control $u$, the probabilistic transitions from any given state $i$ to a successor state $j$ according to the transition probabilities $p_{ij}(u)$, and also generates the corresponding transition cost $g(i,u,j)$. It is then of course possible to use repeated simulation to calculate (at least approximately) the transition probabilities of the system and the expected cost per stage by averaging, and then to apply the dynamic programming methods discussed in Section \ref{sec:stochastic}.
+
+The methodology discussed in this section, however, is geared towards an alternative possibility, which is much more attractive when one contemplates approximations: the transition probabilities are not explicitly estimated, but instead the cost-to-go function of a given policy is progressively calculated by \emph{generating several sample system trajectories} and associated costs.
+
+We are interested in problems with a large number of states where a tabular description of $J^*$ is impossible. We will therefore replace the optimal cost-to-go $J^*(j)$ with a suitable approximation $\tilde J(j,r)$, where $r$ is a vector of parameters. The function $\tilde J(\cdot,r)$ will be called the \emph{approximate cost-to-go function}\index{Cost-to-go!approximate}, and the value $\tilde J(j,r)$ will be called the \emph{approximate cost-to-go} of state $j$. The general form of $\tilde J$ is known and is such that once the parameter  vector $r$ is fixed, the evaluation of $\tilde J(j,r)$ for any state $j$ is fairly simple. Any type of universal approximator of nonlinear mappings can be used, i.e., radial basis functions, multilayer perceptrons, wavelets, polynomials, splines,\ldots\index{Universal approximator} In the following we will use the term \emph{neural network} for all of these approximators.
+
+Approximating cost-to-go functions involving few parameters will be called \emph{compact representations}, while the tabular description of $J^*$ will be called the \emph{lookup table representation}. In a lookup table representation, the values $J^*(j)$ for all states $j$ are stored in a table. 
+
+
+
+
+
+
+
+
+\subsection{Simulation and Training}\index{Simulation}\index{Training}
+Some of the most successful applications of neural networks are in the areas of pattern recognition, nonlinear regression, and nonlinear system identification. In these applications the neural network is used as a universal approximator; the input--output mapping of the neural network is matched to an unknown nonlinear mapping $F$ of interest using a least-squares optimization, known as \emph{training the network}. To perform training, one must have training data, that is, a set of pairs $(i,F(i))$, which is representative of the mapping $F$ that is approximated.
+
+
+It is important to note that in contrast with these neural network applications, in the DP context there is no readily available training set of input--output pairs $(i,J^*(i))$ that could be used to approximate $J^*$ with a least squares fit. The only possibility is to evaluate (exactly or approximately) by simulation the cost-to-go functions of given (suboptimal) policies, and to try to iteratively improve the policies based on the simulation outcomes. This creates analytical and computational difficulties that do not arise in classical neural network training contexts. Indeed the use of simulation to evaluate approximately the optimal cost-to-go function is a key new idea that distinguishes the methodology of neuro-dynamic programming from earlier approximation methods in DP.
+
+Simulation offers another major advantage: it can implicitly identify the \emph{most important} or \emph{most representative} states of the system. It appears plausible that these states are the ones most often visited during simulation, and for this reason the scoring function will tend to approximate better the optimal cost-to-go function for these states, and the suboptimal policy obtained will on the average perform better.
+
+
+
+
+
+
+
+
+\subsection{Lookup Table Representation}\index{Lookup table representation}
+\label{sec:lookuptable}
+A \emph{lookup table representation} of the cost-to-go function $J$ keeps in memory a separate variable $J(i)$ for each state $i$. Consider for example the policy evaluation step (\ref{equ:policyevaluation}) used in the policy iteration method:
+\begin{equation} \label{equ:lookupevaluation}
+J(i) = \sum^n_{j=0} p_{ij}\left(\mu(i)\right)\left(g(i,\mu(i),j) + J(j)\right), \qquad i = 1,\ldots,n
+\end{equation}
+where $\mu$ is a fixed stationary policy and we wish to calculate the corresponding cost-to-go vector. Instead of (\ref{equ:lookupevaluation}) we want to update $J(i)$ by simulation. Suppose that we perform a simulation run using the policy $\mu$ that generates the state trajectory $(i_0,i_1,\ldots,i_N)$ where $i_N$ is the termination state 0. Then we can update the estimates $J(i_k)$ by using for each $k=0,\ldots,N-1$, the formula
+\begin{eqnarray} \label{equ:simulation}
+J(i_k) & := & J(i_k)+\gamma(i_k)\left( g(i_k,i_{k+1})+g(i_{k+1},i_{k+2})+\cdots+g(i_{N-1},i_N)- J(i_k)\right ) \nonumber \\
+& = & J(i_k)-\gamma(i_k)\left( J(i_k) - \sum \limits_{m=k}^{N-1} g(i_m,i_{m+1}) \right),
+\end{eqnarray}
+where the stepsize $\gamma(i_k)$ is allowed to change from one iteration to the next. There are many choices for the stepsizes $\gamma(i_k)$ under which the algorithm remains sound.
+
+It can be shown that the values $J(i)$ generated by (\ref{equ:simulation}) are guaranteed to converge to $J^\mu(i)$, with probability 1, provided that each state is visited by infinitely many trajectories and the stepsize diminishes towards zero at a suitable rate. Similar results are available for simulation algorithms corresponding to value iteration methods (Section \ref{sec:dp:valueiteration}) and temporal difference methods (Section \ref{sec:dp:temporaldifference}).
+
+The number of states in the problem we are interested in, is much too high for a lookup table representation of $J$, for the rest of this chapter we will therefore consider \emph{compact representations}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Approximate Policy Evaluation}\index{Policy evaluation step!approximate} \label{sec:approx:eval}
+Generally, we are interested in approximations of the cost-to-go function $J^\mu$ of a given policy $\mu$, or of the optimal cost-to-go function $J^*$. This is done using a function which, given a state $i$, produces an approximation $\tilde J(i,r)$ of $J^\mu(i)$ or $J^*(i)$. The approximating function involves a parameter vector $r$, and may be implemented using a neural network, a feature extraction mapping, or any other suitable architecture. The parameter $r$ is determined by optimization, often using some type of least square framework.
+
+This subsection demonstrates how the policy evaluation step carried out for a lookup table representation in Section~\ref{sec:lookuptable} is implemented with an approximate cost-to-go function $\tilde J(\cdot,r)$. Suppose that we have a fixed a proper policy $\mu$, a set of representative states $\tilde S$, and that for each $i \in \tilde S$, $c(i)$ is a sample of the cost $J^\mu(i)$. $r$ is a parameter vector to be determined by solving the least squares optimization problem
+\begin{equation} \label{equ:leastsquares}
+\min_r \sum_{i \in \tilde S} \left( \tilde J(i,r) - c(i)\right)^2.
+\end{equation}
+This least squares problem can be solved by an incremental gradient update rule,\index{Incremental gradient iteration} 
+\begin{equation} \label{eq:incrementalgradient}
+r := r - \gamma~\nabla_r\tilde J(i,r) \left( \tilde J(i,r) - c(i)\right),
+\end{equation}
+where $\gamma$ is a stepsize. In order to approximate $J^\mu(i)$ by $\tilde J(i,r)$, we repeat the update rule \ref{eq:incrementalgradient} for all $i \in \tilde S$.
+
+Given a sample state trajectory $(i_0,i_1,\ldots,i_N)$ generated using the policy $\mu$, the sample cost $c(i_k)$ is defined by 
+$$c(i_k) = \sum_{m=k}^{N-1} g(i_m,\mu(i),i_{m+1}).$$
+The parameter vector $r$ is then updated by 
+\begin{equation} \label{equ:incrementalgradient}
+r:= r-\gamma \sum_{k=0}^{N-1} \nabla_r \tilde J(i_k,r) \left( \tilde J(i_k,r) - \sum_{m=k}^{N-1} g(i_m,\mu(i_m),i_{m+1}) \right).
+\end{equation}
+This update rule is called an \emph{offline} variant because the parameter vector $r$ is only updated at the end of the trajectory. If the approximate cost-to-go $\tilde J(\cdot,r)$ is already sufficiently close to $J^\mu$ the policy evaluation step is completed, otherwise a new sample state trajectory is generated and the procedure repeated. Note the formal similarities between the policy evaluation algorithm for lookup tables (\ref{equ:simulation}) and compact representations (\ref{equ:incrementalgradient}).
+
+
+
+
+
+
+\subsection{Approximate Policy Evaluation using TD($\lambda$)}\index{Policy evaluation step!approximate TD($\lambda$)} \label{sec:approx:eval:td}
+In the preceding subsection we discussed one possible method for approximate policy evaluation, here we develop an alternative implementation, in terms of temporal differences (TD). We will see that an algorithm called TD(1) can be interpreted as a type of incremental gradient method for solving the least squares problem associated with the cost-to-go approximation. We then modify TD(1) using a parameter $\lambda$, and we obtain a family of methods corresponding to the TD~methods of Section \ref{sec:dp:temporaldifference}. The motivation for TD($\lambda$) is not as clear as in Section \ref{sec:dp:temporaldifference}, and in fact we will argue that as $\lambda$ becomes smaller, there is a tendency for the quality of the cost-to-go approximation to deteriorate. Nonetheless, there are reasons for interest in TD($\lambda$), for $\lambda < 1$: there is empirical evidence that for some problems, particularly those where the cost-to-go have large variance, it converges faster and leads to better performance than that obtained from TD(1).
+
+Throughout this subsection, we assume that a policy $\mu$ has been fixed. For this reason, we do not need to show the dependence of various quantities on $\mu$, and we employ the notation $g(i,j)$.
+
+
+
+
+\subsubsection*{TD($\lambda$) for $\lambda=1$}
+%\label{sec:td1}
+In the approximate policy evaluation step discussed in Section~\ref{sec:approx:eval}, we pick an initial state $i_0$ and generate a sample trajectory $(i_0,i_1,\ldots,i_N)$. Once this trajectory is available we update the parameter vector $r$ according to the incremental gradient iteration (\ref{equ:incrementalgradient}). 
+
+We define temporal differences $d_k$ by\index{Temporal differences} 
+\begin{equation} \label{equ:temporaldifferences}
+d_k=g(i_k,i_{k+1})+\tilde J(i_{k+1},r) - \tilde J(i_k,r), \qquad k=0,\ldots, N-1,
+\end{equation}
+and using the fact $\tilde J(i_N,r) = \tilde J(0,r) = 0$, the iteration (\ref{equ:incrementalgradient}) becomes
+\begin{equation} \label{equ:incrementaltd}
+r := r + \gamma \sum_{k=0}^{N-1} \nabla_r \tilde J(i_k,r)(d_k + d_{k+1}+\cdots+d_{N-1}).
+\end{equation}
+
+Instead of waiting for the end of the trajectory to update $r$ as above, we may perform the part of the update involving $d_k$ as soon as $d_k$ becomes available. This leads to the update equation
+\begin{equation} \label{equ:online0}
+r:=r+\gamma d_k \sum_{m=0}^k \nabla_r \tilde J(i_m,r), \qquad k= 0,1,\ldots,N-1.
+\end{equation}
+For example, following the state transition $(i_0,i_1)$, we set
+\begin{equation} \label{equ:online1}
+r:=r+\gamma d_0 \nabla_r \tilde J(i_0,r).
+\end{equation}
+Following the state transition $(i_1,i_2)$, we set 
+\begin{equation} \label{equ:online2}
+r:=r+\gamma d_1 \left( \nabla_r \tilde J(i_0,r) + \nabla_r \tilde J(i_1,r) \right), 
+\end{equation}
+and similarly for subsequent transitions.
+
+If all updates of the vector $r$ are performed at the end of a trajectory, the method is denominated \emph{offline}. If on the other hand, an update is performed subsequent to each transition, according to Eqs.\ (\ref{equ:online0})-(\ref{equ:online2}), we have an \emph{online} method.
+
+Note that in order to expect any kind of convergent behaviour, the stepsize $\gamma$ should diminish over time. A popular choice is to let $\gamma = c/(m+d)$ in the course of the $m$th trajectory, where $c$ and $d$ are some positive constants. We should also stress the importance of proper sampling. In particular, the method used for picking the initial states can be crucial to the quality of the cost-to-go approximation constructed by TD(1). One generally expects the approximation to be better for those states that are more frequently visited, and the identity of these states depends strongly on the initialization of the simulated trajectories.
+
+
+
+
+
+
+\subsubsection*{TD($\lambda$) for general $\lambda$}
+%\label{sec:tdlambda}
+While TD(1) is equivalent to approximate policy evaluation, will we now generalize from TD(1) to TD($\lambda$), where $\lambda$ is a parameter in $[0,1]$. In an offline version of TD($\lambda$), a trajectory $i_0,i_1,\ldots,i_N$ is simulated and afterwards the parameter vector $r$ is updated by letting 
+$$r:=r+\gamma \sum_{m=0}^{N-1} \nabla_r \tilde J(i_m,r) \sum_{k=m}^{N-1} d_k \lambda^{k-m}.$$
+In the online version, the terms involving $d_k$ are used for a particular update of $r$, as soon as $d_k$ becomes available. More specifically, for $k=0,\ldots,N-1$, following the state transition $(i_k,i_{k+1})$, we set
+$$r:= r + \gamma d_k \sum_{m=0}^k \lambda^{k-m} \nabla_r \tilde J(i_m,r).$$
+
+While this method has received wide attention, its convergence behavior is unclear. In general, when $\lambda < 1$, TD($\lambda$) resembles an incremental gradient method for the objective function $\sum_i \left( \tilde J(i,r) - J^\mu(i) \right )^2$, except that some error terms are added to the gradient.
+
+
+
+
+
+
+
+
+\subsection{Approximate Optimistic TD($\lambda$) Policy Iteration}\index{Policy iteration!approximate}\index{Policy iteration!optimistic TD($\lambda$)}\index{Optimistic TD($\lambda$)}
+\label{sec:optimistic}
+In policy iteration a sequence $(r_t,\mu_t)$ is generated by subsequently performing a policy evaluation and a policy improvement step. In a evaluation step we fix the policy $\mu_t$ and calculate $r_t$ so that $\tilde J(\cdot,r_t)$ approximates $J^{\mu_t}$; this is the subject of Section~\ref{sec:approx:eval} and \ref{sec:approx:eval:td}. The policy improvement step updates the policy by switching to the new policy $\mu_{t+1}$ which is greedy with respect to $\tilde J(\cdot,r_t)$. An alternative is to perform a policy update earlier, before the approximate evaluation of $J^{\mu_t}$ converges. An extreme possibility, is to use a simulation-based method for approximating $J^{\mu_t}$ and to replace $\mu_t$ with $\mu_{t+1}$ subsequent to the simulation of \emph{every state trajectory} (offline variant) or even subsequent to \emph{every state transition} (online variant). The resulting type of method, which we will call \emph{optimistic policy iteration}, is often used in practice, sometimes with success, even though there is little understanding of its convergence behaviour. It is also the method we will use in Chapter \ref{cha:impl:reinforcement}, when implementing an \Abalone\ reinforcement learner.
+
+
+
+
+
+\subsubsection*{Online Optimistic TD($\lambda$)}\index{Optimistic TD($\lambda$)!online}
+We will describe here the TD($\lambda$)-based variant of optimistic policy iteration that updates the current policy after every state transition $(i_k,i_{k+1})$
+
+At a typical iteration, we are at some state $i_k$ and we have a current parameter vector $r_k$. We select $u_k \in U(i_k)$ such that
+\begin{equation} \label{equ:optimistic:uk}
+u_k = \arg \min_{u \in U(i_k)} \sum_{j=1}^n p_{i_kj}(u) \left( g(i_k,u,j) + \tilde J(j,r_k) \right),
+\end{equation}
+we generate the next state $i_{k+1}$ by simulating a transition according to the transition probabilities $p_{i_kj}(u_k)$, and finally we perform the TD($\lambda$) update
+$$r_{k+1} = r_k + \gamma_k d_k \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m, r_k),$$
+where $d_k$ is the temporal difference\index{Temporal differences} 
+\begin{equation} \label{eq:optimistic:d_k}
+d_k = g(i_k,u_k,i_{k+1}) + \tilde J(i_{k+1},r_k) - \tilde J(i_k,r_k).
+\end{equation}
+In fact, this method is not easily implemented because we need to evaluate a different gradient $\nabla \tilde J(i_m,r_k)$ for each $k$ and $m$. For this reason, one uses instead the update rule
+\begin{equation} \label{eq:optimistic:online0}
+r_{k+1} = r_k + \gamma_k d_k \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_m).
+\end{equation}
+The gradient $\nabla \tilde J(i_m,r_m)$ is evaluated just once, when state $i_m$ is reached. If we define the \emph{eligibility vector}\index{Eligibility vector}
+\begin{equation} \label{eq:optimistic:online1}
+e_k = \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_m),
+\end{equation}
+the algorithm takes the simpler form 
+\begin{equation} \label{eq:optimistic:online2}
+r_{k+1} = r_k + \gamma_k d_k e_k,
+\end{equation}
+The eligibility vector can also be defined iteratively,  
+\begin{equation} \label{eq:optimistic:online3}
+e_{k+1} = \lambda e_k + \nabla \tilde J(i_{k+1},r_{k+1}).
+\end{equation}
+
+Note that if we set $\lambda = 0$, we get an algorithm of the form
+$$ r_{k+1} = r_k + \gamma_k d_k \nabla \tilde J(i_k,r_k). $$
+
+
+
+
+
+\subsubsection*{Offline Optimistic TD($\lambda$)}\index{Optimistic TD($\lambda$)!offline}
+For the offline variant, suppose that we update the policy at the end of each trajectory. Let $r_t$ be the value of the parameter vector at the beginning of the $t$th trajectory. We pick an initial state $i_0$ and simulate a trajectory $i_0,i_1,\ldots,i_N$, using the policy $\mu_t$ defined by 
+$$ \mu_t(i) = \arg \min_{u \in U(i)} \sum_j p_{ij}(u) \left( g(i,u,j) + \tilde J(j,r_t) \right), \qquad \forall i.$$
+Of course, we do not need to generate the policy for all states $i$; it is only when the trajectory reaches a state $i$ that we compute $\mu_t(i)$ as above. Then, at the end of the trajectory, we update the parameter vector $r$ by letting 
+\begin{eqnarray} \label{eq:optimistic:offline}
+r_{t+1} & = & r_t + \gamma_t \sum \limits_{k=0}^{N-1} d_k \sum \limits_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_t) \\
+& = & r_t + \gamma_t \sum \limits_{k=0}^{N-1} \nabla \tilde J(i_k,r_t)(d_k+\lambda d_{k+1}+\cdots+\lambda^{N-1-k}d_{N-1}). \nonumber
+\end{eqnarray}
+
+\subsection{Approximation in Dynamic Games}
+\index{Game!approximation}
+The NDP methodology with cost-to-go function approximation is not very well developed at present for dynamic games (see Section \ref{sec:dynamic:games}). However, there have been reports of success with some of the natural extensions of the one-player NDP methods to sequential games \cite{lig*Tesauro95}. An interesting and straightforward possibility is to implement an approximate version of the optimistic policy iteration algorithm. For example, a TD($\lambda$)-based method that parallels the online method given in Section \ref{sec:optimistic} operates as follows. At the typical iteration, we are at some state $i_k$ and we have a current parameter vector $r_k$. If $i_k \in \underline S$, we select $u_k \in U(i_k)$ such that 
+$$u_k = \arg \min_{u \in U(i_k)} \sum_{j \in \overline S} \underline p_{i_kj}(u) \left (g(i_k,u,j) + \tilde J(j,r_k) \right ),$$ 
+we generate the next state $i_{k+1}$ by simulating a transition according to the transition probabilities $\underline p_{i_kj}(u_k)$, and finally we perform the TD($\lambda$) update
+$$r_{k+1} = r_k +\gamma_k d_k \sum_{m=0}^k \lambda^{k-m} \nabla \tilde J(i_m,r_m),$$
+where $d_k$ is the temporal difference 
+$$d_k = g(i_k,u_k,i_{k+1}) + \tilde J(i_{k+1}, r_k) - \tilde J(i_k,r_k).$$
+If $i_k \in \overline S$, we use the corresponding formulas where $u_k$ is replaced by 
+$$ v_k = \arg \max_{v \in V(i_k)} \sum_{j \in \underline S } \overline p_{i_kj}(v) \left (g(i_k,v,j) + \tilde J(j,r_k) \right ),$$ 
+and the next state $i_{k+1}$ is generated by simulating a transition according to the transition probabilities $\overline p_{i_kj}(v_k)$. Similar to the one-player case, no guarantees of success can be offered for this type of method.
+
+

@@ -1,0 +1,26 @@
+Chapter 2 
+Neuro-dynamic Programming 
+Reinforcement learning is the problem faced by an agent that must learn behaviour 
+through trial-and-error interactions with a dynamic environment. It dates back to early 
+days of cybernetics and work in statistics, psychology, neuroscience, and computer 
+science. In the last five to ten years (the early nineteen-nineties), new methods have 
+attracted rapidly increasing interest in the machine learning and artificial intelligence 
+communities. These methods are aiming to provide effective suboptimal solutions to 
+complex problems of planning and sequential decision making under uncertainty, that 
+for a long time were thought to be intractable. They claim to deal effectively with 
+the dual curses of dynamic programming and stochastic optimal control: Bellman's 
+curse of dimensionality (the exponential computational explosion with the problem 
+dimension is averted through the use of parametric approximate representations of 
+the cost-to-go function), and the curse of modeling (an explicit system model is not 
+needed, and a simulator can be used instead). Furthermore, the methodology has a 
+logical structure and a mathematical foundation. It draws on the theory of function, 
+the theory of iterative optimization and neural network training, and the theory of 
+dynamic programming. In view of the close connection with both neural networks and 
+dynamic programming, Bertsekas and Tsitsiklis [BT96] settled on the name neuro- 
+dynamic programming (NDP), which describes better the nature of the subject than 
+the older and more broadly applicable name reinforcement learning. 
+This chapter is essentially a summary of Bertsekas and Tsitsiklis' excellent textbook 
+on neuro-dynamic programming [BT96], focusing on topics relevant for game-playing 
+algorithms. Its application to the game of Abalone is discussed in Chapter 5, but 
+12 
+

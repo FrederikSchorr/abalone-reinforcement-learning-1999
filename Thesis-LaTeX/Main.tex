@@ -1,0 +1,191 @@
+\NeedsTeXFormat{LaTeX2e}[1995/06/01]
+\documentclass[12pt,oneside,a4paper]{report}
+%*************************************
+%***** Verwendete LaTeX2e-Pakete *****
+%*************************************
+
+% --- Unterstuetzen von deutschen Umlauten
+\usepackage[latin1]{inputenc}
+% --- Verwenden von DC-Fonts (erlaubt richtiges Trennen
+%      auch in Worten mit Umlauten)
+\usepackage{t1enc}
+% --- Papierformat soll A4 sein
+\usepackage{a4}
+% --- Haefig verwendete Zusatzpakete 
+% Nicht benötigte Packete sind herauskommentiert 
+%\usepackage{bibgerm,cite}      % Deutsche Bezeichnungen, Automatisches Zusammenfassen von Literaturstellen
+\usepackage{nomencl}            % unterstützt Symbolverzeichnisse
+\usepackage[final]{graphicx}    % Einbinden von EPS-Grafiken unterstuetzen
+%\usepackage[draft]{graphicx}   
+%\usepackage{psfrag}             % Ersetzen vom Text in EPS-Bildern durch LaTeX ermöglichen
+\usepackage{alltt}              % Für Quelltexte u.ä.
+%\usepackage{supertab}          % Mehrseitige Tabellen
+\usepackage{fancyhdr}           % Seitenkopf gestalten
+%\usepackage{hangcap}           % Eingerückte Überschriften verwenden 
+\usepackage{theorem}
+\usepackage{amsmath,amsfonts,amssymb,amsxtra} % AMSTEX unterstuetzen
+%\usepackage{mathrsfs}          % Für Funktionsmengen, mit \mathscr zugreifen z.B. Laplace- oder Fouriersymbol
+%\usepackage{my}
+%\usepackage[notcite,notref]{showkeys}          % Anzeigen aller \label und \ref -Kommandows
+
+
+% --- Trennmuster fuer Ausnahmefaelle
+\hyphenation{Malin Aba-lone}
+%\makeglossary                  % Erstellung von Symbolverzeichnis veranlassen
+\makeindex
+
+% Document layout
+\addtolength{\topmargin}{10mm}
+\addtolength{\textheight}{-15mm}
+\addtolength{\oddsidemargin}{7mm}
+\addtolength{\textwidth}{-10mm}
+%\topmargin-0.3cm 
+%\textwidth15.7cm 
+%\textheight20.5cm 
+
+
+% Seitenumbruchsteuerung, bei wenigen Zeilen nach Überschrift am Zeilenende   
+\def\condbreak#1{\vskip 0pt plus #1\pagebreak[3]\vskip 0pt plus -#1\relax}
+
+% Kopfzeilen festlegen 
+% wenn: \documentclass[12pt,oneside,a4paper]{report}
+% - Erscheint nur der Section-Title
+%
+% wenn:\documentclass[12pt,oneside,a4paper]{report}
+% dann
+% - auf ungraden Seiten erfolgt die Darstellung des Kapitelnamens
+% - auf geraden Seiten die Darstellung der Section's
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter. #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
+\addtolength{\headheight}{7pt}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\lhead[\fancyplain{}{\thepage}] {\fancyplain{}{\rightmark}}
+\rhead[\fancyplain{}{\leftmark}]{\fancyplain{}{\thepage}}
+\cfoot{}                                            
+
+% Zeilenabstand: 1 1/2-zeilig
+\renewcommand{\baselinestretch}{1.3}
+
+% erste Zeile eines Absatzes nicht einrücken
+\parindent0em
+% Absatzabstand
+\parskip1.5ex
+
+% Tiefe der Gliederung
+\setcounter{secnumdepth}{5}
+% Tiefe des Inhaltsverzeichnisses
+\setcounter{tocdepth}{2}
+
+
+%**** Abkürzungen ****
+\newcommand{\al}{\tt \small}
+\newcommand{\com}[1]{{\rm \small \textit{#1}}}		 % Comment in algorithms
+\newcommand{\rcom}[1]{{\hfill \makebox[8.5cm][l]{\com{#1}}}}
+
+\newcommand{\Abalone}{{\sc Abalone}}
+\newcommand{\Malin}{{\sc Malin}}
+\newcommand{\?}{{\em Whatsitsname? \ldots}}
+
+
+% Definition von Theorem-Umgebungen
+\theoremstyle{plain}
+\theorembodyfont{\upshape}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{assumption}{Assumption}[chapter]
+
+\newtheorem{_algorithm}{Algorithm}[chapter]
+\newenvironment{algorithm}[1][]
+   {\write\lalfile{\string\contentsline
+      {figure}
+      {\string\numberline{\arabic{chapter}.\arabic{_algorithm}}#1}
+      {\thepage}}
+    \begin{_algorithm}[#1] \renewcommand{\baselinestretch}{1.0} 
+      \begin{list}{}{\leftmargin2.0em \parsep0pt \itemsep0pt} 
+        \al \item[] 
+        \begin{alltt} \hfill\\}
+       {\end{alltt} 
+      \end{list}
+    \end{_algorithm}}
+
+
+
+% Hier beginnt das eigentliche Dokument!
+\begin{document}
+\newwrite\lalfile \immediate\openout\lalfile = \jobname.lal
+
+
+%**** Deckblatt, Kurzref. *****
+\pagenumbering{roman}
+\input{Title}
+
+%**** Kapitel *****
+\clearpage
+\pagenumbering{arabic}
+% Introduction
+\input{Intro}
+
+% Neuro-dynamic Programming
+\input{Reinforc}
+
+% User guide
+% The user guide is used within two different main files. Therefore no chapter command is included.
+\chapter{Malin -- An Abalone Playing Program} \label{cha:userguide} \index{Malin!User guide}
+\input{Userguid}
+
+% Conventional algos
+\input{Search}
+
+% Neuro-dynamic algos
+\write\lalfile{\string\addvspace{10pt}}
+\input{Neuro}
+
+% Conclusion
+\input{Conclus}
+
+
+%***** Anhänge  *****
+\begin{appendix}
+
+% Abalone - rules of the game
+\input{Rules}
+
+% Malin detailed design
+\input{Design}
+
+\end{appendix}
+
+%**** Literaturverzeichnis anlegen *****
+\clearpage
+\addtocontents{toc}{\contentsline{chapter}{Bibliography}{\thepage}}
+\lhead{Bibliography}
+\bibliography{Malin,MlGame} 
+\bibliographystyle{c:/emtex/bibtex/bst/alpha}
+
+%**** Figures and Tables ************
+\clearpage
+\lhead{List of Figures}
+\addtocontents{toc}{\contentsline{chapter}{List of Figures}{\thepage}}
+\listoffigures                   % Abbildungsverzeichnis
+
+\clearpage
+\lhead{List of Tables}
+\addtocontents{toc}{\contentsline{chapter}{List of Tables}{\thepage}}
+\listoftables                    % Tabellenverzeichnis
+
+\clearpage
+\immediate\closeout\lalfile
+\lhead{List of Algorithms}
+\addtocontents{toc}{\contentsline{chapter}{List of Algorithms}{\thepage}}
+\chapter*{List of Algorithms}
+\input{\jobname.lal}
+
+
+%***** Index *****
+\clearpage
+\lhead{Index}
+\addtocontents{toc}{\contentsline{chapter}{Index}{\thepage}}
+\printindex
+
+\end{document}

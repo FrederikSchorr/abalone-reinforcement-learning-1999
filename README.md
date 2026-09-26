@@ -19,6 +19,7 @@ Source code, players and documentation from my diploma thesis *Reinforcement Lea
 | `*.as` | Training and self-play scripts |
 | `UserGuide/` | HTML user guide |
 | `Predecessors/` | Earlier DOS versions of Abalone (1988–1998) |
+| `Thesis-LaTeX/` | LaTeX source of the thesis |
 | `Web/` | Web pages of the project |
 
 ## Notes
