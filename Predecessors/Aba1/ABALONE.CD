@@ -1,0 +1,149 @@
+/* 	(C) LIPSOFT 1990 / 1991
+
+	ABADEF.C
+
+	(geh”rt zu ABALONE.C + ABAUTL.C,ABALONE.PRJ)
+	Abalone.
+*/
+
+#ifndef _LIPABADEF_
+#define _LIPABADEF_
+
+
+#ifndef _ATEX
+#define _ATEX
+ typedef void (* atexit_t)(void);
+#endif
+
+#if	!defined(__COLORS)
+#define __COLORS
+
+enum EGA_COLORS {
+    EGA_BLACK		 =  0,	    /* dark colors */
+    EGA_BLUE		 =  1,
+    EGA_GREEN		 =  2,
+    EGA_CYAN		 =  3,
+    EGA_RED		 =  4,
+    EGA_MAGENTA 	 =  5,
+    EGA_BROWN		 =  20,
+    EGA_LIGHTGRAY	 =  7,
+    EGA_DARKGRAY	 =  56,     /* light colors */
+    EGA_LIGHTBLUE	 =  57,
+    EGA_LIGHTGREEN	 =  58,
+    EGA_LIGHTCYAN	 =  59,
+    EGA_LIGHTRED	 =  60,
+    EGA_LIGHTMAGENTA	 =  61,
+    EGA_YELLOW		 =  62,
+    EGA_WHITE		 =  63
+};
+#endif
+
+#define         ABAYES 		1
+#define 	ABANO		0
+#define 	ABAEXIT		2
+#define 	ABAOKAY         3
+#define 	UNUSEDCOLOR	EGA_LIGHTGREEN
+
+#define 	ABAPUSHED	5
+#define 	ABATOUCH	1
+#define 	ABAKILLED	50
+
+enum
+ {
+  HG,
+  SP1,
+  SP2,
+  PRSP1,
+  PRSP2,
+  OUT,
+  SET
+ };
+
+
+
+typedef struct
+ {
+  int zeile;
+  int spalte;
+  int inhalt;
+ }einabafeld;
+
+typedef struct
+ {
+  int x;
+  int y;
+ }coord;
+
+typedef unsigned char byte;
+
+typedef struct
+ {
+  byte z;
+  byte sp;
+ }position;
+
+typedef struct
+ {
+  byte feld[11][11];
+  byte outsp[3];
+  position pos;             /* 'reserve' um geschw zu erhohen */
+  coord a,b,c,d,e,f;
+  int seite,radius;
+  byte color[5]; 	    /* farben der sp.: 1-sp1,2-sp2,3-prsp1,4-prsp2 */
+  void *buffer[5];          /* graphik */
+ }abalone;
+
+
+
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+
+int rand (void);
+void srand (unsigned seed);
+
+#ifndef NULL
+#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#define NULL    0
+#else
+#define NULL    0L
+#endif
+#endif
+
+
+#define random(num)     (rand() % (num))
+#define randomize()     srand((unsigned)time(NULL))
+
+
+int getch (void);
+void *malloc (size_t size);
+void setfeld (abalone *aba,int inhalt);
+int putch (int ch);
+void zeichnen (abalone *aba,int sp1,int prsp1,int sp2,int prsp2);
+void abaende (void);
+int atexit (atexit_t func);
+void exit (int status);
+int printf (const char *format, ...);
+byte push (abalone *aba,position *pos,byte anzahl,byte richtung);
+double readfloat (void);
+void gotoxy (int x,int y);
+int pressedbox (int l,int o,int r,int u,char *text,char *mc1,char *mc2);
+void iff (char *dateihelp,int heimlichh,int versteckenh,int grafiklassenh,\
+			  int noinith,int xstarth,int ystarth);
+int kanngerade (einabafeld *gerad);
+void gerade (abalone *aba,einabafeld *gerad,int richtung);
+int kugelkann (abalone *aba);
+void setpfeile (abalone *aba,position *press,byte anzahl);
+void kugelout (abalone *aba,int sp);
+void delay (unsigned msec);
+extern int testmpix (int x,int y,byte farbe);
+int betrag (int x);
+void kugelout (abalone *aba,int spieler);
+int mcakt (char *buffer);
+int infeld (int l,int o,int r,int u,int color,int setcolor,char *mc1,char *mc2);
+void nextinrichtung (position *pos,byte richtung);
+void defaultpfeile (void);
+byte moglrichtung (abalone *aba,byte richtung);
+#endif
+

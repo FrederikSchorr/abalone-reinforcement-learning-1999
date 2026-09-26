@@ -1,0 +1,562 @@
+
+
+*** Starting new tournament with 2 players *** 
+   COMP4 5(6) :: 5DEFENSE 6(5)
+   COMP4 0(0) ::    COMP6 0(0)
+Tournament interrupted
+
+   COMP4 : won 0, kicked 5, lost 6
+5DEFENSE : won 1, kicked 6, lost 5
+   COMP6 : won 0, kicked 0, lost 0
+ 5MEDIUM : won 0, kicked 0, lost 0
+ 5AGGRES : won 0, kicked 0, lost 0
+
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70,6 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5DEFENSE : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -2000.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,5 0.80,4 0.70,3 0.60,3 0.50,3 0.45
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5MEDIUM : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5AGGRES : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -300.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP4 0(0) :: 5DEFENSE 0(0)
+Tournament interrupted
+
+   COMP4 : won 0, kicked 0, lost 0
+5DEFENSE : won 0, kicked 0, lost 0
+   COMP6 : won 0, kicked 0, lost 0
+ 5MEDIUM : won 0, kicked 0, lost 0
+ 5AGGRES : won 0, kicked 0, lost 0
+
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70,6 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5DEFENSE : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -2000.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,5 0.80,4 0.70,3 0.60,3 0.50,3 0.45
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5MEDIUM : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5AGGRES : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -300.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+  5EQUAL 6(5) ::    COMP4 5(6)
+  5EQUAL 6(5) ::    COMP6 5(6)
+  5EQUAL 5(6) ::  5AGGRES 6(5)
+  5EQUAL 6(4) :: 5DEFENSE 4(6)
+   COMP4 4(6) ::   5EQUAL 6(4)
+   COMP4 1(6) ::    COMP6 6(1)
+   COMP4 0(0) ::  5AGGRES 0(0)
+Tournament interrupted
+
+  5EQUAL : won 4, kicked 29, lost 24
+   COMP4 : won 0, kicked 10, lost 18
+   COMP6 : won 1, kicked 11, lost 7
+ 5AGGRES : won 1, kicked 6, lost 5
+5DEFENSE : won 0, kicked 4, lost 6
+
+5EQUAL : depth = 5
+  Depthfactor, further moves: 1.00,6 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 1.00 
+  Points: 1.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70,6 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,5 0.80,4 0.70,3 0.60,3 0.50,3 0.45
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5AGGRES : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -300.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+5DEFENSE : depth = 5
+  Depthfactor, further moves: 1.00,6 0.80,5 0.70,4 0.60,4 0.50
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -2000.00 0.50 -3.00 -2.00 50.00 5.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+
+
+*** Starting new tournament with 2 players *** 
+    OWN4 0(0) ::   EQUAL4 0(0)
+Tournament interrupted
+
+    OWN4 : won 0, kicked 0, lost 0
+  EQUAL4 : won 0, kicked 0, lost 0
+   NEXT4 : won 0, kicked 0, lost 0
+   COMP4 : won 0, kicked 0, lost 0
+   COMP3 : won 0, kicked 0, lost 0
+   COMP2 : won 0, kicked 0, lost 0
+    OWN5 : won 0, kicked 0, lost 0
+
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,7 1.00,7 1.00,6 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,7 1.00,7 1.00,6 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+NEXT4 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70,6 0.60
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70,6 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP2 : depth = 2
+  Depthfactor, further moves: 1.00,7 0.80
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+OWN5 : depth = 5
+  Depthfactor, further moves: 1.00,5 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+  EQUAL4 1(1) ::     OWN4 1(1)
+Tournament interrupted
+
+  EQUAL4 : won 0, kicked 1, lost 1
+    OWN4 : won 0, kicked 1, lost 1
+   NEXT4 : won 0, kicked 0, lost 0
+   COMP4 : won 0, kicked 0, lost 0
+   COMP2 : won 0, kicked 0, lost 0
+   COMP3 : won 0, kicked 0, lost 0
+    OWN5 : won 0, kicked 0, lost 0
+
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+NEXT4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP2 : depth = 2
+  Depthfactor, further moves: 1.00,7 0.80
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+OWN5 : depth = 5
+  Depthfactor, further moves: 1.00,5 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+  EQUAL4 6(3) ::     OWN4 3(6)
+  EQUAL4 6(4) ::    NEXT4 4(6)
+  EQUAL4 0(0) ::    COMP4 0(0)
+Tournament interrupted
+
+  EQUAL4 : won 2, kicked 12, lost 7
+    OWN4 : won 0, kicked 3, lost 6
+   NEXT4 : won 0, kicked 4, lost 6
+   COMP4 : won 0, kicked 0, lost 0
+   COMP2 : won 0, kicked 0, lost 0
+   COMP3 : won 0, kicked 0, lost 0
+    OWN5 : won 0, kicked 0, lost 0
+
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.02 
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.02 
+NEXT4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.02 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.02 
+COMP2 : depth = 2
+  Depthfactor, further moves: 1.00,7 0.80
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+OWN5 : depth = 5
+  Depthfactor, further moves: 1.00,5 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.01 
+
+
+*** Starting new tournament with 2 players *** 
+
+
+*** Starting new tournament with 2 players *** 
+   NEXT4 4(6) ::     OWN4 6(4)
+   NEXT4 6(4) ::    COMP4 4(6)
+   NEXT4 6(5) ::   EQUAL4 5(6)
+   NEXT4 5(5) ::    COMP2 5(5)
+Tournament interrupted
+
+   NEXT4 : won 2, not won -13105, kicked 21, lost 20
+    OWN4 : won 1, not won 16076, kicked 6, lost 4
+   COMP4 : won 0, not won 13108, kicked 4, lost 6
+  EQUAL4 : won 0, not won 16052, kicked 5, lost 6
+   COMP2 : won 0, not won -26213, kicked 5, lost 5
+   COMP3 : won 0, not won 16025, kicked 0, lost 0
+
+NEXT4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+COMP2 : depth = 2
+  Depthfactor, further moves: 1.00,7 0.80
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.80,7 0.70
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP2 0(0) ::     OWN5 0(0)
+Tournament interrupted
+
+   COMP2 : won 0, not won -13106, kicked 0, lost 0
+    OWN5 : won 0, not won 16077, kicked 0, lost 0
+
+COMP2 : depth = 2
+  Depthfactor, further moves: 1.00,7 0.80
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+OWN5 : depth = 5
+  Depthfactor, further moves: 1.00,5 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP3 4(1) ::    COMP4 1(4)
+Tournament interrupted
+
+   COMP3 : won 0, not won -13105, kicked 4, lost 1
+   COMP4 : won 0, not won 16078, kicked 1, lost 4
+   COMP5 : won 0, not won 13107, kicked 0, lost 0
+
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.95,6 0.90,5 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP5 : depth = 5
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85,3 0.80
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+  TEST42 0(0) ::   TEST41 0(0)
+Tournament interrupted
+
+  TEST42 : won 0, not won 4, kicked 0, lost 0
+  TEST41 : won 0, not won 4, kicked 0, lost 0
+  TEST40 : won 0, not won 3, kicked 0, lost 0
+   COMP4 : won 0, not won 3, kicked 0, lost 0
+
+TEST42 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90,6 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 0.00 0.00 50.00 0.00 0.00 0.00 
+TEST41 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90,6 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.00 0.00 0.00 50.00 0.00 0.00 0.00 
+TEST40 : depth = 4
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90,6 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.95,6 0.90,5 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+  TEST42 6(1) ::   TEST41 1(6)
+  TEST42 2(1) ::   TEST40 1(2)
+Tournament interrupted
+
+  TEST42 : won 1, not won 5, kicked 8, lost 2
+  TEST41 : won 0, not won 5, kicked 1, lost 6
+  TEST40 : won 0, not won 4, kicked 1, lost 2
+   COMP4 : won 0, not won 3, kicked 0, lost 0
+
+TEST42 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 0.00 0.00 50.00 0.00 0.00 0.00 
+TEST41 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.00 0.00 0.00 50.00 0.00 0.00 0.00 
+TEST40 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+
+
+*** Starting new tournament with 2 players *** 
+  TEST42 5(1) ::    COMP4 1(5)
+Tournament interrupted
+
+  TEST42 : won 0, not won 1, kicked 5, lost 1
+   COMP4 : won 0, not won 1, kicked 1, lost 5
+   COMP3 : won 0, not won 0, kicked 0, lost 0
+   COMP5 : won 0, not won 0, kicked 0, lost 0
+  EQUAL4 : won 0, not won 0, kicked 0, lost 0
+    OWN4 : won 0, not won 0, kicked 0, lost 0
+   NEXT4 : won 0, not won 0, kicked 0, lost 0
+
+TEST42 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 0.00 0.00 50.00 0.00 0.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP5 : depth = 5
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85,3 0.80
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+NEXT4 : depth = 4
+  Depthfactor, further moves: 1.00,6 0.80,6 0.70,5 0.60
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP6 6(3) ::    COMP5 3(6)
+   COMP6 5(2) ::    COMP4 2(5)
+Tournament interrupted
+
+   COMP6 : won 1, not won 1, kicked 11, lost 5
+   COMP5 : won 0, not won 1, kicked 3, lost 6
+   COMP4 : won 0, not won 1, kicked 2, lost 5
+  TEST42 : won 0, not won 0, kicked 0, lost 0
+  EQUAL4 : won 0, not won 0, kicked 0, lost 0
+    OWN5 : won 0, not won 0, kicked 0, lost 0
+
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,4 0.95,4 0.90,3 0.85,3 0.80,3 0.75
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -700.00 0.50 -3.00 -5.00 50.00 -3.00 0.00 0.00 
+COMP5 : depth = 5
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85,3 0.80
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+TEST42 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 0.00 0.00 50.00 0.00 0.00 0.00 
+EQUAL4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 1.00 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+OWN5 : depth = 5
+  Depthfactor, further moves: 1.00,5 1.00,5 1.00,4 1.00,4 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP6 5(6) ::    PURE4 6(5)
+   COMP6 6(3) ::    COMP5 3(6)
+   PURE4 5(6) ::    COMP6 6(5)
+   PURE4 6(5) ::    COMP5 5(6)
+   COMP5 1(1) ::    COMP6 1(1)
+Tournament interrupted
+
+   COMP6 : won 2, not won 2, kicked 18, lost 15
+   PURE4 : won 2, not won 1, kicked 17, lost 16
+   COMP5 : won 0, not won 3, kicked 9, lost 13
+
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,4 0.95,4 0.90,3 0.85,3 0.80,3 0.75
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -700.00 0.50 -3.00 -5.00 50.00 -3.00 0.00 0.00 
+PURE4 : depth = 4
+  Depthfactor, further moves: 1.00,4 0.90,4 0.80,4 0.70
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -700.00 1.00 0.00 0.00 50.00 0.00 0.00 0.00 
+COMP5 : depth = 5
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85,3 0.80
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+
+
+*** Starting new tournament with 2 players *** 
+   COMP3 6(4) ::    COMP4 4(6)
+   COMP3 4(6) ::    COMP5 6(4)
+   COMP3 5(6) ::    COMP6 6(5)
+   COMP3 5(6) ::   TEST42 6(5)
+   COMP3 6(5) ::    PURE4 5(6)
+   COMP3 4(6) ::     OWN4 6(4)
+   COMP4 6(5) ::    COMP3 5(6)
+   COMP4 4(6) ::    COMP5 6(4)
+   COMP4 2(6) ::    COMP6 6(2)
+   COMP4 3(6) ::   TEST42 6(3)
+   COMP4 6(2) ::    PURE4 2(6)
+   COMP4 4(6) ::     OWN4 6(4)
+   COMP5 6(4) ::    COMP3 4(6)
+   COMP5 6(2) ::    COMP4 2(6)
+   COMP5 5(6) ::    COMP6 6(5)
+   COMP5 4(6) ::   TEST42 6(4)
+   COMP5 5(6) ::    PURE4 6(5)
+   COMP5 6(5) ::     OWN4 5(6)
+   COMP6 6(5) ::    COMP3 5(6)
+   COMP6 6(5) ::    COMP4 5(6)
+   COMP6 6(4) ::    COMP5 4(6)
+   COMP6 6(4) ::   TEST42 4(6)
+   COMP6 5(6) ::    PURE4 6(5)
+   COMP6 6(5) ::     OWN4 5(6)
+  TEST42 6(4) ::    COMP3 4(6)
+  TEST42 6(4) ::    COMP4 4(6)
+  TEST42 6(4) ::    COMP5 4(6)
+  TEST42 5(6) ::    COMP6 6(5)
+  TEST42 5(6) ::    PURE4 6(5)
+  TEST42 6(1) ::     OWN4 1(6)
+   PURE4 6(4) ::    COMP3 4(6)
+   PURE4 6(5) ::    COMP4 5(6)
+   PURE4 4(6) ::    COMP5 6(4)
+   PURE4 5(6) ::    COMP6 6(5)
+   PURE4 6(2) ::   TEST42 2(6)
+   PURE4 6(2) ::     OWN4 2(6)
+    OWN4 6(4) ::    COMP3 4(6)
+    OWN4 5(6) ::    COMP4 6(5)
+    OWN4 2(6) ::    COMP5 6(2)
+    OWN4 3(6) ::    COMP6 6(3)
+    OWN4 5(6) ::   TEST42 6(5)
+    OWN4 5(6) ::    PURE4 6(5)
+
+   COMP3 : won 2, not won 10, kicked 56, lost 69
+   COMP4 : won 3, not won 9, kicked 51, lost 66
+   COMP5 : won 7, not won 5, kicked 64, lost 55
+   COMP6 : won 11, not won 1, kicked 71, lost 54
+  TEST42 : won 8, not won 4, kicked 64, lost 54
+   PURE4 : won 8, not won 4, kicked 64, lost 57
+    OWN4 : won 3, not won 9, kicked 51, lost 66
+
+COMP3 : depth = 3
+  Depthfactor, further moves: 1.00,7 0.95,7 0.90
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP4 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP5 : depth = 5
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85,3 0.80
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 -3.00 -4.00 50.00 -3.00 4.00 0.00 
+COMP6 : depth = 6
+  Depthfactor, further moves: 1.00,4 0.95,4 0.90,3 0.85,3 0.80,3 0.75
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -700.00 0.50 -3.00 -5.00 50.00 -3.00 0.00 0.00 
+TEST42 : depth = 4
+  Depthfactor, further moves: 1.00,5 0.95,5 0.90,4 0.85
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -900.00 0.50 0.00 0.00 50.00 0.00 0.00 0.00 
+PURE4 : depth = 4
+  Depthfactor, further moves: 1.00,4 0.90,4 0.80,4 0.70
+  Playerfactor: 1.00 0.60 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 10.00 1000.00 -700.00 1.00 0.00 0.00 50.00 0.00 0.00 0.00 
+OWN4 : depth = 4
+  Depthfactor, further moves: 1.00,6 1.00,6 1.00,5 1.00
+  Playerfactor: 1.00 0.50 
+  Points: -7.00 -5.00 -1.00 2.00 5.00 12.00 1000.00 -900.00 0.50 -3.00 -1.00 50.00 -1.00 5.00 0.00 
