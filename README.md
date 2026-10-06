@@ -4,7 +4,7 @@ Source code, players and documentation from my diploma thesis *Reinforcement Lea
 
 ## Thesis
 
-- Library record: [TU Wien catalogplus](https://catalogplus.tuwien.at/permalink/f/8j3js/UTW_alma2150385700003336)
+- Library record: [TU Wien reposiTUm](https://repositum.tuwien.at/handle/20.500.12708/231292)
 - PDF in this repo: [1999-02 - Reinforcement Learning Abalone - Schorr.pdf](<1999-02 - Reinforcement Learning Abalone - Schorr.pdf>)
 
 ## Repository layout
